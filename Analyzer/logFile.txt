@@ -1,0 +1,17 @@
+
+                                      CodeAnalysis - Version 1.4
+    ==============================================================================================
+     Tue Apr  4 13:42:06 2017
+     Path: "C:\Users\susha\Desktop\Studies\Semester_2\Materials\OOD\Project3\Project3\Analyzer"
+     Args: *.h, *.cpp, /f, /r
+                                                                               
+                          Functions Exceeding Metric Limits and Public Data
+    ==============================================================================================
+                 file name        type                               name    line    size    cplx
+    -----------------------  ----------  ---------------------------------  ------  ------  ------
+             Executive.cpp    function                  processSourceCode     385      95       8
+
+
+
+    searched     6 dirs
+   processed     2 files

@@ -1,0 +1,80 @@
+<!-----------------------------------
+CopyOfUnitTest.h
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\FileSystem\TestFileSystem\CopyOfUnitTest.h</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "FileSystem.cpp.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.cpp</a></li><li><a href = "Utilities.h.html">C:\Users\susha\Source\Repos\Project_4\Utilities\Utilities.h</a></li></ul></div><hr/><pre>#ifndef UNITTEST_H
+#define UNITTEST_H
+///////////////////////////////////////////////////////////////
+// UnitTest.cpp - Demonstrate unit testing framework         //
+// ver 1.1                                                   //
+// --------------------------------------------------------- //
+// copyright © Jim Fawcett, 2012, 2013                       //
+// All rights granted provided that this notice is retained  //
+// --------------------------------------------------------- //
+// Jim Fawcett, CSE687-Object Oriented Design, Spring 2013   //
+///////////////////////////////////////////////////////////////
+
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+namespace Test
+{
+  void Title(const std::string& title, char ch='=')
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::cout &lt;&lt; "\n  " &lt;&lt; title;
+    std::cout &lt;&lt; "\n " &lt;&lt; std::string(title.size() + 2, ch);
+  }</div>
+  template &lt;typename T&gt;
+  class TestBase
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {  public:
+
+    typedef bool (T::*Test) ();
+
+    virtual ~TestBase() {}
+
+    // Your test driver implements this for each major test
+    // - call a sequence of doTest(TestN)s
+    //-----------------------------------------------------
+    virtual bool test()=0;
+
+    // Executes test functions inside a try block
+    //-------------------------------------------
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">    bool doTest(Test atest)     { 
+      try
+      {
+        return (dynamic_cast&lt;T*&gt;(this)-&gt;*atest)();
+      }
+      catch (std::exception& ex)
+      {
+        std::cout &lt;&lt; "\n  failed: " &lt;&lt; ex.what();
+        return false;
+      }
+      catch(...)
+      {
+        std::cout &lt;&lt; "\n  failed: thrown structured exception";
+        return false;
+      }
+    }</div>    // Call this in your test functions to save duplicating output statements
+    //-----------------------------------------------------------------------
+    bool checkResult(bool predicate, std::string testname)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">    {      std::string name = std::string(typeid(*this).name()) + "::" + testname;
+      name = name.substr(6, name.size() - 6);
+      if(predicate)
+        return passed(name);
+      else
+        return failed(name);
+    }</div>  protected:
+    bool passed(const std::string& name)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">    {      std::cout &lt;&lt; "\n  passed: " &lt;&lt; name;
+      return true;
+    }</div>    bool failed(const std::string& name)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">    {      std::cout &lt;&lt; "\n  failed: " &lt;&lt; name;
+      return false;
+    }</div>  };</div>}
+#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

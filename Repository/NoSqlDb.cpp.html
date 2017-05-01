@@ -1,0 +1,114 @@
+<!-----------------------------------
+NoSqlDb.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "NoSqlDb.h.html">C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.h</a></li><li><a href = "GrammarHelpers.cpp.html">C:\Users\susha\Source\Repos\Project_4\GrammarHelpers\GrammarHelpers.cpp</a></li></ul></div><hr/><pre>/////////////////////////////////////////////////////////////////////
+// NoSqlDb.cpp - key/value pair in-memory database                 //
+//                                                                 //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2017       //
+/////////////////////////////////////////////////////////////////////
+
+#ifdef NO_SQL
+#include "NoSqlDb.h"
+#include &lt;iostream&gt;
+using StrData = std::string;
+using intData = int;
+using Key = NoSqlDb&lt;StrData&gt;::Key;
+using Keys = NoSqlDb&lt;StrData&gt;::Keys;
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">void create(NoSqlDb<StrData>& db) {	Element&lt;StrData&gt; elem1;
+	elem1.name = "elem1";
+	std::vector&lt;std::string&gt; keysForElem1;
+	keysForElem1.push_back("elem2");
+	keysForElem1.push_back("elem3");
+	elem1.children = keysForElem1;
+	db.save(elem1.name, elem1);
+	Element&lt;StrData&gt; elem2;
+	std::vector&lt;std::string&gt; keysForElem2;
+	keysForElem2.push_back("elem1");
+	elem2.children = keysForElem2;
+	db.save(elem2.name, elem2);
+	Element&lt;StrData&gt; elem3;
+	elem3.name = "elem3";
+	std::vector&lt;std::string&gt; keysForElem3;
+	keysForElem3.push_back("elem2");
+	elem3.children = keysForElem3;
+	db.save(elem3.name, elem3);
+}</div><div class = "externalPart"><span> + </span></div><div class = "internalPart">void edit(NoSqlDb<StrData>& db) {	std::cout &lt;&lt; "\n  Editing name \n ------------------------------------------------------------------------------------------------------------------\n";
+	db.editData("elem1", "name", "sushanth");
+	std::cout &lt;&lt; db.value("elem1").show();
+	std::cout &lt;&lt; "\n  Editing category\n ------------------------------------------------------------------------------------------------------------------\n";
+	db.editData("elem1", "category", "sushanth");
+	std::cout &lt;&lt; db.value("elem1").show();
+	std::cout &lt;&lt; "\n  Editing children\n ------------------------------------------------------------------------------------------------------------------\n";
+	std::cout &lt;&lt; db.value("elem1").show();
+	std::cout &lt;&lt; "\n  Editing data\n ------------------------------------------------------------------------------------------------------------------\n";
+	std::cout &lt;&lt; db.value("elem1").show();
+	std::cout &lt;&lt; "\n  Editing timeStamp\n ------------------------------------------------------------------------------------------------------------------\n";
+	std::cout &lt;&lt; db.value("elem1").show();
+}</div><div class = "externalPart"><span> + </span></div><div class = "internalPart">void displayAllElements(NoSqlDb<StrData>& db) {	Keys storeContents = db.keys();
+	for (Key eachElement : storeContents)
+	{
+		std::cout &lt;&lt; "\n  " &lt;&lt; eachElement &lt;&lt; ":";
+		std::cout &lt;&lt; db.value(eachElement).show();
+	}
+}</div><div class = "externalPart"><span> + </span></div><div class = "internalPart">void icreate(NoSqlDb<intData>& idb) {	Element&lt;intData&gt; ielem1;
+	ielem1.name = "elem1";
+	std::vector&lt;std::string&gt; ikeysForElem1;
+	ikeysForElem1.push_back("ielem2");
+	ikeysForElem1.push_back("ielem3");
+	ielem1.children = ikeysForElem1;
+	idb.save(ielem1.name, ielem1);
+	Element&lt;intData&gt; ielem2;
+	ielem2.name = "elem2";
+	std::vector&lt;std::string&gt; ikeysForElem2;
+	ikeysForElem2.push_back("ielem1");
+	ielem2.children = ikeysForElem2;
+	idb.save(ielem2.name, ielem2);
+	Element&lt;intData&gt; ielem3;
+	ielem3.name = "elem3";
+	idb.save(ielem3.name, ielem3);
+	Element&lt;intData&gt; ielem4;
+	ielem3.name = "elem4";
+	std::vector&lt;std::string&gt; ikeysForElem3;
+	ikeysForElem3.push_back("ielem2");
+	ielem3.children = ikeysForElem3;
+	idb.save(ielem3.name, ielem3);
+}</div><div class = "externalPart"><span> + </span></div><div class = "internalPart">void idisplayAllElements(NoSqlDb<intData>& idb) {	Keys storeContents = idb.keys();
+	for (Key eachElement : storeContents)
+	{
+		std::cout &lt;&lt; "\n  " &lt;&lt; eachElement &lt;&lt; ":";
+		std::cout &lt;&lt; idb.value(eachElement).show();
+	}
+}</div>int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::cout &lt;&lt; "\n  Demonstrating NoSql Helper Code \n =================================\n\n  Creating and saving NoSqlDb elements with string data\n -------------------------------------------------------\n";
+  NoSqlDb&lt;StrData&gt; db;
+  create(db);
+  std::cout &lt;&lt; "\n  Converting to Xml\n------------------------------------------\n\n \n ";
+  std::cout &lt;&lt; "\n  Displaying all the records in DB \n ------------------------------------------\n";
+	displayAllElements(db);
+  std::cout &lt;&lt; "\n\n\n  Querying elements for getting the children where key=elem3\n ------------------------------------------\n";
+  Keys togetchildren = db.getChildren("elem3");
+  for (auto child : togetchildren)
+	  std::cout &lt;&lt; "\n" &lt;&lt; child &lt;&lt; "\n";
+  edit(db);
+  std::cout &lt;&lt; "\n-----------time demonstraion-----\n  deleting keys\n ------------------------------------------------------------------------------------------------------------------\n";
+  std::cout &lt;&lt; "\n  Retrieving elements from NoSqlDb&lt;string&gt; \n ------------------------------------------\n";
+  std::cout &lt;&lt; "\n  size of db = " &lt;&lt; db.count() &lt;&lt; "\n";
+  displayAllElements(db);
+  std::cout &lt;&lt; "\n\n\n  Creating and saving NoSqlDb elements with int data\n ----------------------------------------------------\n";
+   NoSqlDb&lt;intData&gt; idb;
+  icreate(idb);
+  std::cout &lt;&lt; "\n  Editing data\n ------------------------------------------------------------------------------------------------------------------\n";
+  std::cout &lt;&lt; "\n  Retrieving elements from NoSqlDb&lt;int&gt;\n ---------------------------------------\n";
+  std::cout &lt;&lt; "\n  size of idb = " &lt;&lt; idb.count() &lt;&lt; "\n";
+  idisplayAllElements(idb);
+  std::cout &lt;&lt; "\n\n";
+  getchar();
+}</div>#endif // NO_SQL
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

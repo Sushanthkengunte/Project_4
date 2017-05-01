@@ -1,0 +1,73 @@
+<!-----------------------------------
+FileMgr.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\FileMgr\FileMgr.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "IFileMgr.h.html">C:\Users\susha\Source\Repos\Project_4\FileMgr\IFileMgr.h</a></li><li><a href = "FileMgr.h.html">C:\Users\susha\Source\Repos\Project_4\FileMgr\FileMgr.h</a></li><li><a href = "FileSystem.h.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.h</a></li><li><a href = "NoSqlDb.cpp.html">C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.cpp</a></li></ul></div><hr/><pre>/////////////////////////////////////////////////////////////////////
+// FileMgr.cpp - find files matching specified patterns            //
+//               on a specified path                               //
+// ver 2.2                                                         //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016       //
+/////////////////////////////////////////////////////////////////////
+
+#include "FileMgr.h"
+#include &lt;iostream&gt;
+
+using namespace FileManager;
+
+IFileMgr* FileMgr::pInstance_;
+
+IFileMgr* IFileMgr::getInstance()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  return FileMgr::getInstance();
+}</div>
+#ifdef TEST_FILEMGR
+
+using namespace FileManager;
+
+struct FileHandler : IFileEventHandler
+{
+  void execute(const std::string& fileSpec)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::cout &lt;&lt; "\n  --   " &lt;&lt; fileSpec;
+  }</div>};
+
+struct DirHandler : IDirEventHandler
+{
+  void execute(const std::string& dirSpec)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::cout &lt;&lt; "\n  ++ " &lt;&lt; dirSpec;
+  }</div>};
+
+struct DoneHandler : IDoneEventHandler
+{
+  void execute(size_t numFilesProcessed)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::cout &lt;&lt; "\n\n  Processed " &lt;&lt; numFilesProcessed &lt;&lt; " files";
+  }</div>};
+int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::cout &lt;&lt; "\n  Testing FileMgr";
+  std::cout &lt;&lt; "\n =================";
+
+  std::string path = FileSystem::Path::getFullFileSpec("..");
+  IFileMgr* pFmgr = FileMgrFactory::create(path);
+
+  FileHandler fh;
+  DirHandler dh;
+  DoneHandler dnh;
+
+  pFmgr-&gt;regForFiles(&fh);
+  pFmgr-&gt;regForDirs(&dh);
+  pFmgr-&gt;regForDone(&dnh);
+
+  pFmgr-&gt;addPattern("*.h");
+  pFmgr-&gt;addPattern("*.cpp");
+  //pFmgr-&gt;addPattern("*.log");
+
+  pFmgr-&gt;search();
+
+  std::cout &lt;&lt; "\n\n";
+  return 0;
+}</div>#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

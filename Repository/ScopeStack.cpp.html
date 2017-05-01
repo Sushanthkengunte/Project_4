@@ -1,0 +1,132 @@
+<!-----------------------------------
+ScopeStack.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\ScopeStack\ScopeStack.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "FileSystem.h.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.h</a></li><li><a href = "GrammarHelpers.cpp.html">C:\Users\susha\Source\Repos\Project_4\GrammarHelpers\GrammarHelpers.cpp</a></li><li><a href = "ScopeStack.h.html">C:\Users\susha\Source\Repos\Project_4\ScopeStack\ScopeStack.h</a></li><li><a href = "Utilities.h.html">C:\Users\susha\Source\Repos\Project_4\Utilities\Utilities.h</a></li><li><a href = "FileSystem.cpp.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.cpp</a></li><li><a href = "Executive.cpp.html">C:\Users\susha\Source\Repos\Project_4\Analyzer\Executive.cpp</a></li></ul></div><hr/><pre>///////////////////////////////////////////////////////////////////////////////
+// ScopeStack.cpp - implements template stack holding specified element type //
+// ver 2.2                                                                   //
+// Language:      Visual C++ 2010, SP1                                       //
+// Platform:      Dell Precision T7400, Win 7 Pro SP1                        //
+// Application:   Code Analysis Research                                     //
+// Author:        Jim Fawcett, CST 4-187, Syracuse University                //
+//                (315) 443-3948, jfawcett@twcny.rr.com                      //
+///////////////////////////////////////////////////////////////////////////////
+
+//----&lt; test stub &gt;------------------------------------------------------
+
+#ifdef TEST_SCOPESTACK
+
+#include "ScopeStack.h"
+#include "../Utilities/Utilities.h"
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+
+using namespace CodeAnalysis;
+
+struct element
+{
+  std::string type;
+  std::string name;
+  size_t startLineCount = 0;
+  size_t endLineCount = 0;
+  std::string path_;
+  std::string show()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::ostringstream temp;
+    temp &lt;&lt; "(";
+    temp &lt;&lt; type;
+    temp &lt;&lt; ", ";
+    temp &lt;&lt; name;
+    temp &lt;&lt; ", ";
+    temp &lt;&lt; startLineCount;
+    temp &lt;&lt; ", ";
+    temp &lt;&lt; endLineCount;
+    temp &lt;&lt; ")"; 
+    return temp.str();
+  }</div>  std::vector&lt;element*&gt; children_;
+};
+
+int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  ScopeStack&lt;element*&gt;::Rslt::attach(&std::cout);
+  ScopeStack&lt;element*&gt;::Rslt::start();
+
+  using Utils = Utilities::StringHelper;
+
+  Utils::Title("Testing Scope Stack");
+
+  Utils::title("pushing items onto ScopeStack instance after adding startLineCount");
+
+  ScopeStack&lt;element*&gt; testStack;
+  element* pItem = new element;
+
+  pItem-&gt;type = "function";
+  pItem-&gt;name = "fun1";
+  pItem-&gt;startLineCount = 33;
+  testStack.push(pItem);
+
+  pItem = new element;
+  pItem-&gt;type = "if";
+  pItem-&gt;name = "";
+  pItem-&gt;startLineCount = 38;
+  (testStack.top()-&gt;children_).push_back(pItem);
+  testStack.push(pItem);
+
+  pItem = new element;
+  pItem-&gt;type = "for";
+  pItem-&gt;name = "";
+  pItem-&gt;startLineCount = 40;
+  (testStack.top()-&gt;children_).push_back(pItem);
+  testStack.push(pItem);
+
+  showStack&lt;element&gt;(testStack, false);
+  std::cout &lt;&lt; std::endl;
+
+  Utils::title("top and predecessor are:");
+  std::cout &lt;&lt; "\n  " &lt;&lt; testStack.top()-&gt;show();
+  std::cout &lt;&lt; "\n  " &lt;&lt; testStack.predOfTop()-&gt;show();
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("Popping two items off ScopeStack after adding endLineCount");
+
+  testStack.top()-&gt;endLineCount = 50;
+  std::cout &lt;&lt; "\n  " &lt;&lt; testStack.pop()-&gt;show();
+  testStack.top()-&gt;endLineCount = 55;
+  std::cout &lt;&lt; "\n  " &lt;&lt; testStack.pop()-&gt;show();
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("pushing another item onto ScopeStack after adding startLineElement");
+  pItem = new element;
+  pItem-&gt;type = "while";
+  pItem-&gt;name = "";
+  pItem-&gt;startLineCount = 60;
+  std::cout &lt;&lt; "\n  " &lt;&lt; pItem-&gt;show();
+  (testStack.top()-&gt;children_).push_back(pItem);
+  testStack.push(pItem);
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("stack now contains:");
+  showStack&lt;element&gt;(testStack, false);
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("popping last elements off stack after adding endLineCount");
+  testStack.top()-&gt;endLineCount = 70;
+  element* pTop = testStack.pop();
+  std::cout &lt;&lt; "\n  " &lt;&lt; pTop-&gt;show();
+  testStack.top()-&gt;endLineCount = 75;
+  pTop = testStack.pop();
+  std::cout &lt;&lt; "\n  " &lt;&lt; pTop-&gt;show();
+  std::cout &lt;&lt; "\n";
+
+  Utils::title("walking simulated AST tree:");
+  TreeWalk(pTop);
+  std::cout &lt;&lt; "\n\n";
+}</div>
+#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

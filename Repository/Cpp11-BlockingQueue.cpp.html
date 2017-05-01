@@ -1,0 +1,97 @@
+<!-----------------------------------
+Cpp11-BlockingQueue.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\Cpp11-BlockingQueue\Cpp11-BlockingQueue.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "Utilities.h.html">C:\Users\susha\Source\Repos\Project_4\Utilities\Utilities.h</a></li><li><a href = "Cpp11-BlockingQueue.h.html">C:\Users\susha\Source\Repos\Project_4\Cpp11-BlockingQueue\Cpp11-BlockingQueue.h</a></li></ul></div><hr/><pre>///////////////////////////////////////////////////////////////
+// Cpp11-BlockingQueue.cpp - Thread-safe Blocking Queue      //
+// ver 1.4                                                   //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2013 //
+///////////////////////////////////////////////////////////////
+
+#include &lt;condition_variable&gt;
+#include &lt;mutex&gt;
+#include &lt;thread&gt;
+#include &lt;queue&gt;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include "Cpp11-BlockingQueue.h"
+
+#ifdef TEST_BLOCKINGQUEUE
+
+using namespace Async;
+
+std::mutex ioLock;
+
+void test(BlockingQueue&lt;std::string&gt;* pQ)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::string msg;
+  do
+  {
+    msg = pQ-&gt;deQ();
+    {
+      std::lock_guard&lt;std::mutex&gt; l(ioLock);
+      std::cout &lt;&lt; "\n  thread deQed " &lt;&lt; msg.c_str();
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  } while(msg != "quit");
+}</div>
+int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::cout &lt;&lt; "\n  Demonstrating C++11 Blocking Queue";
+  std::cout &lt;&lt; "\n ====================================";
+
+  BlockingQueue&lt;std::string&gt; q;
+  std::thread t(test, &q);
+
+  for(int i=0; i&lt;15; ++i)
+  {
+    std::ostringstream temp;
+    temp &lt;&lt; i;
+    std::string msg = std::string("msg#") + temp.str();
+    {
+      std::lock_guard&lt;std::mutex&gt; l(ioLock);
+      std::cout &lt;&lt; "\n   main enQing " &lt;&lt; msg.c_str();
+    }
+    q.enQ(msg);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
+  }
+  q.enQ("quit");
+  t.join();
+
+  std::cout &lt;&lt; "\n";
+  std::cout &lt;&lt; "\n  Making move copy of BlockingQueue";
+  std::cout &lt;&lt; "\n -----------------------------------";
+
+  std::string msg = "test";
+  q.enQ(msg);
+  std::cout &lt;&lt; "\n  before move:";
+  std::cout &lt;&lt; "\n    q.size() = " &lt;&lt; q.size();
+  std::cout &lt;&lt; "\n    q.front() = " &lt;&lt; q.front();
+  BlockingQueue&lt;std::string&gt; q2 = std::move(q);  // move assignment
+  std::cout &lt;&lt; "\n  after move:";
+  std::cout &lt;&lt; "\n    q2.size() = " &lt;&lt; q2.size();
+  std::cout &lt;&lt; "\n    q.size() = " &lt;&lt; q.size();
+  std::cout &lt;&lt; "\n    q2 element = " &lt;&lt; q2.deQ() &lt;&lt; "\n";
+
+  std::cout &lt;&lt; "\n  Move assigning state of BlockingQueue";
+  std::cout &lt;&lt; "\n ---------------------------------------";
+  BlockingQueue&lt;std::string&gt; q3;
+  q.enQ("test");
+  std::cout &lt;&lt; "\n  before move:";
+  std::cout &lt;&lt; "\n    q.size() = " &lt;&lt; q.size();
+  std::cout &lt;&lt; "\n    q.front() = " &lt;&lt; q.front();
+  q3 = std::move(q);
+  std::cout &lt;&lt; "\n  after move:";
+  std::cout &lt;&lt; "\n    q.size() = " &lt;&lt; q.size();
+  std::cout &lt;&lt; "\n    q3.size() = " &lt;&lt; q3.size();
+  std::cout &lt;&lt; "\n    q3 element = " &lt;&lt; q3.deQ() &lt;&lt; "\n";
+
+  std::cout &lt;&lt; "\n\n";
+}</div>
+#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

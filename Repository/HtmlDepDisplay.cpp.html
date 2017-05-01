@@ -1,0 +1,244 @@
+<!-----------------------------------
+HtmlDepDisplay.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\HtmlDependencyDisplay\HtmlDepDisplay.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "HtmlDepDisplay.h.html">C:\Users\susha\Source\Repos\Project_4\HtmlDependencyDisplay\HtmlDepDisplay.h</a></li><li><a href = "NoSqlDb.h.html">C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.h</a></li><li><a href = "TypeTable.h.html">C:\Users\susha\Source\Repos\Project_4\TypeTable\TypeTable.h</a></li><li><a href = "FileSystem.h.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.h</a></li><li><a href = "ActionsAndRules.h.html">C:\Users\susha\Source\Repos\Project_4\Parser\ActionsAndRules.h</a></li></ul></div><hr/><pre>////////////////////////////////////////////////////////////////////////
+// HtmlDepDisplay.cpp - Displays the dependencies in internet explorer//
+// ver 1.0                                                            //
+//--------------------------------------------------------------------//
+// Language:    C++, Visual Studio 2015                               //
+// Platform:    Lenovo, Windows 10                                    //
+// Application: Project #3, CSE687 - Object Oriented Design, S2015    //
+// Author:		sushanth suresh SUID:987471535					      //
+//		       					                                      //
+////////////////////////////////////////////////////////////////////////
+
+#include "HtmlDepDisplay.h"
+#include "../FileSystem/FileSystem.h"
+#include&lt;iostream&gt;
+#include&lt;fstream&gt;
+#include&lt;istream&gt;
+#include&lt;ostream&gt;
+#include&lt;sstream&gt;
+#include&lt;direct.h&gt;
+#include&lt;vector&gt;
+#include&lt;regex&gt;
+
+//-------takes the dependecy table line no map and the repository path-----------//
+MakingDirectory::MakingDirectory(NoSqlDb&lt;std::string&gt;& database, std::unordered_map&lt;std::string, std::vector&lt;CodeAnalysis::LineNO&gt;&gt; lTable, std::string indexrepository)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	filesToCopy = database.keys();
+	db = database;
+	addheaderDepen(db);
+	localLineNO = lTable;
+	repositoryLocation = indexrepository;
+
+}</div>MakingDirectory::~MakingDirectory()
+{
+}
+//------------copies all the files inside a specified directory-----------------------//
+void MakingDirectory::copyTheFile(std::string destination)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	directorySet newDirectory;
+	std::string replacedString;
+	for (auto each : filesToCopy) {
+		std::string newFileName = appendFileName(each);
+		newDirectory.push_back(newFileName);
+		computeStartLine(each);
+		computeEndLine(each);
+		replacedString = getFileCon(each);
+		createHTMLFile(newFileName,replacedString,destination);
+		allFiles[newFileName] = repositoryLocation + "/"+newFileName;
+	}
+	createRepHtml();
+}</div>
+//------------gets the start Lines for a specific file-------------------------------//
+void MakingDirectory::computeStartLine(std::string forFile)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	startLine.clear();
+	auto each = localLineNO[forFile];
+		for (auto startingLine : each)
+		startLine.push_back(startingLine.startLine);
+	
+}</div>//--------------------gets the end tLines for a specific file----------------------//
+void MakingDirectory::computeEndLine(std::string forFile)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	endLine.clear();
+	auto each = localLineNO[forFile];
+	for (auto endingLine : each)
+			endLine.push_back(endingLine.endLine);
+}</div>//-------------------replaces &lt; with &lt; and &gt; with &gt;-------------------------//
+std::string MakingDirectory::replaceEscape(std::string originalString)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::string correctString;
+	for (auto eachChar : originalString) {
+		if (eachChar == '&lt;')
+			correctString += "&lt;";
+		else if (eachChar == '&gt;')
+			correctString += "&gt;";
+		else 
+			correctString += eachChar;
+	}
+	return correctString;
+}</div>//---------------------returns the correct content of a specific file----------------//
+std::string MakingDirectory::getFileCon(std::string fName)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	codeLineNo = 0;
+	std::string originalString;
+	std::string correctContent;
+	std::vector&lt;std::string&gt; dependentFiles;
+	dependentFiles = db.getChildren(fName);
+	std::ifstream file(fName);
+		//Sets the prologue for a specific file
+		correctContent += prologueHtml(FileSystem::Path::getName(fName));
+		//puts the head body tags
+		correctContent +="&lt;html&gt;&lt;head&gt;&lt;link rel=\"stylesheet\" href=\"../style.css\"&gt;&lt;/head&gt;&lt;body&gt;&lt;h3&gt;" + fName + "&lt;/h3&gt;&lt;hr/&gt;&lt;div class = \"indent\"&gt;&lt;h4&gt;dependencies:&lt;/h4&gt;";
+		correctContent += "&lt;ul&gt;";
+		for (auto item : dependentFiles) {
+			correctContent += "&lt;li&gt;";
+			correctContent+="&lt;a href = \"" + FileSystem::Path::getName(item) + ".html\"&gt;" + item + "&lt;/a&gt;";
+			correctContent += "&lt;/li&gt;";
+		}
+		correctContent += "&lt;/ul&gt;";
+		correctContent+="&lt;/div&gt;&lt;hr/&gt;&lt;pre&gt;";
+		//for each line get escape character or add div tags
+		while (getline(file, originalString))
+		{ 
+			codeLineNo++;
+			correctContent += extractContent(originalString);
+			//if (std::find(startLine.begin(), startLine.end(), codeLineNo) != startLine.end())
+			//{
+			//	correctContent += "&lt;div class = \"externalPart\"&gt;&lt;span&gt; + &lt;/span&gt;&lt;/div&gt;&lt;div class = \"internalPart\"&gt;";
+			//	correctContent += originalString;
+			//}
+			//else if (std::find(endLine.begin(), endLine.end(), codeLineNo) != endLine.end()) {
+			//	correctContent += originalString;
+			//	correctContent += "&lt;/div&gt;";
+			//}
+			//else {
+			//	correctContent += replaceEscape(originalString);
+			//	correctContent += "\n";
+			//}
+		}
+		std::string jQuery = " https://code.jquery.com/jquery-1.11.3.min.js";//----jQuery library link---------------------//
+		correctContent += "&lt;/pre&gt;&lt;script src=\"" + jQuery + "\"&gt;&lt;/script&gt;";
+		correctContent += "&lt;script src=\"../project3.js\"&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;";//----Java sricpt path---------------//
+	file.close();
+	return correctContent;
+}</div>//------------------Creates the Html File using the content and puts it in the desired repository------------------//
+void MakingDirectory::createHTMLFile(std::string filename, std::string & contentsOfFile,std::string destination)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	try
+	{
+		std::ofstream dirFile;
+		std::string storeInsideDestination;
+		storeInsideDestination += destination + "/";
+		storeInsideDestination += FileSystem::Path::getName(filename);
+		dirFile.open(storeInsideDestination);
+		if (!dirFile.is_open()) {
+			std::cout &lt;&lt; "couldnt open";
+		}
+
+		dirFile &lt;&lt; contentsOfFile;
+		dirFile.close();
+	}
+	catch (const std::exception& e)
+	{
+		std::cout &lt;&lt; e.what();
+	}
+
+}</div>
+void MakingDirectory::addheaderDepen(NoSqlDb&lt;std::string&gt;& db)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::regex regularexp(".*.h");
+	auto something = db.keys();
+	for (std::string each : something) {
+		if (std::regex_match(each, regularexp)) {
+			std::string temp = each;
+			temp.pop_back();
+			temp.pop_back();
+			temp.append(".cpp");
+			if(std::find(something.begin(), something.end(),temp) != something.end())
+				db.editData(each, "children", temp);
+		}
+	}
+}</div>//--------------appends .html to the filenames--------------------//
+std::string MakingDirectory::appendFileName(std::string oldFileName)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{
+	oldFileName += ".html";
+	return oldFileName;
+}</div>//---------------creates the index file with all the files in the repository------------//
+void MakingDirectory::createRepHtml()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::string correctContent;
+	std::ofstream dirFile;
+	std::string storeInsideDestination;
+	storeInsideDestination = repositoryLocation + "/index.html";
+	dirFile.open(storeInsideDestination);
+	if (!dirFile.is_open()) {
+		std::cout &lt;&lt; "could not open";
+	}
+	correctContent += prologueHtml("index.html");
+	correctContent += "&lt;html&gt;&lt;head&gt;&lt;link rel=\"stylesheet\" href=\"../style.css\"&gt;&lt;/head&gt;&lt;body&gt;&lt;h3&gt;Index Page&lt;/h3&gt;&lt;hr/&gt;&lt;ul&gt;";
+	std::vector&lt;std::string&gt; Keys = db.keys();
+	for (auto each : Keys)
+		correctContent += "&lt;li&gt;&lt;a href=\" " + FileSystem::Path::getName(each) + ".html\"&gt;" + each + "&lt;/a&gt;&lt;/li&gt;";
+	correctContent += "&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;";
+	dirFile &lt;&lt; correctContent;
+	dirFile.close();
+	
+}</div>std::string MakingDirectory::extractContent(std::string originalString)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::string temp;
+	if (std::find(startLine.begin(), startLine.end(), codeLineNo) != startLine.end())
+	{
+		temp += "&lt;div class = \"externalPart\"&gt;&lt;span&gt; + &lt;/span&gt;&lt;/div&gt;&lt;div class = \"internalPart\"&gt;";
+		temp += originalString;
+	}
+	else if (std::find(endLine.begin(), endLine.end(), codeLineNo) != endLine.end()) {
+		temp += originalString;
+		temp += "&lt;/div&gt;";
+	}
+	else {
+		temp += replaceEscape(originalString);
+		temp += "\n";
+	}
+	return temp;
+}</div>//--------------displays the index file in a repository---------------------------------//
+void MakingDirectory::displayIndexPage(std::string Repository, LPCWSTR browser)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	try
+	{
+		std::string fullPathToRepository = FileSystem::Path::getFullFileSpec(Repository);
+		std::string indexFile = fullPathToRepository + "\\index.html";
+		std::string path = "\"file:///" + indexFile+"\"";
+		std::wstring spath = std::wstring(path.begin(), path.end());
+		LPCWSTR swpath = spath.c_str();
+		LPCWSTR a = L"open";
+		LPCWSTR ch = browser;
+		ShellExecute(NULL, a, ch, swpath, NULL, SW_SHOWDEFAULT);
+	}
+	catch (const std::exception& e)
+	{
+		std::cout &lt;&lt; e.what();
+	}
+ 
+}</div>//-----------provides prologue for a specific file-------------------------------//
+std::string MakingDirectory::prologueHtml(std::string fName)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::string prologueString;
+	prologueString += "&lt;!-----------------------------------\n"+fName+"\n Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017";
+	prologueString += "\n\nNote:\n - Markup characters in the text part, enclosed in &lt;pre&gt;...&lt;/pre&gt; have to be\nreplaced with escape sequences, e.g., &lt; becomes &lt; and &gt; becomes &gt;\n";
+	prologueString += "- Be careful that you don't replace genuine markup characters with escape \nsequences, e.g., everything outside of the &lt;pre&gt;...&lt;/pre&gt; section. ";
+	prologueString += "\n----------------------------------------&gt;\n";
+	return prologueString;
+}</div>
+#ifdef HTML_DISPLAY
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">int main() {	NoSqlDb&lt;std::string&gt; dummyDirectory;
+	std::unordered_map&lt;std::string, std::vector&lt;CodeAnalysis::LineNO&gt;&gt; lineTable;
+	std::string filesIn = "../Repository";
+	LPCWSTR ch = browser;
+	if (_mkdir("../Repository") == 0)
+		std::cout &lt;&lt; "Repository Created";
+	else
+		std::cout &lt;&lt; "coudnt create repository";
+	MakingDirectory a(dummyDirectory,lineTable, filesIn);
+	a.copyTheFile(filesIn);
+	htmlDisplay.displayIndexPage(filesIn, browser);
+}</div>#endif // HTML_DISPLAY
+
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

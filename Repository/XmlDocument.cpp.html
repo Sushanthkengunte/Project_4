@@ -1,0 +1,279 @@
+<!-----------------------------------
+XmlDocument.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlDocument\XmlDocument.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "XmlElement.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlElement\XmlElement.h</a></li><li><a href = "XmlDocument.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlDocument\XmlDocument.h</a></li><li><a href = "XmlParser.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlParser\XmlParser.h</a></li><li><a href = "ScopeStack.cpp.html">C:\Users\susha\Source\Repos\Project_4\ScopeStack\ScopeStack.cpp</a></li><li><a href = "Test1.cpp.html">C:\Users\susha\Source\Repos\Project_4\TestFiles\Test1.cpp</a></li><li><a href = "FileSystem.cpp.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.cpp</a></li></ul></div><hr/><pre>///////////////////////////////////////////////////////////////////
+// XmlDocument.cpp - a container of XmlElement nodes             //
+// Ver 2.2                                                       //
+// Application: Help for CSE687 Pr#2, Spring 2015                //
+// Platform:    Dell XPS 2720, Win 8.1 Pro, Visual Studio 2013   //
+// Author:      Jim Fawcett, CST 4-187, 443-3948                 //
+//              jfawcett@twcny.rr.com                            //
+///////////////////////////////////////////////////////////////////
+
+#include &lt;iostream&gt;
+#include &lt;functional&gt;
+#include "XmlDocument.h"
+#include "..\XmlParser\XmlParser.h"
+#include "../Utilities/Utilities.h"
+
+using namespace XmlProcessing;
+using sPtr = std::shared_ptr &lt; AbstractXmlElement &gt; ;
+
+/////////////////////////////////////////////////////////////////////////////
+// Definitions of XmlDocument methods
+
+XmlProcessing::XmlDocument::XmlDocument(const std::string& src, sourceType srcType)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  XmlParser parser(src, (XmlParser::sourceType) srcType);
+  XmlDocument* pDoc = parser.buildDocument();
+  *this = std::move(*pDoc);
+}</div>//----&lt; move constructor &gt;---------------------------------------------------
+
+XmlDocument::XmlDocument(XmlDocument&& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  pDocElement_ = doc.pDocElement_;
+  doc.pDocElement_ = nullptr;
+}</div>//----&lt; move assignment &gt;----------------------------------------------------
+
+XmlDocument& XmlDocument::operator=(XmlDocument&& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if (&doc == this) return *this;
+  pDocElement_ = doc.pDocElement_;
+  doc.pDocElement_ = nullptr;
+  return *this;
+}</div>//----&lt; return std::shared_ptr to XML root &gt;---------------------------------
+
+sPtr XmlDocument::xmlRoot()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  for (auto pElem : pDocElement_-&gt;children())
+  {
+    if (dynamic_cast&lt;TaggedElement*&gt;(pElem.get()))
+      return pElem;
+  }
+  return nullptr;
+}</div>//----&lt; add XML root to an XmlDocument &gt;-------------------------------------
+
+bool XmlDocument::xmlRoot(sPtr pRoot)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  return pDocElement_-&gt;addChild(pRoot);
+}</div>//----&lt; find element(s) with this tag &gt;--------------------------------------
+/*
+ *  if tag == "" returns pElem and all decendents
+ */
+bool XmlDocument::find(const std::string& tag, sPtr pElem, bool findall)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if (pElem-&gt;tag() == tag || tag == "")
+  {
+    found_.push_back(pElem);
+    if (!findall)
+      return true;
+  }
+  for (auto pChild : pElem-&gt;children())
+    find(tag, pChild);
+  return (found_.size() &gt; 0);
+}</div>//----&lt; find element with this tag &gt;-----------------------------------------
+/*
+ *  found_[0] contains first element (DFS order) with tag, else empty
+ */
+XmlDocument& XmlDocument::element(const std::string& tag)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  found_.clear();
+  find(tag, pDocElement_, false);
+  return *this;
+}</div>//----&lt; find children of element with this tag &gt;-----------------------------
+/*
+ * found_ contains all children found, else empty
+ */
+XmlDocument& XmlDocument::elements(const std::string& tag)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  found_.clear();
+  element(tag);
+  if (found_.size() &gt; 0)
+  {
+    sPtr pElem = found_[0];
+    found_.clear();                         // don't keep parent element
+    for (auto pChild : pElem-&gt;children())
+      found_.push_back(pChild);             // save children
+  }
+  return *this;
+}</div>//----&lt; find all decendents of last find with this tag &gt;---------------------
+/*
+ *  returns all decendents if tag == ""
+ */
+XmlDocument& XmlDocument::descendents(const std::string& tag)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if (found_.size() == 0)
+    found_.push_back(xmlRoot());
+  sPtr pElem = found_[0];
+  found_.clear();
+  for (auto pChild : pElem-&gt;children())
+    find(tag, pChild, true);
+  return *this;
+}</div>//----&lt; return found results &gt;-----------------------------------------------
+
+std::vector&lt;sPtr&gt; XmlDocument::select()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  return std::move(found_);  // returns results and clears found_
+}</div>//----&lt; return the number of elements in the document &gt;----------------------
+
+size_t XmlDocument::size()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  find("", pDocElement_, true);
+  size_t size_ = found_.size() - 1;  // don't count docElement
+  found_.clear();
+  return size_;
+}</div>//----&lt; return XML string representation of XmlDocument &gt;--------------------
+
+std::string XmlDocument::toString()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  return pDocElement_-&gt;toString();
+}</div>
+std::string enQuote(std::string s) { return "\"" + s + "\""; }
+
+#ifdef TEST_XMLDOCUMENT
+
+/////////////////////////////////////////////////////////////////////////////
+// Test Functions
+
+//----&lt; build an XmlDocument for testing &gt;-----------------------------------
+
+XmlDocument buildDocument()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  sPtr pRoot = makeTaggedElement("root");
+  XmlDocument doc(XmlProcessing::makeDocElement(pRoot));
+
+  sPtr child1 = makeTaggedElement("child1");
+  child1-&gt;addChild(makeTextElement("child1 text"));
+  sPtr grandChild11 = makeTaggedElement("grandChild11");
+  grandChild11-&gt;addChild(makeTextElement("grandchild11 text"));
+  child1-&gt;addChild(grandChild11);
+  pRoot-&gt;addChild(child1);
+  sPtr secondChild1 = makeTaggedElement("child1");
+  secondChild1-&gt;addChild(makeTextElement("text of second child1"));
+  child1-&gt;addChild(secondChild1);
+
+  sPtr child2 = makeTaggedElement("child2");
+  child2-&gt;addChild(makeTextElement("child2 text"));
+  pRoot-&gt;addChild(child2);
+  return doc;
+}</div>//----&lt; test Depth First Search on XmlDocument &gt;-----------------------------
+
+void testDFS(XmlDocument& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  title("testing global DFS on XmlDocument - printing tags");
+
+  std::function&lt;void(AbstractXmlElement&)&gt; f;
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  f = [](AbstractXmlElement& Elem) {    if (Elem.tag().size() &gt; 0)
+      std::cout << "\n  " << Elem.tag();</div>  };
+  
+  DFS(doc, f);
+  std::cout &lt;&lt; "\n";
+}</div>//----&lt; test search for element with specified tag &gt;-------------------------
+
+void testElement(XmlDocument& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::string testTag = "child1";
+  title("testing element(" + enQuote(testTag) + ")");
+  std::vector&lt;sPtr&gt; found = doc.element(testTag).select();
+  if (found.size() &gt; 0)
+    std::cout &lt;&lt; "\n  found " &lt;&lt; found[0]-&gt;tag();
+  else
+    std::cout &lt;&lt; "\n  couldn't find " + enQuote(testTag);
+  std::cout &lt;&lt; "\n";
+
+  testTag = "foobar";
+  title("testing element(" + enQuote(testTag) + ")");
+  found = doc.element(testTag).select();
+  if (found.size() &gt; 0)
+    std::cout &lt;&lt; "\n  found " &lt;&lt; found[0]-&gt;tag();
+  else
+    std::cout &lt;&lt; "\n  couldn't find " + enQuote(testTag);
+  std::cout &lt;&lt; "\n";
+}</div>//----&lt; test search for children of element with specified tag &gt;-------------
+
+void testElements(XmlDocument& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::string testTag = "child1";
+  title("testing elements(" + enQuote(testTag) + ")");
+  std::vector&lt;sPtr&gt; found = doc.elements(testTag).select();
+  if (found.size() &gt; 0)
+  {
+    for (auto pElem : found)
+    {
+      if (pElem-&gt;tag() != "")
+        std::cout &lt;&lt; "\n  found: " &lt;&lt; pElem-&gt;tag();
+      else
+        std::cout &lt;&lt; "\n  found: " &lt;&lt; pElem-&gt;value();
+    }
+  }
+  else
+    std::cout &lt;&lt; "\n  couldn't find child elements";
+  std::cout &lt;&lt; "\n";
+}</div>//----&lt; test search for all decendents of xmlRoot with specified tag &gt;-------
+
+void testDescendents(XmlDocument& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::string testTag = "child1";
+  title("testing doc.descendents(" + enQuote(testTag) + ")");
+  std::vector&lt;sPtr&gt; found = doc.descendents(testTag).select();
+  if (found.size() &gt; 0)
+  {
+    for (auto pElem : found)
+    {
+      if (pElem-&gt;tag() != "")
+        std::cout &lt;&lt; "\n  found: " &lt;&lt; pElem-&gt;tag();
+      else
+        std::cout &lt;&lt; "\n  found: " &lt;&lt; pElem-&gt;value();
+    }
+  }
+  else
+    std::cout &lt;&lt; "\n  couldn't find descendent elements";
+  std::cout &lt;&lt; "\n";
+}</div>//----&lt; test search for all decendents of specified element &gt;----------------
+
+void testElementDescendents(XmlDocument& doc)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::string testTag = "child1";
+  title("testing doc.element(" + testTag + ").descendents()");
+  std::vector&lt;sPtr&gt; found = doc.element(testTag).descendents().select();
+  if (found.size() &gt; 0)
+  {
+    for (auto pElem : found)
+    {
+      if (pElem-&gt;tag() != "")
+        std::cout &lt;&lt; "\n  found: " &lt;&lt; pElem-&gt;tag();
+      else
+        std::cout &lt;&lt; "\n  found: " &lt;&lt; pElem-&gt;value();
+    }
+  }
+  else
+    std::cout &lt;&lt; "\n  couldn't find descendent elements";
+  std::cout &lt;&lt; "\n";
+}</div>//----&lt; test stub &gt;----------------------------------------------------------
+
+int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  title("Testing XmlDocument class");
+  
+  XmlDocument doc = buildDocument();
+  std::cout &lt;&lt; doc.toString();
+  std::cout &lt;&lt; "\n";
+  std::cout &lt;&lt; "\n  size of document = " &lt;&lt; doc.size() &lt;&lt; "\n";
+
+  title("Testing XmlDocument::DFS - looking for tags");
+  std::function&lt;void(AbstractXmlElement&)&gt; f;
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  f = [](AbstractXmlElement& Elem) {    if (Elem.tag().size() &gt; 0)
+      std::cout << "\n  " << Elem.tag();</div>  };
+  doc.DFS(doc.xmlRoot(), f);
+  std::cout &lt;&lt; "\n";
+   
+  testDFS(doc);
+  testElement(doc);
+  testElements(doc);
+  testDescendents(doc);
+  testElementDescendents(doc);
+
+  std::string path = "../XmlElementParts/LectureNote.xml";
+  title("Attempting to build document from fileSpec: " + path);
+
+  try
+  {
+    XmlDocument doc2(path, XmlDocument::file);
+    std::cout &lt;&lt; doc2.toString();
+  }
+  catch (std::exception& ex)
+  {
+    std::cout &lt;&lt; "\n\n  " &lt;&lt; ex.what();
+  }
+  std::cout &lt;&lt; "\n\n";
+}</div>
+#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

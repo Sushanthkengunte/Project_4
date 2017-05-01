@@ -1,0 +1,136 @@
+<!-----------------------------------
+CppProperties.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\CppProperties\CppProperties.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "CppProperties.h.html">C:\Users\susha\Source\Repos\Project_4\CppProperties\CppProperties.h</a></li><li><a href = "GrammarHelpers.cpp.html">C:\Users\susha\Source\Repos\Project_4\GrammarHelpers\GrammarHelpers.cpp</a></li></ul></div><hr/><pre>/////////////////////////////////////////////////////////////////////
+// CppProperties.cpp - Defines read/write and read only properties //
+//                                                                 //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2017       //
+/////////////////////////////////////////////////////////////////////
+
+#ifdef TEST_CPPPROPERTIES
+
+#include "CppProperties.h"
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+class X
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+  Property&lt;std::string&gt; name;
+  Property&lt;double&gt; isMutable;
+  Property&lt;const double&gt; pi = 3.1415927;
+  Property&lt;const std::string&gt; constName = "a const name";
+  void show()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::cout &lt;&lt; "\n  name:      " &lt;&lt; name;
+    std::cout &lt;&lt; "\n  isMutable: " &lt;&lt; isMutable;
+    std::cout &lt;&lt; "\n  pi:        " &lt;&lt; pi;
+    std::cout &lt;&lt; "\n  constName: " &lt;&lt; constName;
+    std::cout &lt;&lt; "\n";
+  }</div>};</div>
+/////////////////////////////////////////////////////////////////////
+// Z class:
+// - demonstrates how to customize getter and setter functions
+//   without changing public interface of Z.
+// - That is important because it means that should we decide,
+//   after a class was published, that we should control the
+//   way the property behaves, we won't break existing clients.
+
+/*----&lt; demo function for custom getter and setter &gt;---------------*/
+
+std::string toUpper(const std::string& str)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::string upperS = str;
+  for (auto& c : upperS)
+    c = toupper(c);
+  return upperS;
+}</div>
+/////////////////////////////////////////////////////////////////////
+// - We can also modify the behavior of the propert by overriding
+//   the property virtual functions.  That, however, modifies user
+//   interface.
+//
+class UpperCaseProperty : public Property&lt;std::string&gt;  // changes property name
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  UpperCaseProperty(const std::string& s)   { 
+    value = toUpper(s); 
+  }</div>  virtual Property&lt;std::string&gt;& operator=(const std::string &s)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    value = toUpper(s);
+    return *this;
+  }</div>};</div>
+class Y
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+  UpperCaseProperty name = "jim";
+};</div>
+class Z
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+  Z()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    name.newSetter(
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">      [](const std::string& s) {        // normally you won't want to use console output - this is just for demo
+        std::cout &lt;&lt; "\n  setter converting property to uppercase";
+        return toUpper(s); 
+      }</div>    );
+    // this also works:
+    // name.setter(toUpper);
+
+    name.newGetter(
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">      [](const std::string& val) {      std::string s = val;
+      s[0] = tolower(s[0]);
+      // normally you won't want to use console output - this is just for demo
+      std::cout &lt;&lt; "\n  getter converting first character of property to lowercase";
+      return s;
+    }</div>    );
+  }</div>  Property&lt;std::string&gt; name;
+};</div>
+int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::cout &lt;&lt; "\n  Demonstrate C++ Properties class";
+  std::cout &lt;&lt; "\n ==================================";
+
+  X x;
+  x.name = "Jim";
+  x.show();
+  std::cout &lt;&lt; "\n  setting isMutable to pi:";
+  std::cout &lt;&lt; "\n --------------------------";
+  x.isMutable = x.pi;
+  x.show();
+  
+  //x.constName = "a new name";  // fails to compile - that's good
+
+  std::cout &lt;&lt; "\n  making a copy of x, called newX with new name:";
+  std::cout &lt;&lt; "\n ------------------------------------------------";
+  X newX(x);
+  newX.name = "joe";
+  newX.show();
+
+  std::cout &lt;&lt; "\n";
+  std::cout &lt;&lt; "\n  demonstrate overriding property \"getter\" function to return capitalized name string";
+  std::cout &lt;&lt; "\n -------------------------------------------------------------------------------------";
+  Y y;
+  std::cout &lt;&lt; "\n  y.name = " &lt;&lt; y.name;
+  std::cout &lt;&lt; "\n";
+
+  std::cout &lt;&lt; "\n  demonstrate providing custom getter and setter functions";
+  std::cout &lt;&lt; "\n ----------------------------------------------------------";
+  std::cout &lt;&lt; "\n";
+
+  Z z;
+  z.name = "fawcett";
+  std::string temp = z.name;
+  std::cout &lt;&lt; "\n  z.name = " &lt;&lt; temp;
+  temp = (z.name).getValue();
+  std::cout &lt;&lt; "\n  name property's internal store value is: " &lt;&lt; temp;
+  std::cout &lt;&lt; "\n";
+
+  std::cout &lt;&lt; "\n  making a copy of z, called newZ:";
+  std::cout &lt;&lt; "\n ----------------------------------";
+  Z newZ(z);
+  temp = newZ.name;
+  std::cout &lt;&lt; "\n  newZ.name = " &lt;&lt; temp;
+
+  std::cout &lt;&lt; "\n\n";
+}</div>#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

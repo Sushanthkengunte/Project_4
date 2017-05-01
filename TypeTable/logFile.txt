@@ -1,0 +1,22 @@
+
+                                      CodeAnalysis - Version 1.4
+    ==============================================================================================
+     Tue Apr  4 18:13:23 2017
+     Path: "C:\Users\susha\Desktop\Studies\Semester_2\Materials\OOD\Project3\Project3\TypeTable"
+     Args: *.h, *.cpp, /f, /r
+                                                                               
+                          Functions Exceeding Metric Limits and Public Data
+    ==============================================================================================
+                 file name        type                               name    line    size    cplx
+    -----------------------  ----------  ---------------------------------  ------  ------  ------
+
+              public data: TypeTable.h : 96 - class LineNO
+                int startLine ; 
+              public data: TypeTable.h : 97 - class LineNO
+                int endLine ; 
+              public data: TypeTable.h : 113 - class TypeTable
+                std :: vector < Tuple > value ( Key ) ; 
+
+
+    searched     3 dirs
+   processed     2 files

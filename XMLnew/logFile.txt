@@ -1,0 +1,20 @@
+
+                                      CodeAnalysis - Version 1.4
+    ==============================================================================================
+     Thu Mar  9 23:08:16 2017
+     Path: "C:\Users\susha\Desktop\Studies\Semester_2\Notes\OOD\TypeTable\XMLnew"
+     Args: *.h, *.cpp, /f, /r, /z, ../abc3.xml
+                                                                               
+                          Functions Exceeding Metric Limits and Public Data
+    ==============================================================================================
+                 file name        type                               name    line    size    cplx
+    -----------------------  ----------  ---------------------------------  ------  ------  ------
+             Tokenizer.cpp    function                               main     329      61       8
+             XmlWriter.cpp    function                               main     123      85       2
+
+              public data: XmlWriter.h : 60 - class XmlWriter
+                typedef std :: pair < std :: string , std :: string > attribElem ; 
+
+
+    searched    22 dirs
+   processed    16 files

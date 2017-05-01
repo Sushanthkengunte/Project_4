@@ -1,0 +1,170 @@
+<!-----------------------------------
+TypeTable.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\TypeTable\TypeTable.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "TypeTable.h.html">C:\Users\susha\Source\Repos\Project_4\TypeTable\TypeTable.h</a></li><li><a href = "ActionsAndRules.h.html">C:\Users\susha\Source\Repos\Project_4\Parser\ActionsAndRules.h</a></li><li><a href = "Utilities.h.html">C:\Users\susha\Source\Repos\Project_4\Utilities\Utilities.h</a></li><li><a href = "AbstrSynTree.h.html">C:\Users\susha\Source\Repos\Project_4\AbstractSyntaxTree\AbstrSynTree.h</a></li><li><a href = "FileSystem.h.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.h</a></li></ul></div><hr/><pre>/////////////////////////////////////////////////////////////////////
+// TypeTable.cpp - creating the TypeTable                          //
+// ver 1.0                                                         //
+//-----------------------------------------------------------------//
+// Language:    C++, Visual Studio 2015                            //
+// Platform:    Lenovo, Windows 10                                 //
+// Application: Project #2, CSE687 - Object Oriented Design, S2015 //
+// Author:		sushanth suresh SUID:987471535					   //
+//		       					                                   //
+/////////////////////////////////////////////////////////////////////
+#include "TypeTable.h"
+#include "../Parser/ActionsAndRules.h"
+namespace CodeAnalysis {
+	//--------------sets the type of the tuple----------------//
+   bool Tuple::setType(Type_name type_arg)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	{		type_of = type_arg;
+		return true;
+	}</div>   //---------sets the namespace of the tuple------------//
+	 bool Tuple::setNamespace(Namespace_name namespace_arg)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	{		namespace_of = namespace_arg;
+		return true;
+	}</div>//------------sets the file name of the tuple-----------//
+	 bool Tuple::setFile(File_name file_arg)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	{		file_of = file_arg;
+		return true;
+	}</div>	//-----returns the type of the tuple----------------//
+	 std::string Tuple::getType()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	{		return type_of;
+	}</div>	 //--------returns the namespace of the tuple-------//
+	 std::string Tuple::getNamespace()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	{		return namespace_of;
+	}</div>	//--------returns the file name of the tuple---------//
+	 std::string Tuple::getFileName()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	{		return file_of;
+	}</div>	 //-------constructor of TypeTable getting the AST from repository----------//
+	  TypeTable::TypeTable() :
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">		 ASTref_(Repository::getInstance()->AST()){		 std::function&lt;void()&gt; test = [] { int x; };  // This is here to test detection of lambdas.
+	 }</div>
+	 TypeTable::~TypeTable()
+	 {
+	 }
+	 //-------------returns all the keys of the type table------------------//
+	  Keys TypeTable::getKeys()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 std::vector&lt;std::string&gt; keys_;
+		 for (auto item : T_Table)
+		 {
+			 keys_.push_back(item.first);
+		 }
+		 return keys_;
+	 }</div>	  //---------inserts into the typeTable---------------------------//
+	  bool TypeTable::insert(Key k, std::vector&lt; Tuple&gt; t)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 if (T_Table.find(k) != T_Table.end())
+			 return false;
+		 T_Table[k] = t;
+		 return true;
+	 }</div>	  //-----------returns a value of a particular key in the TypeTable---------//
+	  std::vector&lt;Tuple&gt; TypeTable::value(Key key)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 if (T_Table.find(key) != T_Table.end())
+			 return T_Table[key];
+		 return std::vector&lt;Tuple&gt;{};
+	 }</div>	  //------------returns count of the entries inside the TypeTable------------//
+	  int TypeTable::count()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 return T_Table.size();
+	 }</div>	  //------------returns a referens to the TypeTable------------------------//
+	  std::unordered_map&lt;Key, std::vector&lt;Tuple&gt;&gt;& TypeTable::getTable()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 return T_Table;
+	 }</div>	  //------------populates the type table---------------------------//
+	  void TypeTable::doTableAnal()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 ASTNode* pRoot = ASTref_.root();
+		 DFS(pRoot);
+	 }</div>	  std::unordered_map&lt;std::string, std::vector&lt;LineNO&gt;&gt; TypeTable::getLineNoTable()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	  {		  return tyLine;
+	  }</div>	  //--------checks for the required types------------------------//
+	  bool TypeTable::doDisplay1(ASTNode* pNode)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 static std::string toDisplay[] = {
+			 "class", "struct", "enum","function"
+		 };
+		 for (std::string type : toDisplay)
+		 {
+			 if (pNode-&gt;type_ == "namespace" && pNode-&gt;name_ == correct_namespace)
+				 continue;
+			 if (pNode-&gt;type_ == type)
+				 return true;
+		 }
+	
+		 return false;
+	 }</div>	  //-----------get line Number-----//
+	  void TypeTable::append(LineNO lined,std::string pathName)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	  {		  std::vector&lt;LineNO&gt; temp;
+		  temp = tyLine[pathName];
+		  temp.push_back(lined);
+		  tyLine[pathName] = temp;
+	  }</div>	  //----------pushes into the type table if the type is a required one------------//
+	  void TypeTable::pushIntoMap(ASTNode * pNode)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		 if (doDisplay1(pNode))
+		 {
+			 if (pNode-&gt;type_ == "class" || pNode-&gt;type_ == "function") {
+				 LineNO a;
+				 a.startLine = pNode-&gt;startLineCount_;
+				 a.endLine = pNode-&gt;endLineCount_;
+				 if(pNode-&gt;startLineCount_ != pNode-&gt;endLineCount_ && pNode-&gt;startLineCount_+1 != pNode-&gt;endLineCount_)
+					 append(a, pNode-&gt;path_);
+			 }
+			 Tuple save;
+			 if (pNode-&gt;type_ == "function" && correct_namespace == "Global Namespace" && pNode-&gt;name_ != "main" && pType == "namespace"&& pNode-&gt;name_!= "void") {//pushing a global function
+				 save.setFile(pNode-&gt;path_);
+				 save.setType(pNode-&gt;type_);
+				 save.setNamespace(correct_namespace);
+				 std::vector&lt;Tuple&gt; entry = value(pNode-&gt;name_);
+				 entry.push_back(save);
+				 insert(pNode-&gt;name_, entry);
+			 }
+			 else if (pNode-&gt;type_ != "function")// pushing classes, structs and enum
+			 {
+				 save.setFile(pNode-&gt;path_);
+				 save.setType(pNode-&gt;type_);
+				 save.setNamespace(correct_namespace);
+				 std::vector&lt;Tuple&gt; entry = value(pNode-&gt;name_);
+				 entry.push_back(save);
+				 insert(pNode-&gt;name_, entry);
+			 }
+
+		 }
+	 }</div>	  //------------walks the AST in a DFS manner--------------//
+	 void TypeTable::DFS(ASTNode * pNode)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">	 {		/* currentName = pNode-&gt;path_;
+		 if (previousName != currentName) {
+			 previousName = currentName;
+			 tyLine[currentName] = a_Line;
+			 a_Line.clear();
+		 }*/
+		 
+		 if (pNode-&gt;type_ == "namespace")
+			 nameSpaceStack.push(pNode-&gt;name_); //stack to save the namespace
+		 else
+		 {
+			 pushIntoMap(pNode);
+		 }
+		 for (auto child : pNode-&gt;children_) {
+			 pType = pNode-&gt;type_;
+			 correct_namespace = nameSpaceStack.top();
+			 DFS(child);						// calling DFS to all the children of the node
+			 pType = pNode-&gt;type_;
+		 }
+		 if (pNode-&gt;type_ == "namespace")
+			 nameSpaceStack.pop();
+	 }</div>}
+#ifdef TYPE_TEST
+
+
+
+#include "../Display/Display.h"
+using namespace CodeAnalysis;
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">int main() {	TypeTable ta;
+	ta.doTableAnal();
+	Display d;
+	d.showTypeTable(ta.getTable());
+
+}</div>#endif // TYPE_TEST
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

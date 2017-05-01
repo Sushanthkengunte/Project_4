@@ -1,0 +1,84 @@
+<!-----------------------------------
+Utilities.h
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\XMLnew\Utilities\Utilities.h</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "Utilities.h.html">C:\Users\susha\Source\Repos\Project_4\Utilities\Utilities.h</a></li><li><a href = "FileSystem.cpp.html">C:\Users\susha\Source\Repos\Project_4\FileSystem\FileSystem.cpp</a></li><li><a href = "Test1.cpp.html">C:\Users\susha\Source\Repos\Project_4\TestFiles\Test1.cpp</a></li><li><a href = "Utilities.cpp.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\Utilities\Utilities.cpp</a></li></ul></div><hr/><pre>#ifndef UTILITIES_H
+#define UTILITIES_H
+///////////////////////////////////////////////////////////////////////
+// Utilities.h - small, generally useful, helper classes             //
+// ver 1.2                                                           //
+// Language:    C++, Visual Studio 2015                              //
+// Application: Most Projects, CSE687 - Object Oriented Design       //
+// Author:      Jim Fawcett, Syracuse University, CST 4-187          //
+//              jfawcett@twcny.rr.com                                //
+///////////////////////////////////////////////////////////////////////
+/*
+* Package Operations:
+* -------------------
+* This package provides classes StringHelper and Converter and a global
+* function putline().  This class will be extended continuously for 
+* awhile to provide convenience functions for general C++ applications.
+*
+* Build Process:
+* --------------
+* Required Files: Utilities.h, Utilities.cpp
+*
+* Build Command: devenv Utilities.sln /rebuild debug
+*
+* Maintenance History:
+* --------------------
+* ver 1.2 : 22 Feb 2015
+* - changed default underline char in Title(const std::string&, Char)
+* ver 1.1 : 06 Feb 2015
+* - fixed bug in split which turns a comma separated string into
+*   a vector of tokens.
+* - added comments
+* ver 1.0 : 05 Feb 2016
+* - first release
+*
+* Planned Additions and Changes:
+* ------------------------------
+* - none yet
+*/
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;sstream&gt;
+#include &lt;functional&gt;
+
+namespace Utilities
+{
+  class StringHelper
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {  public:
+    static std::vector&lt;std::string&gt; split(const std::string& src);
+    static void Title(const std::string& src, char underline = '=');
+    static void title(const std::string& src);
+  };</div>
+  void putline();
+
+  template &lt;typename T&gt;
+  class Converter
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {  public:
+    static std::string toString(const T& t);
+    static T toValue(const std::string& src);
+  };</div>
+  template &lt;typename T&gt;
+  std::string Converter&lt;T&gt;::toString(const T& t)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::ostringstream out;
+    out &lt;&lt; t;
+    return out.str();
+  }</div>
+  template&lt;typename T&gt;
+  T Converter&lt;T&gt;::toValue(const std::string& src)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">  {    std::istringstream in(src);
+    T t;
+    in &gt;&gt; t;
+    return t;
+  }</div>}
+#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

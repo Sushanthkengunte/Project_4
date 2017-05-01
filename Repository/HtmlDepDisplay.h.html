@@ -1,0 +1,92 @@
+<!-----------------------------------
+HtmlDepDisplay.h
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\HtmlDependencyDisplay\HtmlDepDisplay.h</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "NoSqlDb.h.html">C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.h</a></li><li><a href = "TypeTable.h.html">C:\Users\susha\Source\Repos\Project_4\TypeTable\TypeTable.h</a></li><li><a href = "ActionsAndRules.h.html">C:\Users\susha\Source\Repos\Project_4\Parser\ActionsAndRules.h</a></li><li><a href = "HtmlDepDisplay.cpp.html">C:\Users\susha\Source\Repos\Project_4\HtmlDependencyDisplay\HtmlDepDisplay.cpp</a></li></ul></div><hr/><pre>#pragma once
+/////////////////////////////////////////////////////////////////////
+//  HtnlDepDiplay.h - Displays the dependencies in internet explorer/
+//  ver 1.0                                                        //
+//                                                                 //
+//  Language:      Visual C++ 2008, SP1                            //
+//  Platform:      Lenovo , Windows 10       			           //
+//  Application:   CodeAnalysis - CIS 687 Project 3                //
+//  Author:        Sushanth Suresh SUID:987471535			       //
+/////////////////////////////////////////////////////////////////////
+/*
+Module Operations:
+==================
+It defines MakingDirectory class
+*MakingDirectory copies all the directories in a repository 
+and opens the index page which contains all the files inside the given 
+folder
+
+
+
+
+Public Interface:
+=================
+copyTheFile(std::string destination)					//copies all the files inside a specified directory
+computeStartLine(std::string forFile)					//gets the start Lines for a specific file
+computeEndLine(std::string forFile)						//gets the end tLines for a specific file
+displayIndexPage(std::string Repository)				//displays the index file in a repository
+
+
+Build Process:
+==============
+Required files
+-TypeTable.h
+-NosqlDb.h
+-FileSystem.h
+Build commands (either one)
+
+- devenv HtmlDepDisplay.sln
+
+
+Maintenance History:
+====================
+ver 1.0 : 07 March 17
+- first release
+*/
+
+#include&lt;vector&gt;
+#include&lt;stack&gt;
+#include "../NoSqlDb/NoSqlDb.h"
+#include "../TypeTable/TypeTable.h"
+using directorySet = std::vector&lt;std::string&gt;;
+
+
+class MakingDirectory
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+	MakingDirectory(NoSqlDb&lt;std::string&gt;& database, std::unordered_map&lt;std::string, std::vector&lt;CodeAnalysis::LineNO&gt;&gt;,std::string);
+	~MakingDirectory();
+	void copyTheFile(std::string destination);		//copies all the files inside a specified directory
+	void computeStartLine(std::string forFile);		//gets the start Lines for a specific file
+	void computeEndLine(std::string forFile);		//gets the end tLines for a specific file
+	void displayIndexPage(std::string Repository, LPCWSTR browser);	//displays the index file in a repository
+
+private:
+	directorySet filesToCopy;
+	NoSqlDb&lt;std::string&gt; db;
+	directorySet newFiles;
+	std::string replaceEscape(std::string s);
+	std::string getFileCon(std::string fName);
+	void createHTMLFile(std::string filename, std::string& contentsOfFile,std::string destination);
+	void addheaderDepen(NoSqlDb&lt;std::string&gt;& db);
+	std::string appendFileName(std::string oldFileName);
+	void createRepHtml();
+	std::string extractContent(std::string originalString);
+	std::string prologueHtml(std::string fName);
+	std::unordered_map&lt;std::string, std::vector&lt;CodeAnalysis::LineNO&gt;&gt; localLineNO;
+	std::unordered_map&lt;std::string, std::string&gt; allFiles;
+	int codeLineNo;
+	std::vector&lt;int&gt; startLine;
+	std::vector&lt;int&gt; endLine;
+	std::string repositoryLocation;
+};</div>
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

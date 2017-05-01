@@ -1,0 +1,269 @@
+<!-----------------------------------
+NoSqlDb.h
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.h</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "CppProperties.h.html">C:\Users\susha\Source\Repos\Project_4\CppProperties\CppProperties.h</a></li><li><a href = "GrammarHelpers.cpp.html">C:\Users\susha\Source\Repos\Project_4\GrammarHelpers\GrammarHelpers.cpp</a></li><li><a href = "XmlElement.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlElement\XmlElement.h</a></li><li><a href = "XmlDocument.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlDocument\XmlDocument.h</a></li><li><a href = "Test1.cpp.html">C:\Users\susha\Source\Repos\Project_4\TestFiles\Test1.cpp</a></li><li><a href = "NoSqlDb.cpp.html">C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.cpp</a></li></ul></div><hr/><pre>#pragma once
+/////////////////////////////////////////////////////////////////////
+//  NoSqlDb.h - Key-value pair in Database                         //
+//  ver 1.0                                                        //
+//                                                                 //
+//  Language:      Visual C++ 2008, SP1                            //
+//  Platform:      Lenovo , Windows 10      			           //
+//  Application:   NoSql Database - CIS 687 Project 1              //
+//  Author:        Sushanth Suresh SUID:987471535			       //
+/////////////////////////////////////////////////////////////////////
+/*
+Module Operations:
+==================
+It defines two classes No SQL database class and an Element class
+*No SQL Database works as a container class implementing an unordereded
+map on Heap memory with an instance of Element class as the value with
+a unique Key.
+* No SQL class defines operations such as editiing, deleting, 
+persisting of values into an XML file and extracting the values from 
+XML.
+These two classes use Template functionalities
+
+Public Interface:
+=================
+
+getChildren()             // Member function that gives the the dependent keys
+editData()                // Overloaded member function that edit values
+toXml()                   //Member function that persists the values into an XML
+Keys()                    // Member function that gives the keys in the Database
+save()                    //Member function saves elememt in the database
+value()                   //Member function Gets the value
+
+Element Class contains
+
+name							// Member variables of type Property
+childrenKeys					//Member variable Vector of strings holding dependent Keys
+
+
+
+Build Process:
+==============
+Required files
+- Cppproperties.h, Convert.h,
+- XmlDocument.h, XmlElement.h,
+
+
+
+Build commands (either one)
+
+- devenv Project1_Sushanth.sln
+
+
+Maintenance History:
+====================
+ver 2.0 : used only creation and edition
+ver 1.0 : 07 Feb 17
+- first release
+*/
+
+#include &lt;unordered_map&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+#include &lt;vector&gt;
+#include &lt;iomanip&gt;
+#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include "../CppProperties/CppProperties.h"
+#include "../XMLnew/XmlDocument/XmlDocument.h"
+#include "../XMLnew/XmlElement/XmlElement.h"
+#include &lt;fstream&gt;
+#include&lt;string&gt;
+/////////////////////////////////////////////////////////////////////
+// Element class represents a data record in our NoSql database
+// - in our NoSql database that is just the value in a key/value pair
+// - it needs to store child data, something for you to implement
+//
+template&lt;typename Data&gt;
+class Element
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+	
+  using Name = std::string;
+  using Childrens = std::vector&lt;std::string&gt;;  
+  Property&lt;Name&gt; name;            // metadata
+  Property&lt;Childrens&gt; children;    //metadata  
+  std::string show();
+};</div>
+template&lt;typename Data&gt;
+std::string Element&lt;Data&gt;::show()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::ostringstream out;
+	out &lt;&lt; "\n    " &lt;&lt; std::setw(8) &lt;&lt; "name" &lt;&lt; " : " &lt;&lt; name;
+	Childrens children_ = static_cast&lt;Childrens&gt;(children);
+	if (children_.size() &gt; 0)
+	{
+		out &lt;&lt; "\n    " &lt;&lt; std::setw(8) &lt;&lt; "children" &lt;&lt; " : ";
+		for (size_t i = 0; i &lt; children_.size(); ++i)
+		{
+			out &lt;&lt; children_[i];
+			if (i &lt; children_.size())
+				out &lt;&lt; ", ";
+		}
+	}
+	out &lt;&lt; "\n";
+	return out.str();
+}</div>
+
+
+/////////////////////////////////////////////////////////////////////
+// NoSqlDb class is a key/value pair in-memory database
+// - stores and retrieves elements
+// - you will need to add query 
+//   That should probably be another class that uses NoSqlDb
+//
+using namespace XmlProcessing;
+using SPtr = std::shared_ptr&lt;AbstractXmlElement&gt;;
+template&lt;typename Data&gt;
+class NoSqlDb
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{public:
+  using Key = std::string;
+  using ToBeModified = std::string;
+  using Keys = std::vector&lt;Key&gt;;
+  using xml = std::string;
+  using listOf = std::vector&lt;xml&gt;;
+
+  std::vector&lt;std::string&gt; getChildren(Key key);
+  void editData(Key, std::string, std::string);
+  std::string toXml();
+
+  Keys keys();
+  bool save(Key key, Element&lt;Data&gt; elem);
+  Element&lt;Data&gt; value(Key key);
+  void show();
+  size_t count();
+private:
+  using Item = std::pair&lt;Key, Element&lt;Data&gt;&gt;;
+  std::unordered_map&lt;Key,Element&lt;Data&gt;&gt; store; 
+};</div>template&lt;typename Data&gt;
+inline void NoSqlDb&lt;Data&gt;::show()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{
+	Keys temp = keys();
+	Element&lt;Data&gt; elemTem;
+	for (auto each : temp) {
+		elemTem = value(each);
+		std::cout &lt;&lt; elemTem.show();
+	}
+}</div>
+//---------------Puts the values of the database into the XML-----------------------------
+template&lt;typename Data&gt;
+std::string NoSqlDb&lt;Data&gt;::toXml()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	xml theDocument;
+	XmlDocument doc;
+	try	{
+	listOf chil;
+	SPtr pRoot = makeTaggedElement("Database");
+	doc.docElement() = pRoot;
+	for (xml each : keys()) {
+		Element&lt;Data&gt; x = value(each);
+		SPtr dElement = makeTaggedElement("record");
+		pRoot-&gt;addChild(dElement);		
+		SPtr pKeyElement = makeTaggedElement("keyofValues");//Keys
+		dElement-&gt;addChild(pKeyElement);
+		SPtr pKeyText = makeTextElement(x.name);
+		pKeyElement-&gt;addChild(pKeyText);	
+		SPtr pNameElement = makeTaggedElement("name");	//Name
+		dElement-&gt;addChild(pNameElement);
+		SPtr pNameText = makeTextElement(x.name);
+		pNameElement-&gt;addChild(pNameText);		
+		chil = getChildren(x.name);//children
+		int count = chil.size();
+		int i = 0;
+		SPtr pChildElement = makeTaggedElement("children");
+		dElement-&gt;addChild(pChildElement);
+		while (i != count) {
+			xml child = chil[i];
+			SPtr pchildtag = makeTaggedElement("child");
+			pChildElement-&gt;addChild(pchildtag);
+			SPtr pchildText = makeTextElement(child);
+			pchildtag-&gt;addChild(pchildText);
+			i++;
+		}
+	}
+		theDocument = doc.toString();
+		std::ofstream input_file("../database.xml");
+		input_file &lt;&lt; theDocument;
+		input_file.close();
+	}
+	catch (const std::exception& e){std::cout &lt;&lt; "exception:" &lt;&lt; e.what();
+	}	
+	return theDocument;
+}</div>
+
+
+//----------------------------- Editing name and childrens of the element----------
+template&lt;typename Data&gt;
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">void NoSqlDb<Data>::editData(Key key,std::string e, std::string dat) {	bool flag = false;
+
+	Element&lt;Data&gt; elem = value(key);
+	if (e == "name") {
+		elem.name = dat;
+		flag = true;
+	}
+	else if (e == "children") {
+		Element&lt;Data&gt; elem = value(key);
+		std::vector&lt;std::string&gt; childList = getChildren(key);
+		std::vector&lt;std::string&gt;::iterator it;
+		if ((it = std::find(childList.begin(), childList.end(), dat)) != childList.end()) {
+
+		}
+		else
+		{
+				childList.push_back(dat);
+				elem.children = childList;
+				store[key] = elem;		
+		}
+
+	}
+	else {
+		std::cout &lt;&lt; "provide parameter";
+	}
+	
+}</div>
+
+//-----------Returns all the Keys in the database-----------------
+template&lt;typename Data&gt;
+typename NoSqlDb&lt;Data&gt;::Keys NoSqlDb&lt;Data&gt;::keys()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  Keys keys;
+  for (Item item : store)
+  {
+     keys.push_back(item.first);
+  }
+  return keys;
+}</div>//-----------Adds an Element into the database---------------------
+template&lt;typename Data&gt;
+bool NoSqlDb&lt;Data&gt;::save(Key key, Element&lt;Data&gt; elem)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	//time_t createdtime = time(&createdtime);
+	//elem.timeDate = createdtime;
+  if(store.find(key) != store.end())
+    return false;
+  store[key] = elem;
+  return true;
+}</div>//--------------------Gets the Element using its associated Key-----------
+template&lt;typename Data&gt;
+Element&lt;Data&gt; NoSqlDb&lt;Data&gt;::value(Key key)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if (store.find(key) != store.end())
+    return store[key];
+  return Element&lt;Data&gt;();
+}</div>
+//------------------Counts the number of keys-----------------------
+template&lt;typename Data&gt;
+size_t NoSqlDb&lt;Data&gt;::count()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  return store.size();
+}</div>
+
+// --------------------------get the children list------------------------------------
+template&lt;typename Data&gt;
+std::vector&lt;std::string&gt; NoSqlDb&lt;Data&gt;::getChildren(Key key)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	Element&lt;Data&gt; temp = value(key);
+	std::vector&lt;std::string&gt; childList = temp.children;
+	return childList;</div>}
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

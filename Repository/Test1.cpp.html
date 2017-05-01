@@ -1,0 +1,36 @@
+<!-----------------------------------
+Test1.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\TestFiles\Test1.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "Test1.h.html">C:\Users\susha\Source\Repos\Project_4\TestFiles\Test1.h</a></li><li><a href = "SemiExp.h.html">C:\Users\susha\Source\Repos\Project_4\SemiExp\SemiExp.h</a></li></ul></div><hr/><pre>// Test1.cpp
+
+#include "Test1.h"
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+
+Test::Test1::Test1() {}
+
+Test::Test1::~Test1() {}
+
+template&lt;typename T&gt;
+std::string toString(const T& t)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::ostringstream out;
+  out &lt;&lt; t;
+  return out.str();
+}</div>
+using namespace Scanner;
+
+#ifdef TEST_TEST1
+
+int main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  SemiExp se1;
+  std::cout &lt;&lt; "\n  " &lt;&lt; toString&lt;size_t&gt;(se1.length());
+  std::cout &lt;&lt; "\n\n";
+}</div>#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

@@ -1,0 +1,162 @@
+<!-----------------------------------
+DependencyAnalysis.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\DependencyAnalysis\DependencyAnalysis.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "NoSqlDb.h.html">C:\Users\susha\Source\Repos\Project_4\NoSqlDb\NoSqlDb.h</a></li><li><a href = "DependencyAnalysis.h.html">C:\Users\susha\Source\Repos\Project_4\DependencyAnalysis\DependencyAnalysis.h</a></li><li><a href = "TypeTable.h.html">C:\Users\susha\Source\Repos\Project_4\TypeTable\TypeTable.h</a></li><li><a href = "XmlDocument.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlDocument\XmlDocument.h</a></li><li><a href = "Test1.cpp.html">C:\Users\susha\Source\Repos\Project_4\TestFiles\Test1.cpp</a></li></ul></div><hr/><pre>/////////////////////////////////////////////////////////////////////
+// DependencyAnalysis.cpp - Performs dependency analysis           //
+// ver 1.0                                                         //
+//-----------------------------------------------------------------//
+// Language:    C++, Visual Studio 2015                            //
+// Platform:    Lenovo, Windows 10                                 //
+// Application: Project #2, CSE687 - Object Oriented Design, S2015 //
+// Author:		sushanth suresh SUID:987471535					   //
+//		       					                                   //
+/////////////////////////////////////////////////////////////////////
+
+
+#include "DependencyAnalysis.h"
+#include&lt;iostream&gt;
+//---------returns a reference to the database-------//
+NoSqlDb&lt;std::string&gt;& DependencyAnalysis::getDatabase()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	return db;
+}</div>//------------returns a reference to the type table-----------------//
+std::unordered_map&lt;std::string, std::vector&lt;CodeAnalysis::Tuple&gt;&gt;& DependencyAnalysis::getTheTable()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	return Type_Final;
+}</div>
+void DependencyAnalysis::persistIntoXml(std::string filePa)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::string theDocument;
+	XmlDocument doc;
+	try {
+		std::vector&lt;std::string&gt; chil;
+		SPtr pRoot = makeTaggedElement("Database");
+		doc.docElement() = pRoot;
+		for (std::string each : db.keys()) {
+			Element&lt;std::string&gt; x = db.value(each);
+			SPtr dElement = makeTaggedElement("record");
+			pRoot-&gt;addChild(dElement);
+			SPtr pKeyElement = makeTaggedElement("keyofValues");//Keys
+			dElement-&gt;addChild(pKeyElement);
+			SPtr pKeyText = makeTextElement(x.name);
+			pKeyElement-&gt;addChild(pKeyText);
+			SPtr pNameElement = makeTaggedElement("name");	//Name
+			dElement-&gt;addChild(pNameElement);
+			SPtr pNameText = makeTextElement(x.name);
+			pNameElement-&gt;addChild(pNameText);
+			chil = db.getChildren(x.name);//children
+			int count = chil.size();
+			int i = 0;
+			SPtr pChildElement = makeTaggedElement("children");
+			dElement-&gt;addChild(pChildElement);
+			while (i != count) {
+				std::string child = chil[i];
+				SPtr pchildtag = makeTaggedElement("child");
+				pChildElement-&gt;addChild(pchildtag);
+				SPtr pchildText = makeTextElement(child);
+				pchildtag-&gt;addChild(pchildText);
+				i++;
+			}
+		}
+		theDocument = doc.toString();
+		std::ofstream input_file(filePa);
+		input_file &lt;&lt; theDocument;
+		input_file.close();
+	}
+	catch (const std::exception& e) {
+		std::cout &lt;&lt; "exception:" &lt;&lt; e.what();
+	}
+}</div>
+std::unordered_map&lt;std::string, std::vector&lt;CodeAnalysis::LineNO&gt;&gt; DependencyAnalysis::getTypeLine()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{
+	return row.getLineNoTable();
+}</div>
+
+
+DependencyAnalysis::~DependencyAnalysis()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{
+}</div>//--------performs the dependency analysis-------------------//
+ void DependencyAnalysis::doDependAnal()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	 try
+	 {
+		 std::vector&lt;std::string&gt; all_filepaths = allFiles();	//gets all the file names
+		 std::vector&lt;std::string&gt; depFile;
+		 for (auto eachFile : all_filepaths) { //for each files in the directory
+			 std::ifstream in(eachFile);
+			 toker.attach(&in);
+			 do {
+				 depFile = pushFileTokens();	//check if any of the token is in the file is also present in the Type Table 
+												//and return the files which corresponds to the tokens 
+				 validate(depFile, eachFile);	//adds the dependent files as children to the current file
+
+			 } while (in.good());
+			 //Testing
+			 in.close();
+
+		 }
+	 }
+	 catch (const std::exception& e)
+	 {
+		 std::cout&lt;&lt;e.what();
+	 }
+
+
+}</div> //--------Adds the dependent files to as children to the current file--------------------//
+void DependencyAnalysis::validate(std::vector&lt;std::string&gt;& depFile, std::string curFile)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	for (auto eachFile : depFile) {
+		Element&lt;std::string&gt; temp;
+		temp.name = curFile;
+		db.save(curFile, temp);
+
+		if (eachFile != curFile)
+		{
+			db.editData(curFile, "children", eachFile);//add to the db as a child
+		}
+	}
+
+
+}</div>//---------gets all the file names-------------//
+std::vector&lt;std::string&gt; DependencyAnalysis::allFiles()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	
+		std::vector&lt;std::string&gt; tempKeys;
+		for (auto item : file_paths)
+			for (auto x : item.second)
+				tempKeys.push_back(x);
+		return tempKeys;
+	
+
+}</div>//------------checks if the token is present in the type table------------------//
+std::vector&lt;std::string&gt; DependencyAnalysis::pushFileTokens()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{	std::vector&lt;std::string&gt; depFiles;
+	try
+	{
+		std::string tok = toker.getTok();
+		//stores all the dependent files
+		if (tok == "\n") { return depFiles; }
+		std::vector&lt;CodeAnalysis::Tuple&gt; depTuple;
+		if (Type_Final.find(tok) != Type_Final.end())
+			depTuple = Type_Final[tok];// if you find tok in typeTable key return the value
+		for (auto eachItem : depTuple)
+			depFiles.push_back(eachItem.getFileName());
+		
+	}
+	catch (const std::exception& e)
+	{
+		std::cout &lt;&lt; e.what();
+	}
+	return depFiles;
+}</div>#ifdef TEST_DEPENDENCY_ANALYSIS
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">int main() {	std::unordered_map&lt;std::string, std::vector&lt;std::string&gt;&gt; file;// assign the fies needed to compute the analysis
+	DependencyAnalysis depen(file);
+	depen.doDependAnal();
+	Display d;
+	d.showDependencyTable(depen.getDatabase());
+
+}</div>
+#endif // TEST_DEPENDENCY_ANALYSIS
+
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>

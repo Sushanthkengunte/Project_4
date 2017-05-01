@@ -1,0 +1,16 @@
+
+                                      CodeAnalysis - Version 1.4
+    ==============================================================================================
+     Tue Mar  7 19:23:55 2017
+     Path: "C:\Users\susha\Desktop\Studies\Semester_2\Materials\OOD\Project2\TypeTable\XMLnew\Utilities"
+     Args: *.h, *.cpp, /f, /r
+                                                                               
+                          Functions Exceeding Metric Limits and Public Data
+    ==============================================================================================
+                 file name        type                               name    line    size    cplx
+    -----------------------  ----------  ---------------------------------  ------  ------  ------
+
+
+
+    searched     2 dirs
+   processed     2 files

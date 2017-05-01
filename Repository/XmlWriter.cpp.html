@@ -1,0 +1,199 @@
+<!-----------------------------------
+XmlWriter.cpp
+ Help file for Project #3 Published by Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017
+
+Note:
+ - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+- Be careful that you don't replace genuine markup characters with escape 
+sequences, e.g., everything outside of the <pre>...</pre> section. 
+---------------------------------------->
+<html><head><link rel="stylesheet" href="../style.css"></head><body><h3>C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlWriter\XmlWriter.cpp</h3><hr/><div class = "indent"><h4>dependencies:</h4><ul><li><a href = "XmlWriter.h.html">C:\Users\susha\Source\Repos\Project_4\XMLnew\XmlWriter\XmlWriter.h</a></li><li><a href = "ScopeStack.cpp.html">C:\Users\susha\Source\Repos\Project_4\ScopeStack\ScopeStack.cpp</a></li></ul></div><hr/><pre>///////////////////////////////////////////////////////////////////////
+// XmlWriter.cpp - Create XML Strings                                //
+// ver 4                                                             //
+// Language:    Visual C++, Visual Studio 2010, SP1                  //
+// platform:    Toshiba Portege R705, Windows 7, Home Premium, SP1   //
+// Application: Summer 2011 Projects                                 //
+// Author:      Jim Fawcett, Syracuse University, CST 4-187          //
+//              www.lcs.syr.edu/faculty/fawcett, (315) 443-3948      //
+///////////////////////////////////////////////////////////////////////
+
+#include "XmlWriter.h"
+
+//----&lt; indent helper function &gt;-------------------------------------
+
+void XmlWriter::indentIt()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{    _xml += '\n';
+    for(size_t i=0; i&lt;_level; ++i)
+      _xml += "  ";
+}</div>//----&lt; add opening tag &gt;--------------------------------------------
+
+XmlWriter& XmlWriter::start(const std::string& tag)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if(_indented)
+  {
+    indentIt();
+    ++_level;
+  }
+  _tag = tag;
+  _xml += '&lt;' + tag + '&gt;';
+  tagStack.push(tag);
+  return *this;
+}</div>//----&lt; add attribute to opening tag &gt;-------------------------------
+//
+//  Must be applied before adding body or closing
+//
+XmlWriter& XmlWriter::addAttribute(const std::string& name, const std::string& value)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  position = _xml.find_last_of('&gt;');
+  if(_xml[--position] == '/')
+  {
+    _xml.insert(position,'"' + value + '"' + ' ');
+    _xml.insert(position,name + '=');
+  }
+  else
+  {
+    _xml.insert(++position,'"' + value + '"');
+    _xml.insert(position,' ' + name + '=');
+  }
+  return *this;
+}</div>//----&lt; add body string to opening tag &gt;-----------------------------
+
+XmlWriter& XmlWriter::addBody(const std::string& body)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if(_indented)
+  {
+    indentIt();
+  }
+  _xml += body;
+  return *this;
+}</div>//----&lt; add closing tag &gt;--------------------------------------------
+
+XmlWriter& XmlWriter::end()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if(_indented)
+  {
+    --_level;
+    indentIt();
+  }
+  _tag = tagStack.top();
+  tagStack.pop();
+  _xml += "&lt;/" + _tag + '&gt;';
+  return *this;
+}</div>//----&lt; construct element from tag and body &gt;------------------------
+
+XmlWriter& XmlWriter::element(const std::string& tag, const std::string& body)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  start(tag);
+  addBody(body);
+  end();
+  return *this;
+}</div>//----&lt; add XML declaration &gt;----------------------------------------
+//
+//  May be invoked once anytime during construction
+//
+XmlWriter& XmlWriter::addDeclaration()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  _xml = "&lt;? xml version=\"1.0\" ?&gt;" + _xml;
+  return *this;
+}</div>//----&lt; add XML comment ---------------------------------------------
+//
+//  Will be placed at the end of XML constructed so far
+//
+XmlWriter& XmlWriter::addComment(const std::string& cmt)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  if(_indented)
+  {
+    indentIt();
+  }
+  _xml += "&lt;!-- " + cmt + " --&gt;";
+  return *this;
+}</div>//----&lt; test stub &gt;--------------------------------------------------
+
+#ifdef TEST_XMLWRITER
+
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+void mOut(const std::string& message)
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  std::cout &lt;&lt; "\n  " &lt;&lt; message.c_str();
+}</div>
+void main()
+<div class = "externalPart"><span> + </span></div><div class = "internalPart">{  mOut("Testing XmlWriter");
+  mOut("=================");
+
+  mOut("creating XML writer object:"); 
+  XmlWriter wtr;
+  wtr.indent();
+
+  mOut("adding XML declaration:");
+  wtr.addDeclaration();
+  mOut(wtr.xml());
+
+  mOut("adding comment:");
+  wtr.addComment("top level comment");
+  mOut(wtr.xml());
+
+  mOut("adding root element:");
+  wtr.start("root");
+  mOut(wtr.xml());
+
+  mOut("adding attributes:");
+  wtr.addAttribute("att1","val1");
+  wtr.addAttribute("att2","val2");
+  mOut(wtr.xml());
+
+  mOut("adding comment:");
+  wtr.addComment("comment in root's body");
+  mOut(wtr.xml());
+
+  mOut("Creating self-closing element:");
+  wtr.start("child1");
+  mOut(wtr.xml());
+
+  mOut("adding attribute:");
+  wtr.addAttribute("c1name","c1value");
+  mOut(wtr.xml());
+  
+  mOut("adding child to root's body:");
+  wtr.end();
+  mOut(wtr.xml());
+
+  mOut("adding another comment");
+  wtr.addComment("another root's body comment");
+  mOut(wtr.xml());
+
+  wtr.start("child2");
+  wtr.start("grandchild21");
+  wtr.end();
+  wtr.end();
+
+  mOut("adding string to root's body:"); 
+  wtr.addBody("root's body");
+  mOut(wtr.xml());
+
+  mOut("closing root element:\n");
+  wtr.end();
+
+  std::cout &lt;&lt; "\n\n  writing completed XML";
+  std::cout &lt;&lt; "\n -----------------------\n";
+  std::cout &lt;&lt; wtr.xml();
+
+  mOut("\n  writing XML to file \"Test.xml\":");
+  std::ofstream out("test.xml");
+  if(out.good())
+  {
+    out &lt;&lt; wtr.xml().c_str();
+    out.close();
+  }
+  std::cout &lt;&lt; std::endl;
+
+  mOut("creating composite element:");
+  XmlWriter cwtr, bcwtr1, bcwtr2;
+  std::string temp = 
+    bcwtr1.element("child1","child1's body")
+    .element("child2","child2's body").xml();
+  std::cout &lt;&lt; "\n  " &lt;&lt; bcwtr1.xml();
+  bcwtr1.clear();
+
+  std::cout &lt;&lt; "\n  " &lt;&lt;
+    cwtr.start("parent")
+    .addBody(bcwtr1.element("child1","child1's body").xml())
+    .addBody(bcwtr2.element("child2","body2").xml())
+    .end().xml();
+  std::cout &lt;&lt; "\n\n";
+}</div>#endif
+</pre><script src=" https://code.jquery.com/jquery-1.11.3.min.js"></script><script src="../project3.js"></script></body></html>
