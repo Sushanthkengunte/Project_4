@@ -920,6 +920,10 @@ void executefuncionality2(CodeAnalysisExecutive& exec) {
 	exec.stopLogger();
 	std::cout << "\n  Code Analysis completed";
 }
+#ifdef Executive_File
+
+
+
 int main(int argc, char* argv[])
 {
   using namespace CodeAnalysis;
@@ -969,3 +973,4 @@ int main(int argc, char* argv[])
   }
   return 0;
 }
+#endif // Executive_File

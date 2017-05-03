@@ -49,7 +49,38 @@ void StringHelper::title(std::string src, std::ostringstream& out)
   out << "\n  " << src;
   out << "\n " << std::string(src.size() + 2, '-');
 }
+//----< remove leading and trailing whitespace >---------------------
 
+std::string StringHelper::trim(const std::string& src)
+{
+  std::locale loc;
+  std::string trimmed = src;
+  size_t first = 0;
+  while (true)
+  {
+    if (std::isspace(trimmed[first], loc))
+      ++first;
+    else
+      break;
+  }
+  size_t last = trimmed.size() - 1;
+  while (true)
+  {
+    if (std::isspace(trimmed[last], loc) && last > 0)
+      --last;
+    else
+      break;
+
+  }
+  return trimmed.substr(first, last-first+1);
+}
+//----< wrap string in lines >---------------------------------------
+
+std::string StringHelper::addHeaderAndFooterLines(const std::string& src)
+{
+  std::string line = "------------------------------";
+  return line + "\n" + src + "\n" + line + "\n";
+}
 void StringHelper::sTitle(std::string src, size_t offset, size_t width, std::ostream& out, char underline)
 {
   if (width < src.size())
@@ -104,7 +135,7 @@ void Utilities::putline()
 
 using Utils = Utilities::StringHelper;
 
-int main(){
+int main1(){
   Utils::Title("Testing Utilities Package");
   putline();
 

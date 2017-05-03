@@ -19,15 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{936434E9-93F0-467B-BBB7-D682483244BA}</ProjectGuid>
+    <ProjectGuid>{D17F3AC7-8BC8-421B-8CDB-3AEBE7E1C3B6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Executive</RootNamespace>
+    <RootNamespace>Communication_Channel_Server</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>CodeAnalyzer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -147,78 +146,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\AbstractSyntaxTree\AbstrSynTree.cpp" />
-    <ClCompile Include="..\FileMgr\FileMgr.cpp" />
-    <ClCompile Include="..\FileSystem\FileSystem.cpp" />
-    <ClCompile Include="..\GrammarHelpers\GrammarHelpers.cpp" />
-    <ClCompile Include="..\HtmlDependencyDisplay\HtmlDepDisplay.cpp" />
-    <ClCompile Include="..\Logger\Logger.cpp" />
-    <ClCompile Include="..\Parser\ActionsAndRules.cpp" />
-    <ClCompile Include="..\Parser\ConfigureParser.cpp" />
-    <ClCompile Include="..\Parser\Parser.cpp" />
-    <ClCompile Include="..\ScopeStack\ScopeStack.cpp" />
-    <ClCompile Include="..\SemiExp\SemiExp.cpp" />
-    <ClCompile Include="..\Tokenizer\Tokenizer.cpp" />
-    <ClCompile Include="..\Utilities\Utilities.cpp" />
-    <ClCompile Include="Executive.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\AbstractSyntaxTree\AbstrSynTree.h" />
-    <ClInclude Include="..\FileMgr\FileMgr.h" />
-    <ClInclude Include="..\FileMgr\IFileMgr.h" />
-    <ClInclude Include="..\FileSystem\FileSystem.h" />
-    <ClInclude Include="..\GrammarHelpers\GrammarHelpers.h" />
-    <ClInclude Include="..\HtmlDependencyDisplay\HtmlDepDisplay.h" />
     <ClInclude Include="..\Logger\Logger.h" />
-    <ClInclude Include="..\NoSqlDb\NoSqlDb.h" />
-    <ClInclude Include="..\Parser\ActionsAndRules.h" />
-    <ClInclude Include="..\Parser\ConfigureParser.h" />
-    <ClInclude Include="..\Parser\Parser.h" />
-    <ClInclude Include="..\ScopeStack\ScopeStack.h" />
-    <ClInclude Include="..\SemiExp\itokcollection.h" />
-    <ClInclude Include="..\SemiExp\SemiExp.h" />
-    <ClInclude Include="..\Tokenizer\Tokenizer.h" />
-    <ClInclude Include="..\TypeTable\TypeTable.h" />
-    <ClInclude Include="..\Utilities\Utilities.h" />
-    <ClInclude Include="..\XMLnew\XmlDocument\XmlDocument.h" />
-    <ClInclude Include="..\XMLnew\XmlElementParts\xmlElementParts.h" />
-    <ClInclude Include="..\XMLnew\XmlElement\XmlElement.h" />
-    <ClInclude Include="..\XMLnew\XmlParser\XmlParser.h" />
-    <ClInclude Include="Executive.h" />
+    <ClInclude Include="Communication_Channel_Server.h" />
+    <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Sockets.h" />
+    <ClInclude Include="WindowsHelpers.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AbstractSyntaxTree\AbstractSyntaxTree.vcxproj">
-      <Project>{53c7c53b-4d2f-4e71-9af3-0b77dd0034b3}</Project>
+    <ClCompile Include="..\Logger\Logger.cpp" />
+    <ClCompile Include="Communication_Channel_Server.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Sockets.cpp" />
+    <ClCompile Include="WindowsHelpers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Analyzer\Executive.vcxproj">
+      <Project>{936434e9-93f0-467b-bbb7-d682483244ba}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\DependencyAnalysis\DependencyAnalysis.vcxproj">
-      <Project>{5e4ab865-1690-4237-8afd-1203cf4e4df1}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\FileMgr\FileMgr.vcxproj">
-      <Project>{ddee27ff-855e-4d10-ad7b-79cb8966ef13}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\FileSystem\FileSystem.vcxproj">
-      <Project>{04cb7a5f-7472-4f19-9ea9-00b80063658c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\HtmlDependencyDisplay\HtmlDependencyDisplay.vcxproj">
-      <Project>{44953934-0a7d-4e4b-87f9-819ccf2a3934}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Logger\Logger.vcxproj">
-      <Project>{66d2c764-9da8-4505-b869-8e84e8968f7c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\NoSqlDb\NoSqlDb.vcxproj">
-      <Project>{0258661b-f975-4061-9aa6-5e201397c91d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Parser\Parser.vcxproj">
-      <Project>{77be9964-7862-4d05-aff0-b42718aae386}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\TypeTable\TypeTable.vcxproj">
-      <Project>{731e1a9d-8311-4cb6-8651-a41b600bc082}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.vcxproj">
-      <Project>{462b43b2-8b13-4178-bf2a-903f76f1985c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\XMLnew\XmlDocument\XmlDocument.vcxproj">
-      <Project>{0a82ecdc-7520-453a-8f2c-d813feee7537}</Project>
+    <ProjectReference Include="..\HttpMessage\HttpMessage.vcxproj">
+      <Project>{3145a0f7-ceed-4551-a9f6-74aa9189baad}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

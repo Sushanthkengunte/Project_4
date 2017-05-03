@@ -1,10 +1,9 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 ///////////////////////////////////////////////////////////////////////
-// Utilities.h - small, generally useful, helper classes             //
-// ver 1.4                                                           //
+// Utilities.h - small, generally usefule, helper classes            //
+// ver 1.1                                                           //
 // Language:    C++, Visual Studio 2015                              //
-// Platform:    Dell XPS 8900, Windows 10                            //
 // Application: Most Projects, CSE687 - Object Oriented Design       //
 // Author:      Jim Fawcett, Syracuse University, CST 4-187          //
 //              jfawcett@twcny.rr.com                                //
@@ -24,14 +23,6 @@
 *
 * Maintenance History:
 * --------------------
-* ver 1.4 : 26 Feb 2017
-* - changed StringHelper::split to use isspace from <locale> instead of <cctype>
-* ver 1.3 : 12 Aug 2016
-* - added overloads of title functions for std::ostringstreams
-* ver 1.2 : 10 Aug 2016
-* - added new function StringHelper::sTitle(...)
-* - changed the way string arguments are passed to each of the
-*   title functions
 * ver 1.1 : 06 Feb 2015
 * - fixed bug in split which turns a comma separated string into
 *   a vector of tokens.
@@ -45,37 +36,55 @@
 */
 #include <string>
 #include <vector>
-#include<iostream>
+#include <iostream>
 #include <sstream>
 #include <functional>
 
 namespace Utilities
 {
-  class test
-  {
-  public:
-    std::vector<std::string> publicVector;
-  };
+  ///////////////////////////////////////////////////////////////////
+  // Utilities for std::string
+  // - split accepts comma separated list of items and returns
+  //   std::vector containing each item
+  // - Title writes src string to console with underline of '=' chars
+  // - title writes src string to console with underline of '-' chars
 
   class StringHelper
   {
   public:
     static std::vector<std::string> split(const std::string& src);
-    static void Title(std::string src, std::ostream&  out = std::cout);
-    static void Title(std::string src, std::ostringstream& out);
-    static void title(std::string src, std::ostream& out = std::cout);
-    static void title(std::string src, std::ostringstream& out);
-    static void sTitle(
-      std::string src, size_t offset, size_t width, std::ostream& out = std::cout, char underline = '-'
-    );
-    static void sTitle(
-      std::string src, size_t offset, size_t width, std::ostringstream& out, char underline = '-'
-    );
-	static std::string trim(const std::string& src);
+    static void Title(const std::string& src, char underline = '-');
+    static void title(const std::string& src);
+    static std::string trim(const std::string& src);
     static std::string addHeaderAndFooterLines(const std::string& src);
   };
 
+  ///////////////////////////////////////////////////////////////////
+  // function writes return to console
+
   void putline();
+
+  ///////////////////////////////////////////////////////////////////
+  // DisplayLocation writes start address, ending address and size
+  // to console
+
+  std::string ToDecAddressString(size_t address);
+  std::string ToHexAddressString(size_t address);
+
+  template<typename T>
+  void DisplayLocation(T& t)
+  {
+    size_t address = reinterpret_cast<size_t>(&t);
+    size_t size = sizeof(t);
+
+    std::cout << ToDecAddressString(address) 
+              << " : " 
+              << ToDecAddressString(address + size)
+              << ", " << size;
+  }
+
+  ///////////////////////////////////////////////////////////////////
+  // Converter converts template type T to and from string
 
   template <typename T>
   class Converter
@@ -101,8 +110,5 @@ namespace Utilities
     in >> t;
     return t;
   }
-  
 }
-
-
 #endif
