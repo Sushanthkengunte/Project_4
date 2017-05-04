@@ -39,7 +39,7 @@
 */
 #include "../HttpMessage/HttpMessage.h"
 #include "../Sockets/Sockets.h"
-#include "FileSystem.h"
+#include "../FileSystem/FileSystem.h"
 #include "../Cpp11-BlockingQueue/Cpp11-BlockingQueue.h"
 #include "../Logger/Logger.h"
 #include "../Utilities/Utilities.h"
@@ -48,7 +48,7 @@
 #include<vector>
 #include <iostream>
 
-using Show = Logging::StaticLogger<1>;
+//using Show = Logging::StaticLogger<1>;
 using namespace Utilities;
 
 /////////////////////////////////////////////////////////////////////
@@ -78,179 +78,35 @@ private:
 	bool readFile(const std::string& filename, size_t fileSize, Socket& socket);
 	Async::BlockingQueue<HttpMessage>& msgQ_;
 };
-//----< this defines processing to frame messages >------------------
-
-HttpMessage ClientHandler::readMessage(Socket& socket)
+/////////////////////////////////////////////////////////////////////
+// MsgClient class
+// - was created as a class so more than one instance could be 
+//   run on child thread
+//
+class MsgClient
 {
-	connectionClosed_ = false;
-	HttpMessage msg;
+public:
+	using EndPoint = std::string;
+	void execute(const size_t TimeBetweenMessages, const size_t NumMessages, std::string type, std::string category);
+	std::string initialiseListener(int);
+	std::string deleteFile(int category);
+	std::string publishFile(int category);
+	std::string addFiles(int category, std::string files);
+	std::string displayFilesInClient(int category);
+	std::string downloadCategory(int category);
+	//bool checkmessage(HttpMessage msg);
+	std::string downloadLazy(std::string files1, int category);
+	std::vector<std::string> split(const std::string &s, char delim);
 
-	// read message attributes
+	std::vector<std::string> filePathOf;
+	std::vector<std::string> fileForLazy;
+	std::vector<std::string> filesTodisplay;
+private:
+	HttpMessage makeMessage(size_t n, const std::string& msgBody, const EndPoint& ep, std::string category, std::string type);
+	void sendMessage(HttpMessage& msg, Socket& socket);
+	bool sendFile(const std::string& fqname, Socket& socket, std::string category);
+};
 
-	while (true)
-	{
-		std::string attribString = socket.recvString('\n');
-		if (attribString.size() > 1)
-		{
-			HttpMessage::Attribute attrib = HttpMessage::parseAttribute(attribString);
-			msg.addAttribute(attrib);
-		}
-		else
-		{
-			break;
-		}
-	}
-	// If client is done, connection breaks and recvString returns empty string
-
-	if (msg.attributes().size() == 0)
-	{
-		connectionClosed_ = true;
-		return msg;
-	}
-
-	if (msg.attributes()[0].first == "POST")
-	{
-		// is this a file message?
-		std::string fileList = msg.findValue("listOf");
-		if (fileList != "") {
-			displayFiles.clear();
-			std::stringstream ss;
-			ss.str(fileList);
-			std::string item;
-			while (std::getline(ss, item, ',')) {
-				displayFiles.push_back(item);
-			}
-		}
-
-		std::string filename = msg.findValue("file");
-		if (filename != "")
-		{
-			size_t contentSize;
-			std::string sizeString = msg.findValue("content-length");
-			if (sizeString != "")
-				contentSize = Converter<size_t>::toValue(sizeString);
-			else
-				return msg;
-
-			std::string correctfilename;
-
-				std::string category1 = msg.findValue("Category");
-				std::string pathTill = FileSystem::Path::getFullFileSpec("../");
-				std::string fileName = FileSystem::Path::getName(filename);
-				 correctfilename = pathTill + "Client_Files\\HtmlFiles\\Category" + category1 + "\\" + fileName;
-			
-
-			readFile(correctfilename, contentSize, socket);
-		}
-
-		if (filename != "")
-		{
-			// construct message body
-
-			msg.removeAttribute("content-length");
-			std::string bodyString = "<file>" + filename + "</file>";
-			std::string sizeString = Converter<size_t>::toString(bodyString.size());
-			msg.addAttribute(HttpMessage::Attribute("content-length", sizeString));
-			msg.addBody(bodyString);
-		}
-		else if (fileList != "") {
-			msg.removeAttribute("content-length");
-			std::string bodyString = "<all files>" + fileList + "</all files>";
-			std::string sizeString = Converter<size_t>::toString(bodyString.size());
-			msg.addAttribute(HttpMessage::Attribute("content-length", sizeString));
-			msg.addBody(bodyString);
-		}
-		else
-		{
-			// read message body
-
-			size_t numBytes = 0;
-			size_t pos = msg.findAttribute("content-length");
-			if (pos < msg.attributes().size())
-			{
-				numBytes = Converter<size_t>::toValue(msg.attributes()[pos].second);
-				Socket::byte* buffer = new Socket::byte[numBytes + 1];
-				socket.recv(numBytes, buffer);
-				buffer[numBytes] = '\0';
-				std::string msgBody(buffer);
-				msg.addBody(msgBody);
-				delete[] buffer;
-			}
-		}
-	}
-	return msg;
-}
-//----< read a binary file from socket and save >--------------------
-/*
-* This function expects the sender to have already send a file message,
-* and when this function is running, continuosly send bytes until
-* fileSize bytes have been sent.
-*/
-bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socket& socket)
-{
-	std::cout << "\n\nReceiving file-------->" + filename;
-	std::string fqname =  filename ;
-	FileSystem::File file(fqname);
-	file.open(FileSystem::File::out, FileSystem::File::binary);
-	if (!file.isGood())
-	{
-		/*
-		* This error handling is incomplete.  The client will continue
-		* to send bytes, but if the file can't be opened, then the server
-		* doesn't gracefully collect and dump them as it should.  That's
-		* an exercise left for students.
-		*/
-		Show::write("\n\n  can't open file " + fqname);
-		return false;
-	}
-
-	const size_t BlockSize = 2048;
-	Socket::byte buffer[BlockSize];
-	std::cout << "\nrecieving blocks of file";
-	size_t bytesToRead;
-	while (true)
-	{
-		if (fileSize > BlockSize)
-			bytesToRead = BlockSize;
-		else
-			bytesToRead = fileSize;
-
-		socket.recv(bytesToRead, buffer);
-
-		FileSystem::Block blk;
-		for (size_t i = 0; i < bytesToRead; ++i)
-			blk.push_back(buffer[i]);
-
-		file.putBlock(blk);
-		if (fileSize < BlockSize)
-			break;
-		fileSize -= BlockSize;
-	}
-	std::cout << "\nfile recieved and closed-------->" + filename;
-	file.close();
-	return true;
-}
-//----< receiver functionality is defined by this function >---------
-
-void ClientHandler::operator()(Socket socket)
-{
-	while (true)
-	{
-		HttpMessage msg = readMessage(socket);
-		if (connectionClosed_ || msg.bodyString() == "quit")
-		{//closes when the connection closes
-			Show::write("\n\n  clienthandler thread is terminating");
-			break;
-		}
-		msgQ_.enQ(msg);
-	}
-}
-
-inline Async::BlockingQueue<HttpMessage>& ClientHandler::getQ()
-{
-	// TODO: insert return statement here
-	return msgQ_;
-}
 
 
 

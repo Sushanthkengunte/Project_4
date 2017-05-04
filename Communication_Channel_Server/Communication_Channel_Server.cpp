@@ -225,7 +225,7 @@ void MsgClient::deletingFilesInCategory(std::string category) {
 	std::string htmlPath = pathToTheCategory + "\\HtmlFiles\\Category" + category + "\\";
 	std::string sourcePath = pathToTheCategory + "\\SourceCode\\Category" + category+"\\";
 
-	std::vector<std::string> filesHtml = FileSystem::Directory::getFiles(htmlPath, "*.*");
+	std::vector<std::string> filesHtml = FileSystem::Directory::getFiles(htmlPath, "*.html");
 	for (std::string each : filesHtml) {
 		std::string correct = pathToTheCategory + "\\HtmlFiles\\Category" + category + "\\" + each;
 		remove(correct.c_str());
@@ -245,15 +245,15 @@ void MsgClient::deletingFilesInCategory(std::string category) {
 std::string MsgClient::dispplayFilesInCategory(std::string category) {
 	std::cout << "\nCalling display function to delete Category" + category;
 	std::string pathTill = FileSystem::Path::getFullFileSpec("../");
-	std::string pathToTheCategory = pathTill + "Server_Files\\SourceCode\\Category" + category + "\\";
-	std::vector<std::string> filesSource = FileSystem::Directory::getFiles(pathToTheCategory, "*.*");
+	std::string pathToTheCategory = pathTill + "Server_Files\\HtmlFiles\\Category" + category + "\\";
+	std::vector<std::string> filesSource = FileSystem::Directory::getFiles(pathToTheCategory, "*.html");
 	std::string correct;
 	for (std::string each : filesSource) {
 		 correct += each + ",";
 		
 	}
 	correct.pop_back();
-	std::cout << "\nDisplayed files in both Html ";
+	std::cout << "\nDisplayed files in  Html ";
 	return correct;
 }
 
@@ -318,6 +318,8 @@ void MsgClient::downloadCategory(std::string category, std::string type, std::ve
 		msg = makeMessage(1, msgBody, "localhost:8080", category, type);		
 		sendMessage(msg, si);
 		std::cout << "\n\n  Server sends back download msg\n" + msg.toIndentedString();
+		files.push_back("project4.js");
+		files.push_back("style.css");
 		//std::vector<std::string> files;
 		for (size_t i = 0; i < files.size(); ++i)
 		{
@@ -498,8 +500,8 @@ void MsgClient::processMessage(HttpMessage msg)
 		for (auto each : filesSource) {
 			absolutePathOfFiles.push_back(pathToTheCategory + each);
 		}
-		absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\project3.js");
-		absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\style.css");
+		absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\Category1\\project4.js");
+		absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\Category1\\style.css");
 		downloadCategory(cat,tp, absolutePathOfFiles);
 
 	}

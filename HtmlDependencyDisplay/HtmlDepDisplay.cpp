@@ -93,7 +93,7 @@ std::string MakingDirectory::getFileCon(std::string fName)
 		//Sets the prologue for a specific file
 		correctContent += prologueHtml(FileSystem::Path::getName(fName));
 		//puts the head body tags
-		correctContent +="<html><head><link rel=\"stylesheet\" href=\"../style.css\"></head><body><h3>" + fName + "</h3><hr/><div class = \"indent\"><h4>dependencies:</h4>";
+		correctContent +="<html><head><link rel=\"stylesheet\" href=\"style.css\"></head><body><h3>" + fName + "</h3><hr/><div class = \"indent\"><h4>dependencies:</h4>";
 		correctContent += "<ul>";
 		for (auto item : dependentFiles) {
 			correctContent += "<li>";
@@ -110,7 +110,7 @@ std::string MakingDirectory::getFileCon(std::string fName)
 		}
 		std::string jQuery = " https://code.jquery.com/jquery-1.11.3.min.js";//----jQuery library link---------------------//
 		correctContent += "</pre><script src=\"" + jQuery + "\"></script>";
-		correctContent += "<script src=\"../project3.js\"></script></body></html>";//----Java sricpt path---------------//
+		correctContent += "<script src=\"project4.js\"></script></body></html>";//----Java sricpt path---------------//
 	file.close();
 	return correctContent;
 }
@@ -230,11 +230,12 @@ std::unordered_map<std::string, std::vector<std::string>> MakingDirectory::getDe
 	std::vector<std::string> childrenInHtml;
 	KeysOfDepen = db.keys();
 	for (auto each : KeysOfDepen) {
+		childrenOfKeys.clear();
 		childrenOfKeys = db.getChildren(each);
 		std::string onlyNames = FileSystem::Path::getName(each);
 		keysInHtml.push_back(onlyNames + ".html");
 		for (auto oneChild : childrenOfKeys) {
-			std::string onlyNamesOfChildren = FileSystem::Path::getName(each);
+			std::string onlyNamesOfChildren = FileSystem::Path::getName(oneChild);
 			childrenInHtml.push_back(onlyNamesOfChildren + ".html");
 		}
 		temp[onlyNames + ".html"] = childrenInHtml;

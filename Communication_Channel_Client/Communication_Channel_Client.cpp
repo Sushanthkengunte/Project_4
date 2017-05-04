@@ -30,19 +30,17 @@
 *     sndr.PostMessage(msg);
 *   HttpMessage msg has the sending adddress, e.g., localhost:8080.
 */
-#include "../HttpMessage/HttpMessage.h"
-#include "Sockets.h"
-#include "FileSystem.h"
-#include "../Logger/Logger.h"
-#include "../updatedLibraries/Utilities/Utilities.h"
+
+
+
 
 #include <iostream>
 #include <string>
-#include <sstream>
+
 #include <thread>
 #include "Communication_Channel_Client.h"
 
-using Show = Logging::StaticLogger<1>;
+//using Show = Logging::StaticLogger<1>;
 using namespace Utilities;
 using Utils = StringHelper;
 
@@ -60,33 +58,7 @@ private:
 
 size_t ClientCounter::clientCount = 0;
 
-/////////////////////////////////////////////////////////////////////
-// MsgClient class
-// - was created as a class so more than one instance could be 
-//   run on child thread
-//
-class MsgClient
-{
-public:
-	using EndPoint = std::string;
-	void execute(const size_t TimeBetweenMessages, const size_t NumMessages, std::string type, std::string category);
-	void initialiseListener(int);
-	void deleteFile(int category);
-	void publishFile(int category);
-	void addFiles(int category,std::vector<std::string> filePath);
-	void displayFilesInClient(int category);
-	void downloadCategory(int category);
-	bool checkmessage(HttpMessage msg);
-	/*std::vector<std::string>*/void downloadLazy(std::vector<std::string> files, int category);
 
-	std::vector<std::string> filePathOf;
-	std::vector<std::string> fileForLazy;
-	std::vector<std::string> filesTodisplay;
-private:
-	HttpMessage makeMessage(size_t n, const std::string& msgBody, const EndPoint& ep, std::string category, std::string type);
-	void sendMessage(HttpMessage& msg, Socket& socket);
-	bool sendFile(const std::string& fqname, Socket& socket,std::string category);
-};
 //----< factory for creating messages >------------------------------
 /*
 * This function only creates one type of message for this demo.
@@ -174,7 +146,7 @@ bool MsgClient::sendFile(const std::string& filename, Socket& socket,std::string
 	file.close();
 	return true;
 }
-void MsgClient::initialiseListener(int port)
+std::string MsgClient::initialiseListener(int port)
 {
 	/*std::thread t1(
 		[&]() {*/
@@ -185,6 +157,7 @@ void MsgClient::initialiseListener(int port)
 		//Show::title("\n  HttpMessage Server started");
 	::Sleep(20);//to test for download
 		Async::BlockingQueue<HttpMessage> msgQ;
+		std::string typeOfResult;
 
 		try
 		{
@@ -205,33 +178,33 @@ void MsgClient::initialiseListener(int port)
 				//Show::write("\n\n  server recvd message with body contents:\n" + msg.bodyString());
 				//unique value to mark end of the download file
 				std::string type1 = msg.findValue("type");
+				
 				if (type1 == "upload") {
-					if (msg.bodyString() == "Successfull")
+					if (msg.bodyString() == "Successfull") {
+						typeOfResult = msg.bodyString();
 						break;
+					}
 			}else if (type1 == "display") {
 					filesTodisplay.clear();
-					std::string csvFileList = msg.bodyString();
-					std::stringstream ss;
-					ss.str(csvFileList);
-					std::string temp;
-					while (std::getline(ss,temp,',')) {
-						filesTodisplay.push_back(temp);
-
-					}
+					typeOfResult = msg.bodyString();
+		
 					break;//send back to gui and break
 				}else if (type1 == "download") {
 					if (msg.bodyString() == "quit") {
-						std::cout << "\n recieved message to quit";
+						typeOfResult = "finish download";
 						break;
 					}
 			
 				}
 				else if (type1 == "downloadLazy") {
 					//filesForLazyDownload
-					if (msg.bodyString() == "Successfull")
+					if (msg.bodyString() == "Successfull") {
+						typeOfResult = "finish lazy download";
 						break;
+					}
 				}
 				else /*if (checkmessage(msg))*/ {
+					typeOfResult = "finished" + type1;
 					break;
 				}
 				
@@ -240,6 +213,7 @@ void MsgClient::initialiseListener(int port)
 			}
 			std::cout << "\n-----------------\n Successfully completed and returned from Server \n-----------------\n";
 			sl.close();
+			return typeOfResult;
 		}
 		catch (std::exception& exc)
 		{
@@ -253,94 +227,108 @@ void MsgClient::initialiseListener(int port)
 }
 
 
-bool MsgClient::checkmessage(HttpMessage msg) {
-	//send the message to the GUI and after sending the 
-	return true;
-}
+//bool MsgClient::checkmessage(HttpMessage msg) {
+//	//send the message to the GUI and after sending the 
+//	return true;
+//}
 
 //when GUI selects a category to delete from server, 
-void MsgClient::deleteFile(int category)
+std::string MsgClient::deleteFile(int category)
 {
-	if (category != -1) {
+	std::string returnMessage;
 
 		execute(100, 1, "delete", std::to_string(category));
 		std::thread t1(
 			[&]() {
-			initialiseListener(8080);
+			returnMessage = initialiseListener(8080);
 		});
 		t1.join();
-	}
-
+	
+		return returnMessage;
 	
 }
 
-void MsgClient::publishFile(int category)
+std::string MsgClient::publishFile(int category)
 {
-	if (category != -1) {
-		execute(100, 1, "publish", std::to_string(category));
+	std::string returnMessage;
+	execute(100, 1, "publish", std::to_string(category));
 		std::thread t1(
 			[&]() {
-			initialiseListener(8080);
+			returnMessage =	initialiseListener(8080);
 		});
 		t1.join();
+		
+		return returnMessage;
+}
+std::vector<std::string> MsgClient::split(const std::string &s, char delim) {
+	std::stringstream ss;
+	ss.str(s);
+	std::string item;
+	std::vector<std::string> elems;
+	while (std::getline(ss, item, delim)) {
+		elems.push_back(item);
 	}
+	return elems;
 }
 
-
-void MsgClient::addFiles(int category, std::vector<std::string> filePath)
+std::string MsgClient::addFiles(int category, std::string files)
 {
-	if (category != -1) {
+	std::vector<std::string> filePath;
+	filePath = split(files, ',');
+	std::string returnMessage;
 		filePathOf.clear();
 		filePathOf = filePath;
 		execute(100, 1, "upload", std::to_string(category));
 		std::thread t1(
 			[&]() {
-			initialiseListener(8080);
+			returnMessage = initialiseListener(8080);
 		});// Start listener on the client c1
 		t1.join();
-	}
-
+	
+		return returnMessage;
 }
-void MsgClient::displayFilesInClient(int category)
+std::string MsgClient::displayFilesInClient(int category)
 {
-	if (category != -1) {
-		
+	
+	std::string returnMessage;
 	
 		execute(100, 1, "display", std::to_string(category));
 		std::thread t1(
 			[&]() {
-			initialiseListener(8080);
+			returnMessage = initialiseListener(8080);
 		});// Start listener on the client c1
 		t1.join();
-	}
+		return returnMessage;
 }
 
-void MsgClient::downloadCategory(int category)
+std::string MsgClient::downloadCategory(int category)
 {
-	if (category != -1) {
-		
+	
+	std::string returnMessage;
 
 		execute(100, 1, "download", std::to_string(category));
 		std::thread t1(
 			[&]() {
-			initialiseListener(8080);
+			returnMessage = initialiseListener(8080);
 		});// Start listener on the client c1
 		t1.join();
-	}
+		return returnMessage;
 }
-/*std::vector<std::string>*/void MsgClient::downloadLazy(std::vector<std::string> files, int category)
+std::string MsgClient::downloadLazy(std::string files1, int category)
 {
-	if (category != -1) {
+	std::vector<std::string> files;
+	files = split(files1, ',');
+	std::string returnMessage;
 		fileForLazy.clear();
 		fileForLazy = files;
 		execute(100, 1, "downloadLazy", std::to_string(category));
 		std::thread t1(
 			[&]() {
-			initialiseListener(8080);
+			returnMessage = initialiseListener(8080);
 		});
 		t1.join();
-	}
-
+	
+		return returnMessage;
 }
 
 
@@ -416,7 +404,7 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 			//Show::write("\n\n  sending file " + files[i]);
 			sendFile(fullPathOfFile, si,category)  ;
 		}
-
+		//std::string returnMessage = category + "Completed";
 		// shut down server's client handler
 
 	/*	msg = makeMessage(1, "quit", "toAddr:localhost:8080", category, type);
@@ -426,6 +414,7 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 		//Show::write("\n");
 		//Show::write("\n  All done folks");
 		si.close();
+		
 	}
 	catch (std::exception& exc)
 	{
@@ -435,10 +424,188 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 	}
 }
 
+//----< this defines processing to frame messages >------------------
 
+HttpMessage ClientHandler::readMessage(Socket& socket)
+{
+	connectionClosed_ = false;
+	HttpMessage msg;
+
+	// read message attributes
+
+	while (true)
+	{
+		std::string attribString = socket.recvString('\n');
+		if (attribString.size() > 1)
+		{
+			HttpMessage::Attribute attrib = HttpMessage::parseAttribute(attribString);
+			msg.addAttribute(attrib);
+		}
+		else
+		{
+			break;
+		}
+	}
+	// If client is done, connection breaks and recvString returns empty string
+
+	if (msg.attributes().size() == 0)
+	{
+		connectionClosed_ = true;
+		return msg;
+	}
+
+	if (msg.attributes()[0].first == "POST")
+	{
+		// is this a file message?
+		std::string fileList = msg.findValue("listOf");
+		if (fileList != "") {
+			displayFiles.clear();
+			std::stringstream ss;
+			ss.str(fileList);
+			std::string item;
+			while (std::getline(ss, item, ',')) {
+				displayFiles.push_back(item);
+			}
+		}
+
+		std::string filename = msg.findValue("file");
+		if (filename != "")
+		{
+			size_t contentSize;
+			std::string sizeString = msg.findValue("content-length");
+			if (sizeString != "")
+				contentSize = Converter<size_t>::toValue(sizeString);
+			else
+				return msg;
+
+			std::string correctfilename;
+
+			std::string category1 = msg.findValue("Category");
+			std::string pathTill = FileSystem::Path::getFullFileSpec("../");
+			std::string fileName = FileSystem::Path::getName(filename);
+			correctfilename = pathTill + "Client_Files\\HtmlFiles\\Category" + category1 + "\\" + fileName;
+
+
+			readFile(correctfilename, contentSize, socket);
+}
+
+		if (filename != "")
+		{
+			// construct message body
+
+			msg.removeAttribute("content-length");
+			std::string bodyString = "<file>" + filename + "</file>";
+			std::string sizeString = Converter<size_t>::toString(bodyString.size());
+			msg.addAttribute(HttpMessage::Attribute("content-length", sizeString));
+			msg.addBody(bodyString);
+		}
+		else if (fileList != "") {
+			msg.removeAttribute("content-length");
+			std::string bodyString = "<all files>" + fileList + "</all files>";
+			std::string sizeString = Converter<size_t>::toString(bodyString.size());
+			msg.addAttribute(HttpMessage::Attribute("content-length", sizeString));
+			msg.addBody(bodyString);
+		}
+		else
+		{
+			// read message body
+
+			size_t numBytes = 0;
+			size_t pos = msg.findAttribute("content-length");
+			if (pos < msg.attributes().size())
+			{
+				numBytes = Converter<size_t>::toValue(msg.attributes()[pos].second);
+				Socket::byte* buffer = new Socket::byte[numBytes + 1];
+				socket.recv(numBytes, buffer);
+				buffer[numBytes] = '\0';
+				std::string msgBody(buffer);
+				msg.addBody(msgBody);
+				delete[] buffer;
+			}
+		}
+	}
+	return msg;
+}
+//----< read a binary file from socket and save >--------------------
+/*
+* This function expects the sender to have already send a file message,
+* and when this function is running, continuosly send bytes until
+* fileSize bytes have been sent.
+*/
+bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socket& socket)
+{
+	std::cout << "\n\nReceiving file-------->" + filename;
+	std::string fqname = filename;
+	FileSystem::File file(fqname);
+	file.open(FileSystem::File::out, FileSystem::File::binary);
+	if (!file.isGood())
+	{
+		/*
+		* This error handling is incomplete.  The client will continue
+		* to send bytes, but if the file can't be opened, then the server
+		* doesn't gracefully collect and dump them as it should.  That's
+		* an exercise left for students.
+		*/
+		//Show::write("\n\n  can't open file " + fqname);
+		std::cout << "Cant open file" + fqname;
+		return false;
+	}
+
+	const size_t BlockSize = 2048;
+	Socket::byte buffer[BlockSize];
+	std::cout << "\nrecieving blocks of file";
+	size_t bytesToRead;
+	while (true)
+	{
+		if (fileSize > BlockSize)
+			bytesToRead = BlockSize;
+		else
+			bytesToRead = fileSize;
+
+		socket.recv(bytesToRead, buffer);
+
+		FileSystem::Block blk;
+		for (size_t i = 0; i < bytesToRead; ++i)
+			blk.push_back(buffer[i]);
+
+		file.putBlock(blk);
+		if (fileSize < BlockSize)
+			break;
+		fileSize -= BlockSize;
+	}
+	std::cout << "\nfile recieved and closed-------->" + filename;
+	file.close();
+	return true;
+}
+//----< receiver functionality is defined by this function >---------
+
+void ClientHandler::operator()(Socket socket)
+{
+	while (true)
+	{
+		HttpMessage msg = readMessage(socket);
+		if (connectionClosed_ || msg.bodyString() == "quit")
+		{//closes when the connection closes
+			std::cout << "\n \n Client Handler thread is terminating";
+			//Show::write("\n\n  clienthandler thread is terminating");
+			break;
+		}
+		msgQ_.enQ(msg);
+	}
+}
+
+inline Async::BlockingQueue<HttpMessage>& ClientHandler::getQ()
+{
+	// TODO: insert return statement here
+	return msgQ_;
+}
 
 
 //----< entry point - runs two clients each on its own thread >------
+#ifdef TESTING_CLIENT
+
+
+
 
 int main()
 {
@@ -486,3 +653,4 @@ int main()
 	t1.join();
 	t2.join();*/
 }
+#endif // TESTING_CLIENT
