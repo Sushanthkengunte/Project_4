@@ -35,8 +35,10 @@
 #include "FileSystem.h"
 #include "../Logger/Logger.h"
 #include "../updatedLibraries/Utilities/Utilities.h"
-#include <string>
+
 #include <iostream>
+#include <string>
+#include <sstream>
 #include <thread>
 #include "Communication_Channel_Client.h"
 
@@ -75,8 +77,11 @@ public:
 	void displayFilesInClient(int category);
 	void downloadCategory(int category);
 	bool checkmessage(HttpMessage msg);
+	/*std::vector<std::string>*/void downloadLazy(std::vector<std::string> files, int category);
+
 	std::vector<std::string> filePathOf;
-	
+	std::vector<std::string> fileForLazy;
+	std::vector<std::string> filesTodisplay;
 private:
 	HttpMessage makeMessage(size_t n, const std::string& msgBody, const EndPoint& ep, std::string category, std::string type);
 	void sendMessage(HttpMessage& msg, Socket& socket);
@@ -178,7 +183,7 @@ void MsgClient::initialiseListener(int port)
 		//Show::attach(&std::cout);
 		//Show::start();
 		//Show::title("\n  HttpMessage Server started");
-
+	::Sleep(20);//to test for download
 		Async::BlockingQueue<HttpMessage> msgQ;
 
 		try
@@ -196,16 +201,44 @@ void MsgClient::initialiseListener(int port)
 			{
 				
 				HttpMessage msg = msgQ.deQ();
-				std::cout <<"\n-----------------\n Successfully completed and returned from Server \n-----------------\n";
+				
 				//Show::write("\n\n  server recvd message with body contents:\n" + msg.bodyString());
 				//unique value to mark end of the download file
-				if (checkmessage(msg)) {
+				std::string type1 = msg.findValue("type");
+				if (type1 == "upload") {
+					if (msg.bodyString() == "Successfull")
+						break;
+			}else if (type1 == "display") {
+					filesTodisplay.clear();
+					std::string csvFileList = msg.bodyString();
+					std::stringstream ss;
+					ss.str(csvFileList);
+					std::string temp;
+					while (std::getline(ss,temp,',')) {
+						filesTodisplay.push_back(temp);
+
+					}
+					break;//send back to gui and break
+				}else if (type1 == "download") {
+					if (msg.bodyString() == "quit") {
+						std::cout << "\n recieved message to quit";
+						break;
+					}
+			
+				}
+				else if (type1 == "downloadLazy") {
+					//filesForLazyDownload
+					if (msg.bodyString() == "Successfull")
+						break;
+				}
+				else /*if (checkmessage(msg))*/ {
 					break;
 				}
 				
 				//break;
 				//process the messages
 			}
+			std::cout << "\n-----------------\n Successfully completed and returned from Server \n-----------------\n";
 			sl.close();
 		}
 		catch (std::exception& exc)
@@ -224,6 +257,7 @@ bool MsgClient::checkmessage(HttpMessage msg) {
 	//send the message to the GUI and after sending the 
 	return true;
 }
+
 //when GUI selects a category to delete from server, 
 void MsgClient::deleteFile(int category)
 {
@@ -251,6 +285,7 @@ void MsgClient::publishFile(int category)
 		t1.join();
 	}
 }
+
 
 void MsgClient::addFiles(int category, std::vector<std::string> filePath)
 {
@@ -293,7 +328,20 @@ void MsgClient::downloadCategory(int category)
 		t1.join();
 	}
 }
+/*std::vector<std::string>*/void MsgClient::downloadLazy(std::vector<std::string> files, int category)
+{
+	if (category != -1) {
+		fileForLazy.clear();
+		fileForLazy = files;
+		execute(100, 1, "downloadLazy", std::to_string(category));
+		std::thread t1(
+			[&]() {
+			initialiseListener(8080);
+		});
+		t1.join();
+	}
 
+}
 
 
 
@@ -308,8 +356,8 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 	size_t myCount = counter.count();
 	std::string myCountString = Utilities::Converter<size_t>::toString(myCount);
 
-	Show::attach(&std::cout);
-	Show::start();
+	//Show::attach(&std::cout);
+	//Show::start();
 
 	/*Show::title(
 		"Starting HttpMessage client side reciever" + myCountString +
@@ -332,6 +380,21 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 		
 			std::string msgBody = "Sending from client to "+type+"\n";
 			msg = makeMessage(1, msgBody, "localhost:8080",category,type);
+
+			if (fileForLazy.size() != 0) {
+				std::string msgBody_;
+				for (std::string each : fileForLazy) {
+					msgBody_ += each + ",";
+				}
+				msgBody_.pop_back();
+				
+				
+				msg.addAttribute(HttpMessage::attribute("lazyFiles", "true"));
+				msg.addAttribute(HttpMessage::attribute("allFilesToDownload", msgBody_));
+				
+
+				std::cout << "Sending message to do lazy download";
+			}
 			
 			/*
 			* Sender class will need to accept messages from an input queue
@@ -345,6 +408,7 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 		
 		//  send all *.cpp files from TestFiles folder
 
+
 		std::vector<std::string> files = filePathOf;
 		for (size_t i = 0; i < files.size(); ++i)
 		{
@@ -355,12 +419,13 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 
 		// shut down server's client handler
 
-		//msg = makeMessage(1, "quit", "toAddr:localhost:8080", category, type);
-		//sendMessage(msg, si);
+	/*	msg = makeMessage(1, "quit", "toAddr:localhost:8080", category, type);
+		sendMessage(msg, si);*/
 		//Show::write("\n\n  client" + myCountString + " sent\n" + msg.toIndentedString());
 
 		//Show::write("\n");
 		//Show::write("\n  All done folks");
+		si.close();
 	}
 	catch (std::exception& exc)
 	{
@@ -393,10 +458,18 @@ int main()
 	for(auto each: FileSystem::Directory::getFiles("../TestFiles", "*.cpp")){
 		files.push_back(FileSystem::Path::getFullFileSpec("../TestFiles/") + each);
 	}
-	//c1.addFiles(1, files);
-	//c1.deleteFile(1);
-	c1.displayFilesInClient(1);
-
+	//c1.addFiles(2, files);
+	//c1.deleteFile(2);
+	//c1.displayFilesInClient(2);
+	c1.publishFile(1);
+	//c1.downloadCategory(1);
+	std::vector<std::string> files1;
+	//for (auto each : FileSystem::Directory::getFiles("../Server_Files/HtmlFiles/Category1", "*.html")) {
+	//	files1.push_back(FileSystem::Path::getFullFileSpec("../Server_Files/HtmlFiles/Category") + each);
+	//}
+	std::string temp = "C:/Users/susha/Source/Repos/Project_4/Server_Files/HtmlFiles/Category1/XmlDocument.h.html";
+	files1.push_back(temp);
+	c1.downloadLazy(files1,1);
 	//c1.execute(100, 1);
 	
 	

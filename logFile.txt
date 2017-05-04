@@ -1,6 +1,0 @@
-
-                                      CodeAnalysis - Version 1.4
-    ==============================================================================================
-     Mon May  1 21:52:46 2017
-     Path: "C:\Users\susha\Source\Repos\Project_4"
-     Args: *.h, *.cpp, /f, /r

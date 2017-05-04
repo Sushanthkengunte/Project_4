@@ -107,19 +107,6 @@ std::string MakingDirectory::getFileCon(std::string fName)
 		{ 
 			codeLineNo++;
 			correctContent += extractContent(originalString);
-			//if (std::find(startLine.begin(), startLine.end(), codeLineNo) != startLine.end())
-			//{
-			//	correctContent += "<div class = \"externalPart\"><span> + </span></div><div class = \"internalPart\">";
-			//	correctContent += originalString;
-			//}
-			//else if (std::find(endLine.begin(), endLine.end(), codeLineNo) != endLine.end()) {
-			//	correctContent += originalString;
-			//	correctContent += "</div>";
-			//}
-			//else {
-			//	correctContent += replaceEscape(originalString);
-			//	correctContent += "\n";
-			//}
 		}
 		std::string jQuery = " https://code.jquery.com/jquery-1.11.3.min.js";//----jQuery library link---------------------//
 		correctContent += "</pre><script src=\"" + jQuery + "\"></script>";
@@ -231,6 +218,29 @@ void MakingDirectory::displayIndexPage(std::string Repository, LPCWSTR browser)
 		std::cout << e.what();
 	}
  
+}
+//----------to create html fileTable and return----------//
+std::unordered_map<std::string, std::vector<std::string>> MakingDirectory::getDependencyTableInHtml()
+{
+	//addheaderDepen(db1);
+	std::unordered_map<std::string, std::vector<std::string>> temp;
+	std::vector<std::string> childrenOfKeys;
+	std::vector<std::string> KeysOfDepen;
+	std::vector<std::string> keysInHtml;
+	std::vector<std::string> childrenInHtml;
+	KeysOfDepen = db.keys();
+	for (auto each : KeysOfDepen) {
+		childrenOfKeys = db.getChildren(each);
+		std::string onlyNames = FileSystem::Path::getName(each);
+		keysInHtml.push_back(onlyNames + ".html");
+		for (auto oneChild : childrenOfKeys) {
+			std::string onlyNamesOfChildren = FileSystem::Path::getName(each);
+			childrenInHtml.push_back(onlyNamesOfChildren + ".html");
+		}
+		temp[onlyNames + ".html"] = childrenInHtml;
+
+	}
+	return temp;
 }
 //-----------provides prologue for a specific file-------------------------------//
 std::string MakingDirectory::prologueHtml(std::string fName)

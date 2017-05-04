@@ -60,6 +60,8 @@ public:
 	void computeStartLine(std::string forFile);		//gets the start Lines for a specific file
 	void computeEndLine(std::string forFile);		//gets the end tLines for a specific file
 	void displayIndexPage(std::string Repository, LPCWSTR browser);	//displays the index file in a repository
+	//version 2
+	std::unordered_map<std::string, std::vector<std::string>> getDependencyTableInHtml();
 
 private:
 	directorySet filesToCopy;
@@ -79,5 +81,8 @@ private:
 	std::vector<int> startLine;
 	std::vector<int> endLine;
 	std::string repositoryLocation;
+	//version 2
+	
+
 };
 

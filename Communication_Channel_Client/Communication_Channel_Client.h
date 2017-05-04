@@ -44,6 +44,8 @@
 #include "../Logger/Logger.h"
 #include "../Utilities/Utilities.h"
 #include <string>
+#include <sstream>
+#include<vector>
 #include <iostream>
 
 using Show = Logging::StaticLogger<1>;
@@ -130,7 +132,15 @@ HttpMessage ClientHandler::readMessage(Socket& socket)
 			else
 				return msg;
 
-			readFile(filename, contentSize, socket);
+			std::string correctfilename;
+
+				std::string category1 = msg.findValue("Category");
+				std::string pathTill = FileSystem::Path::getFullFileSpec("../");
+				std::string fileName = FileSystem::Path::getName(filename);
+				 correctfilename = pathTill + "Client_Files\\HtmlFiles\\Category" + category1 + "\\" + fileName;
+			
+
+			readFile(correctfilename, contentSize, socket);
 		}
 
 		if (filename != "")
@@ -178,7 +188,8 @@ HttpMessage ClientHandler::readMessage(Socket& socket)
 */
 bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socket& socket)
 {
-	std::string fqname = "../Repository/" + filename + ".snt";
+	std::cout << "\n\nReceiving file-------->" + filename;
+	std::string fqname =  filename ;
 	FileSystem::File file(fqname);
 	file.open(FileSystem::File::out, FileSystem::File::binary);
 	if (!file.isGood())
@@ -195,7 +206,7 @@ bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socke
 
 	const size_t BlockSize = 2048;
 	Socket::byte buffer[BlockSize];
-
+	std::cout << "\nrecieving blocks of file";
 	size_t bytesToRead;
 	while (true)
 	{
@@ -215,6 +226,7 @@ bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socke
 			break;
 		fileSize -= BlockSize;
 	}
+	std::cout << "\nfile recieved and closed-------->" + filename;
 	file.close();
 	return true;
 }
@@ -226,7 +238,7 @@ void ClientHandler::operator()(Socket socket)
 	{
 		HttpMessage msg = readMessage(socket);
 		if (connectionClosed_ || msg.bodyString() == "quit")
-		{
+		{//closes when the connection closes
 			Show::write("\n\n  clienthandler thread is terminating");
 			break;
 		}

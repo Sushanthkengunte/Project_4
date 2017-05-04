@@ -170,6 +170,10 @@ namespace CodeAnalysis
     void setLogFile(const File& file);
 	std::string getDepRsltFnm();
 	std::string getDsCCRsltFnm();
+	//function to call global function from communication channel
+	std::unordered_map<std::string, std::vector<std::string>> getExecFunctionality(int argcNumber, char* argvguments[], std::string category);
+	//std::unordered_map<std::string, std::vector<std::string>> getDependentHtml(int argcNumber, char* argvguments[]);
+
   private:
     void setLanguage(const File& file);
     void showActivity(const File& file);

@@ -880,6 +880,8 @@ std::string CodeAnalysis::CodeAnalysisExecutive::getDsCCRsltFnm()
 	return sCCResultDoc;
 }
 
+
+
 std::string CodeAnalysisExecutive::systemTime()
 { 
   time_t sysTime = time(&sysTime);
@@ -892,6 +894,65 @@ std::string CodeAnalysisExecutive::systemTime()
 //----< conduct code analysis >--------------------------------------
 
 #include <fstream>
+//-------------for remote code publisher: publisher function-----------------------------
+std::unordered_map<std::string, std::vector<std::string>> CodeAnalysis::CodeAnalysisExecutive::getExecFunctionality(int argcNumber, char* argvguments[], std::string category)
+{
+
+	bool succeeded = ProcessCommandLine(argcNumber, argvguments);
+	if (!succeeded) {
+
+	}
+	setDisplayModes();
+	startLogger(std::cout);
+	getSourceFiles();
+	
+	processSourceCode(true);
+	complexityAnalysis();
+	dispatchOptionalDisplays();
+	Rslt::write("\n");
+	//showCommandLineArguments(argcNumber, argvguments);
+	//setDisplayModes();
+	//startLogger(std::cout);
+	stopLogger();
+	auto forDP = getFileMap();
+	DependencyAnalysis d(forDP);
+	d.doDependAnal();
+	////std::string tempDepenNme = getDepRsltFnm();
+	std::unordered_map<std::string, std::vector<std::string>> temp;
+	NoSqlDb<std::string> database;
+	database = d.getDatabase();
+	std::unordered_map<std::string, std::vector<CodeAnalysis::LineNO>> lineTable = d.getTypeLine();
+	std::string filesIn = "../Server_Files/HtmlFiles/Category"+category;
+
+	MakingDirectory htmlDisplay(database, lineTable, filesIn);
+	htmlDisplay.copyTheFile(filesIn);
+	//LPCWSTR browser = L"chrome.exe";
+	temp = htmlDisplay.getDependencyTableInHtml();
+	//htmlDisplay.displayIndexPage(filesIn, browser);
+	return temp;
+}
+//------------------for remote code publisher: lazy download---------------------------
+//std::unordered_map<std::string, std::vector<std::string>> CodeAnalysis::CodeAnalysisExecutive::getDependentHtml(int argcNumber, char* argvguments[])
+//{
+//	std::unordered_map<std::string, std::vector<std::string>> temp;
+//	bool succeeded = ProcessCommandLine(argcNumber, argvguments);
+//	if (!succeeded) {
+//
+//	}
+//	getSourceFiles();
+//	auto forDP = getFileMap();
+//	DependencyAnalysis d(forDP);
+//	d.doDependAnal();
+//	NoSqlDb<std::string> database;
+//	database = d.getDatabase();	std::unordered_map<std::string, std::vector<CodeAnalysis::LineNO>> lineTable = d.getTypeLine();
+//	std::string filesIn = "../Server_Files";
+//	MakingDirectory htmlDisplay(database, lineTable, filesIn);
+//	temp = htmlDisplay.getDependencyTableInHtml();
+//
+//	return temp;
+//}
+
+
 
 void executefuncionality1(CodeAnalysisExecutive& exec) {
 	exec.setDisplayModes();

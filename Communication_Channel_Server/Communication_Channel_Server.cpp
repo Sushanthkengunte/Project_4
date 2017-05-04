@@ -64,8 +64,20 @@ public:
 	void initialiseListener(int);
 	void processMessage(HttpMessage msg);
 	void deletingFilesInCategory(std::string category);
-	std::string dispplayFilesInCategory(std::string category);
+	void publishTheCategory(std::string category);
+	std::string dispplayFilesInCategory(std::string category);	
+	void downloadCategory(std::string category, std::string type, std::vector<std::string> files);
+	void lazyDownload(std::string files, std::string category, std::string type);
+	void findHtmlDependencies(std::string forEach,std::unordered_map<std::string, std::vector<std::string>> correctTable);
+	void downloadSpecifiedFiles(std::string type, std::vector<std::string> files, std::string category);
+	
 private:
+	std::unordered_map<std::string, std::vector<std::string>> category1HtmlDependencytable;
+	std::unordered_map<std::string, std::vector<std::string>> category2HtmlDependencytable;
+	std::unordered_map<std::string, std::vector<std::string>> category3HtmlDependencytable;
+	std::vector<std::string> filesForLazyDownload;
+	std::unordered_map<std::string, std::vector<std::string>> getCorrectTable(std::string category);
+	void putInCorrectTable(std::string category, std::unordered_map<std::string, std::vector<std::string>>);
 	HttpMessage makeMessage(size_t n, const std::string& body, const EndPoint& ep, std::string category, std::string type);
 	void sendMessage(HttpMessage& msg, Socket& socket);
 	bool sendFile(const std::string& fqname, Socket& socket,std::string category, std::string type);
@@ -126,8 +138,11 @@ void MsgClient::sendMessage(HttpMessage& msg, Socket& socket)
 bool MsgClient::sendFile(const std::string& filename, Socket& socket, std::string category, std::string type)
 {
 	// assumes that socket is connected
-
-	std::string fqname = "../TestFiles/" + filename;
+	std::string pathTill = FileSystem::Path::getFullFileSpec("../");
+	std::string pathToTheCategory = pathTill + "Server_Files\\HtmlFiles\\Category" + category + "\\"+filename;
+	
+	
+	std::string fqname = pathToTheCategory;
 	FileSystem::FileInfo fi(fqname);
 	size_t fileSize = fi.size();
 	std::string sizeString = Converter<size_t>::toString(fileSize);
@@ -135,6 +150,7 @@ bool MsgClient::sendFile(const std::string& filename, Socket& socket, std::strin
 	file.open(FileSystem::File::in, FileSystem::File::binary);
 	if (!file.isGood())
 		return false;
+
 
 	HttpMessage msg = makeMessage(1, "", "localhost::8080",category,type);
 	msg.addAttribute(HttpMessage::Attribute("file", filename));
@@ -179,15 +195,18 @@ void MsgClient::initialiseListener(int port)
 		* We could easily change that by sending a distinguished
 		* message for shutdown.
 		*/
+		std::cout << "\nStarted processing messages recieved in Server";
 		while (true)
 		{
 			HttpMessage msg = msgQ.deQ();
-			std::cout << "\n\n  server recvd message with body contents:\n" + msg.bodyString();
+			//std::cout << "\n\n  server recvd message with body contents:\n" + msg.bodyString();
 			processMessage(msg);
-			//dont put break server should listen to server queue forever
+			//dont put break server should listen to serve queue forever
 				
 
 		}
+		std::cout << "Done processing the messages";
+		//sl.close();
 	}
 	catch (std::exception& exc)
 	{
@@ -200,7 +219,7 @@ void MsgClient::initialiseListener(int port)
 }
 //-----------deleting all the files in a category------------
 void MsgClient::deletingFilesInCategory(std::string category) {
-
+	std::cout << "\nCalling deleting function to delete Category"+category;
 	std::string pathTill = FileSystem::Path::getFullFileSpec("../");
 	std::string pathToTheCategory = pathTill + "Server_Files";
 	std::string htmlPath = pathToTheCategory + "\\HtmlFiles\\Category" + category + "\\";
@@ -216,13 +235,15 @@ void MsgClient::deletingFilesInCategory(std::string category) {
 		std::string correct = pathToTheCategory + "\\SourceCode\\Category" + category + "\\" + each;
 		remove(correct.c_str());
 	}
+	std::cout << "\nDeleting files in both (Html/SourceCode) Category";
 
 }
 
-//-----------deleting all the files in a category------------
+//-----------end deleting all the files in a category------------
 
 //-----------display all the files in a category------------
 std::string MsgClient::dispplayFilesInCategory(std::string category) {
+	std::cout << "\nCalling display function to delete Category" + category;
 	std::string pathTill = FileSystem::Path::getFullFileSpec("../");
 	std::string pathToTheCategory = pathTill + "Server_Files\\SourceCode\\Category" + category + "\\";
 	std::vector<std::string> filesSource = FileSystem::Directory::getFiles(pathToTheCategory, "*.*");
@@ -232,10 +253,175 @@ std::string MsgClient::dispplayFilesInCategory(std::string category) {
 		
 	}
 	correct.pop_back();
+	std::cout << "\nDisplayed files in both Html ";
 	return correct;
 }
 
-//-----------display all the files in a category------------
+//-----------end display all the files in a category------------
+//-------calling code publisher with category---------------
+void MsgClient::publishTheCategory(std::string category) {
+	std::cout << "\nPublish the files in category"+category;
+	CodeAnalysis::CodeAnalysisExecutive obj;
+	char * array[7];
+	std::string path = "../Server_Files/SourceCode/Category" + category /*+ "/"*/;
+	std::string arguments[] = {"abc", path,"*.h","*.cpp","/m","/f","/r" };
+	for (int i = 0; i < 7; i++) {
+		const char* charArguments = arguments[i].c_str();
+		array[i] = _strdup(charArguments);
+		}
+	std::unordered_map<std::string, std::vector<std::string>> temp;
+	temp = obj.getExecFunctionality(7, array, category);
+	putInCorrectTable(category, temp);
+	std::cout << "\nPublished the files in category";
+}
+std::unordered_map<std::string, std::vector<std::string>> MsgClient::getCorrectTable(std::string category)
+{
+	std::unordered_map<std::string, std::vector<std::string>> correctTable;
+	if (category == "1")
+		correctTable = category1HtmlDependencytable ;
+	if (category == "2")
+		correctTable = category2HtmlDependencytable ;
+	if (category == "3")
+		correctTable = category3HtmlDependencytable;
+
+	return correctTable;
+}
+//-------end calling code publisher with category---------------
+void MsgClient::putInCorrectTable(std::string category, std::unordered_map<std::string, std::vector<std::string>> htmlTable)
+{
+	if (category == "1")
+		category1HtmlDependencytable = htmlTable;
+	if (category == "2")
+		category2HtmlDependencytable = htmlTable;
+	if (category == "3")
+		category3HtmlDependencytable = htmlTable;
+	
+}
+//-------downloading files in a category---------------
+void MsgClient::downloadCategory(std::string category, std::string type, std::vector<std::string> files) {
+	std::cout << "\ndownload files in category" + category;
+	try
+	{
+		SocketSystem ss;
+		SocketConnecter si;
+		while (!si.connect("localhost", 8080))
+		{
+			std::cout << "\n client waiting to connect";
+			::Sleep(100);
+		}
+
+		// send a set of messages
+
+		HttpMessage msg;
+		std::string msgBody = "sending back with files to download";
+		std::cout << msgBody;
+		msg = makeMessage(1, msgBody, "localhost:8080", category, type);		
+		sendMessage(msg, si);
+		std::cout << "\n\n  Server sends back download msg\n" + msg.toIndentedString();
+		//std::vector<std::string> files;
+		for (size_t i = 0; i < files.size(); ++i)
+		{
+			std::cout << "\n\n  sending file " + files[i];
+			sendFile(files[i], si, category, type);
+		}
+
+		// shut down server
+
+		msg = makeMessage(1, "quit", "toAddr:localhost:8080", category, type);
+		sendMessage(msg, si);
+		//Show::write("\n\n  client" + myCountString + " sent\n" + msg.toIndentedString());
+
+		//std::cout << "\n";
+		std::cout << "\n  Sending quit msg to stop client to listen";
+	}
+	catch (std::exception& exc)
+	{
+		std::cout << "\n  Exeception caught: ";
+		std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
+		std::cout << exMsg;
+	}
+}
+void MsgClient::downloadSpecifiedFiles(std::string type, std::vector<std::string> files, std::string category) {
+	try
+	{
+		std::cout << "\n Sending files back from server in sownload lazy";
+		SocketSystem ss;
+		SocketConnecter si;
+		while (!si.connect("localhost", 8080))
+		{
+			std::cout << "\n client waiting to connect";
+			::Sleep(100);
+		}
+
+		// send a set of messages
+
+		HttpMessage msg;
+		std::string msgBody = "Sending from Server to " + type + "\n";
+		msg = makeMessage(1, msgBody, "localhost:8080", category, type);
+		sendMessage(msg, si);
+		std::cout << "\n\n  Server sends \n" + msg.toIndentedString();
+		//  send all *.cpp files from TestFiles folder
+
+		for (size_t i = 0; i < filesForLazyDownload.size(); ++i)
+		{
+
+			std::string fullPathOfFile = files[i];
+			//Show::write("\n\n  sending file " + files[i]);
+			sendFile(fullPathOfFile, si, category,type);
+		}
+
+		// shut down server's client handler
+
+			msg = makeMessage(1, "Suceesful", "toAddr:localhost:8080", category, type);
+		sendMessage(msg, si);
+		std::cout << "Server finished sending files back to client";
+		si.close();
+	}
+	catch (std::exception& exc)
+	{
+		std::cout << "\n  Exeception caught: ";
+		std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
+		std::cout << exMsg;
+	}
+
+
+}
+
+void MsgClient::lazyDownload(std::string files,std::string category,std::string type)
+{
+	std::vector<std::string> temporaryfiles;
+	std::stringstream ss;
+	ss.str(files);
+	std::string temp;
+	while (std::getline(ss, temp, ',')) {
+		temporaryfiles.push_back(temp);
+
+	}
+	for (std::string each : temporaryfiles) {
+		auto x = getCorrectTable(category);
+		findHtmlDependencies(each, getCorrectTable(category));
+	}
+
+}
+
+void MsgClient::findHtmlDependencies(std::string forEach,std::unordered_map<std::string, std::vector<std::string>> correctTable)
+{
+	std::string onlyNames = FileSystem::Path::getName(forEach);
+	if (std::find(filesForLazyDownload.begin(), filesForLazyDownload.end(), onlyNames) == filesForLazyDownload.end())
+	{
+		filesForLazyDownload.push_back(onlyNames);
+	}
+	std::vector<std::string> temporary = correctTable[onlyNames];
+	for (std::string each : temporary)
+	{
+		std::string onlyChildrenNames = FileSystem::Path::getName(each);
+		if (std::find(filesForLazyDownload.begin(), filesForLazyDownload.end(), onlyChildrenNames) == filesForLazyDownload.end())
+		{
+			findHtmlDependencies(onlyChildrenNames, correctTable);
+		}
+	}
+	
+}
 
 void MsgClient::processMessage(HttpMessage msg)
 {
@@ -272,13 +458,15 @@ void MsgClient::processMessage(HttpMessage msg)
 		sendMessage(message, si);
 		
 	}if (type == "publish") {
-		std::cout << "Recieved message to publish";
+		//std::cout << "Recieved message to publish";
 		//msg = makeMessage(1, "publish file done", "toAddr:localhost:8080");
 		//create socket and send the message
-		SocketSystem ss;
-		SocketConnecter si;
-		//MsgClient c2;
-		//c2.execute(100, 1);
+		std::string  cat = msg.findValue("Category");
+		std::string  tp = msg.findValue("type");
+		publishTheCategory(cat);
+		
+		MsgClient c2;
+		c2.execute(100, 1,tp,cat);
 		
 		
 		// call the server function
@@ -299,6 +487,32 @@ void MsgClient::processMessage(HttpMessage msg)
 		}
 		sendMessage(message, si);
 		
+	} if (type == "download") {
+		std::string  cat = msg.findValue("Category");
+		std::string  tp = msg.findValue("type");
+		std::string pathTill = FileSystem::Path::getFullFileSpec("../");
+		std::vector<std::string> absolutePathOfFiles;
+		std::string pathToTheCategory = pathTill + "Server_Files\\HtmlFiles\\Category" + cat + "\\";
+		std::vector<std::string> filesSource = FileSystem::Directory::getFiles(pathToTheCategory, "*.*");
+		
+		for (auto each : filesSource) {
+			absolutePathOfFiles.push_back(pathToTheCategory + each);
+		}
+		absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\project3.js");
+		absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\style.css");
+		downloadCategory(cat,tp, absolutePathOfFiles);
+
+	}
+	if (type == "downloadLazy") {
+		std::string lazyFiles = msg.findValue("lazyFiles");
+		if (lazyFiles != "") {
+			std::string toDownload = msg.findValue("allFilesToDownload");
+			std::string  cat = msg.findValue("Category");
+			//std::vector<std::string>
+			lazyDownload(toDownload,cat,type);
+			downloadSpecifiedFiles(type, filesForLazyDownload, cat);
+		}
+
 	}
 	
 }
@@ -317,10 +531,6 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 	Show::attach(&std::cout);
 	Show::start();
 
-	/*Show::title(
-		"Starting HttpMessage client" + myCountString +
-		" on thread " + Utilities::Converter<std::thread::id>::toString(std::this_thread::get_id())
-	);*/
 	try
 	{
 		SocketSystem ss;
@@ -351,21 +561,22 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 		
 		//  send all *.cpp files from TestFiles folder
 
-			std::vector<std::string> files;
+	/*		std::vector<std::string> files;
 		for (size_t i = 0; i < files.size(); ++i)
 		{
 			std::cout << "\n\n  sending file " + files[i];
 			sendFile(files[i], si,category,type);
-		}
+		}*/
 
 		// shut down server
 
-		msg = makeMessage(1, "quit", "toAddr:localhost:8080",category,type);
-		sendMessage(msg, si);
+		/*msg = makeMessage(1, "quit", "toAddr:localhost:8080",category,type);
+		sendMessage(msg, si);*/
 		//Show::write("\n\n  client" + myCountString + " sent\n" + msg.toIndentedString());
 
 		std::cout << "\n";
 		std::cout << "\n  All done folks";
+		si.close();
 	}
 	catch (std::exception& exc)
 	{
@@ -385,7 +596,7 @@ int main()
 	::SetConsoleTitle(L"Server on Threads");
 
 	//Show::title("Demonstrating two HttpMessage Clients each running on a child thread");
-	CodeAnalysis::CodeAnalysisExecutive obj;
+	
 	MsgClient c1;
 
 	std::thread t1(

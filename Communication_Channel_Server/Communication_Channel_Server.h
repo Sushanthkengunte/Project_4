@@ -44,6 +44,8 @@
 #include "../Logger/Logger.h"
 #include "../Utilities/Utilities.h"
 #include <string>
+#include <sstream>
+#include<stack>
 #include <iostream>
 #include "../Analyzer/Executive.h"
 
@@ -73,6 +75,7 @@ private:
 	HttpMessage readMessage(Socket& socket);
 	bool readFile(const std::string& filename, size_t fileSize, Socket& socket);
 	Async::BlockingQueue<HttpMessage>& msgQ_;
+
 };
 //----< this defines processing to frame messages >------------------
 
@@ -204,6 +207,7 @@ bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socke
 	file.close();
 	return true;
 }
+
 //----< receiver functionality is defined by this function >---------
 
 void ClientHandler::operator()(Socket socket)
@@ -216,7 +220,8 @@ void ClientHandler::operator()(Socket socket)
 			Show::write("\n\n  Server is terminating");
 			break;
 		}
-		msgQ_.enQ(msg);
+		
+			msgQ_.enQ(msg);
 	}
 }
 

@@ -252,5 +252,6 @@ paket-files/
 *.sln.iml
 
 # project specific
-/Server_Files/SourceCode
+/Server_Files
+/Client_Files
 /TestFiles
