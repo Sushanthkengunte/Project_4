@@ -1,5 +1,4 @@
 #pragma once
-
 /////////////////////////////////////////////////////////////////////////
 // MsgServer.cpp - Demonstrates simple one-way HTTP style messaging    //
 //                 and file transfer                                   //
@@ -75,7 +74,11 @@ public:
 	
 private:
 	bool connectionClosed_;
+	void splitforList(std::string fileList);
+	void callReadFileFunction(HttpMessage msg, std::string filename, size_t contentSize,Socket& socket);
 	HttpMessage readMessage(Socket& socket);
+	HttpMessage addFileBody(HttpMessage msg, std::string size);
+	//HttpMessage readMessageBody(HttpMessage msg, Socket& socket);
 	bool readFile(const std::string& filename, size_t fileSize, Socket& socket);
 	Async::BlockingQueue<HttpMessage>& msgQ_;
 };
@@ -105,6 +108,7 @@ public:
 	std::vector<std::string> fileForLazy;
 	std::vector<std::string> filesTodisplay;
 private:
+	std::string processTheMessageFromSrv(HttpMessage msg);
 	HttpMessage makeMessage(size_t n, const std::string& msgBody, const EndPoint& ep, std::string category, std::string type);
 	void sendMessage(HttpMessage& msg, Socket& socket);
 	bool sendFile(const std::string& fqname, Socket& socket, std::string category);

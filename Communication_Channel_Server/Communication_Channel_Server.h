@@ -99,6 +99,8 @@ public:
 	void downloadSpecifiedFiles(std::string type, std::vector<std::string> files, std::string category);
 
 private:
+	void connectToTheClient(HttpMessage msg);
+	void doDownloadProcessing(HttpMessage msg);
 	std::unordered_map<std::string, std::vector<std::string>> category1HtmlDependencytable;
 	std::unordered_map<std::string, std::vector<std::string>> category2HtmlDependencytable;
 	std::unordered_map<std::string, std::vector<std::string>> category3HtmlDependencytable;
