@@ -218,6 +218,8 @@ std::string MsgClient::dispplayFilesInCategory(std::string category) {
 	std::string pathToTheCategory = pathTill + "Server_Files\\HtmlFiles\\Category" + category + "\\";
 	std::vector<std::string> filesSource = FileSystem::Directory::getFiles(pathToTheCategory, "*.html");
 	std::string correct;
+	if (filesSource.size() == 0)
+		return "No files to display";
 	for (std::string each : filesSource) {
 		if(each != "index.html")
 		 correct += each + ",";

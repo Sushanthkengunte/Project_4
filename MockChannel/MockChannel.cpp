@@ -109,7 +109,7 @@ void MockChannel::start()
     }
     BQueue& sendQ = pSendr->queue();
     BQueue& recvQ = pRecvr->queue();
-	//client.testExecutive();
+	client.testExecutive();
     while (!stop_)
     {
       std::cout << "\n  channel deQing message";

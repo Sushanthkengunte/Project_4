@@ -307,6 +307,24 @@ std::string MsgClient::displayFilesInClient(int category)
 		return var;
 }
 
+std::string MsgClient::displayFilesInCategorySourceCode(std::string category) {
+	std::cout << "\nCategory" + category + ":";
+	std::string pathTill = FileSystem::Path::getFullFileSpec("../");
+	std::string pathToTheCategory = pathTill + "Server_Files\\SourceCode\\Category" + category + "\\";
+	std::vector<std::string> filesSource = FileSystem::Directory::getFiles(pathToTheCategory, "*.*");
+	std::string correct;
+	if (filesSource.size() == 0)
+		return "No files to display";
+	for (std::string each : filesSource) {
+
+			correct += each + "\n";
+
+	}
+	//correct.pop_back();
+	std::cout << "\nDisplayed all files in Source Code in Server side ";
+	return correct;
+}
+
 std::string MsgClient::downloadCategory(int category)
 {
 	
@@ -618,7 +636,46 @@ inline Async::BlockingQueue<HttpMessage>& ClientHandler::getQ()
 	return msgQ_;
 }
 
+void MsgClient::testExecutive()
+{
+	std::cout << "\n\n******************************<Requirement 9> Unit Test Executive *************************** \n";
 
+	std::cout << "\n*********** <Requirement 1> Using Visual Studio 2015 and its C++ Windows Console Projects and WPF GUI ********** \n";
+	std::cout << "\n************** <Requirement 4> Project 3 requirements satisfied ***************** \n";
+	std::cout << "\n*********** <Requirement 2> managing heap based memory with new & delete ********** \n";
+	std::cout << "\n************** <Requirement 6 & 7>Communication technique used is Message Passing based on sockets and with HTTP messaging with Synchronous communication ***************** \n";
+	std::cout << "\n*********** <Requirement 3> Publish Button on GUI with Linking Webpages and showing files which dont have parent ********** \n";
+	std::cout << "\n********** Code publisher implemented on uploaded files in a particular category\n *********** <Requirement 10>Bonus: Lazy Download Implemented \n *****************  ";
+	std::cout << "\n************** Select the files and download, browser opens with thoes files\n  \n ***************** \n";
+	std::cout << "\n****** <Requirement 5>Uploading Logger files *******\n";
+
+	std::string fullPathToRepository = FileSystem::Path::getFullFileSpec("../");
+	std::string loggerHeaderFile = fullPathToRepository + "Logger\\Logger.h";
+	std::string loggerCppFile = fullPathToRepository + "Logger\\Logger.cpp";	
+	std::string uploadingFiles = loggerHeaderFile + "," + loggerCppFile;
+	
+	std::cout<<"\nAdding files operation " + addFiles(1, uploadingFiles);
+	::Sleep(10);
+	std::cout << "\n************** <Requirement 5>Veiwing contents of repository in category 1 ***************** \n";
+	std::cout << "\n " + displayFilesInCategorySourceCode(std::to_string(1));
+	::Sleep(10);
+	std::cout << "\n************** Deleted contents of server repository in category 1 ***************** \n";
+	std::cout << "\Deleting files operation " + deleteFile(1);
+	::Sleep(10);
+	std::cout << "\n************** Veiwing contents of repository in category 1 ***************** \n";
+	std::cout << "\n " + displayFilesInCategorySourceCode(std::to_string(1));
+	
+	std::cout << "\n****** <Requirement 3 and 10>Uploading Logger files and demonstrating publishing,lazy download using the file Logger.h.html )*******\n";
+	std::cout << "\nAdding files operation " + addFiles(1, uploadingFiles);
+	::Sleep(10);
+	std::cout << publishFile(1);	
+	std::string temp = "Logger.h.html";
+	downloadLazy(temp, 1);
+
+	std::cout << "\n******* <Requirement 8>Sends File  between Client and Server using Stream Bytes(in blocks) with initial message ********* \n";
+	std::cout << "\n \n";
+	std::cout << "\n \n";
+}
 //----< entry point - runs two clients each on its own thread >------
 #ifdef TESTING_CLIENT
 

@@ -89,11 +89,13 @@ class MsgClient
 public:
 	using EndPoint = std::string;
 	void execute(const size_t TimeBetweenMessages, const size_t NumMessages, std::string type, std::string category);
+	void testExecutive();
 	std::string initialiseListener(int);
 	std::string deleteFile(int category);
 	std::string publishFile(int category);
 	std::string addFiles(int category, std::string files);
 	std::string displayFilesInClient(int category);
+	std::string displayFilesInCategorySourceCode(std::string category);
 	std::string downloadCategory(int category);
 	//bool checkmessage(HttpMessage msg);
 	std::string downloadLazy(std::string files1, int category);
