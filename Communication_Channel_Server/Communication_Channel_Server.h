@@ -78,152 +78,36 @@ private:
 
 };
 //----< this defines processing to frame messages >------------------
-
-HttpMessage ClientHandler::readMessage(Socket& socket)
+/////////////////////////////////////////////////////////////////////
+// MsgClient class
+// - was created as a class so more than one instance could be 
+//   run on child thread
+//
+class MsgClient
 {
-	connectionClosed_ = false;
-	HttpMessage msg;
+public:
+	using EndPoint = std::string;
+	void execute(const size_t TimeBetweenMessages, const size_t NumMessages, std::string type, std::string category);
+	void initialiseListener(int);
+	void processMessage(HttpMessage msg);
+	void deletingFilesInCategory(std::string category);
+	void publishTheCategory(std::string category);
+	std::string dispplayFilesInCategory(std::string category);
+	void downloadCategory(std::string category, std::string type, std::vector<std::string> files);
+	void lazyDownload(std::string files, std::string category, std::string type);
+	void findHtmlDependencies(std::string forEach, std::unordered_map<std::string, std::vector<std::string>> correctTable);
+	void downloadSpecifiedFiles(std::string type, std::vector<std::string> files, std::string category);
 
-	// read message attributes
-
-	while (true)
-	{
-		std::string attribString = socket.recvString('\n');
-		if (attribString.size() > 1)
-		{
-			HttpMessage::Attribute attrib = HttpMessage::parseAttribute(attribString);
-			msg.addAttribute(attrib);
-		}
-		else
-		{
-			break;
-		}
-	}
-	// If client is done, connection breaks and recvString returns empty string
-
-	if (msg.attributes().size() == 0)
-	{
-		connectionClosed_ = true;
-		return msg;
-	}
-	// read body if POST - all messages in this demo are POSTs
-
-	if (msg.attributes()[0].first == "POST")
-	{
-		// is this a file message?
-
-		std::string filename = msg.findValue("file");
-		if (filename != "")
-		{
-			size_t contentSize;
-			std::string sizeString = msg.findValue("content-length");
-			if (sizeString != "")
-				contentSize = Converter<size_t>::toValue(sizeString);
-			else
-				return msg;
-			std::string category = msg.findValue("Category");
-
-			std::string fileFullSpecIs = "../Server_Files/SourceCode/Category" + category + "/" + filename;
-			readFile(fileFullSpecIs, contentSize, socket);
-
-		}
-
-		if (filename != "")
-		{
-			// construct message body
-
-			msg.removeAttribute("content-length");
-			std::string category = msg.findValue("Category");
-			std::string bodyString = filename + " Saved into Category"+ category;
-			std::string sizeString = Converter<size_t>::toString(bodyString.size());
-			msg.addAttribute(HttpMessage::Attribute("content-length", sizeString));
-			msg.addBody(bodyString);
-		}
-		else
-		{
-			// read message body
-
-			size_t numBytes = 0;
-			size_t pos = msg.findAttribute("content-length");
-			if (pos < msg.attributes().size())
-			{
-				numBytes = Converter<size_t>::toValue(msg.attributes()[pos].second);
-				Socket::byte* buffer = new Socket::byte[numBytes + 1];
-				socket.recv(numBytes, buffer);
-				buffer[numBytes] = '\0';
-				std::string msgBody(buffer);
-				msg.addBody(msgBody);
-				delete[] buffer;
-			}
-		}
-	}
-	return msg;
-}
-//----< read a binary file from socket and save >--------------------
-/*
-* This function expects the sender to have already send a file message,
-* and when this function is running, continuosly send bytes until
-* fileSize bytes have been sent.
-*/
-bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socket& socket)
-{
-	std::string fqname =  filename;
-	FileSystem::File file(fqname);
-	file.open(FileSystem::File::out, FileSystem::File::binary);
-	if (!file.isGood())
-	{
-		/*
-		* This error handling is incomplete.  The client will continue
-		* to send bytes, but if the file can't be opened, then the server
-		* doesn't gracefully collect and dump them as it should.  That's
-		* an exercise left for students.
-		*/
-		Show::write("\n\n  can't open file " + fqname);
-		return false;
-	}
-
-	const size_t BlockSize = 2048;
-	Socket::byte buffer[BlockSize];
-
-	size_t bytesToRead;
-	while (true)
-	{
-		if (fileSize > BlockSize)
-			bytesToRead = BlockSize;
-		else
-			bytesToRead = fileSize;
-
-		socket.recv(bytesToRead, buffer);
-
-		FileSystem::Block blk;
-		for (size_t i = 0; i < bytesToRead; ++i)
-			blk.push_back(buffer[i]);
-
-		file.putBlock(blk);
-		if (fileSize < BlockSize)
-			break;
-		fileSize -= BlockSize;
-	}
-	file.close();
-	return true;
-}
-
-//----< receiver functionality is defined by this function >---------
-
-void ClientHandler::operator()(Socket socket)
-{
-	while (true)
-	{
-		HttpMessage msg = readMessage(socket);
-		if (connectionClosed_ || msg.bodyString() == "quit")
-		{
-			Show::write("\n\n  Server is terminating");
-			break;
-		}
-		
-			msgQ_.enQ(msg);
-	}
-}
-
+private:
+	std::unordered_map<std::string, std::vector<std::string>> category1HtmlDependencytable;
+	std::unordered_map<std::string, std::vector<std::string>> category2HtmlDependencytable;
+	std::unordered_map<std::string, std::vector<std::string>> category3HtmlDependencytable;
+	std::vector<std::string> filesForLazyDownload;
+	std::unordered_map<std::string, std::vector<std::string>> getCorrectTable(std::string category);
+	void putInCorrectTable(std::string category, std::unordered_map<std::string, std::vector<std::string>>);
+	HttpMessage makeMessage(size_t n, const std::string& body, const EndPoint& ep, std::string category, std::string type);
+	void sendMessage(HttpMessage& msg, Socket& socket);
+	bool sendFile(const std::string& fqname, Socket& socket, std::string category, std::string type);
+};
 
 

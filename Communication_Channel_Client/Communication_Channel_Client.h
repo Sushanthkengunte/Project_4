@@ -44,6 +44,7 @@
 #include "../Logger/Logger.h"
 #include "../Utilities/Utilities.h"
 #include <string>
+#include<shellapi.h>
 #include <sstream>
 #include<vector>
 #include <iostream>

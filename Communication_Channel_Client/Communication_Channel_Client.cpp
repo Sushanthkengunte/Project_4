@@ -203,6 +203,11 @@ std::string MsgClient::initialiseListener(int port)
 						break;
 					}
 				}
+				else if (type1 == "publish") {
+					//filesForLazyDownload
+					typeOfResult = msg.bodyString();
+					break;
+				}
 				else /*if (checkmessage(msg))*/ {
 					typeOfResult = "finished" + type1;
 					break;
@@ -328,6 +333,17 @@ std::string MsgClient::downloadLazy(std::string files1, int category)
 			returnMessage = initialiseListener(8080);
 		});
 		t1.join();
+		for (auto open : files) {
+
+			std::string fullPathToRepository = FileSystem::Path::getFullFileSpec("../");
+			std::string indexFile = fullPathToRepository + "Client_Files\\HtmlFiles\\Category" + std::to_string(category) + "\\" + open;
+			std::string path = "\"file:///" + indexFile + "\"";
+			std::wstring spath = std::wstring(path.begin(), path.end());
+			LPCWSTR swpath = spath.c_str();
+			LPCWSTR a = L"open";
+			LPCWSTR ch = L"chrome.exe";
+			ShellExecute(NULL, a, ch, swpath, NULL, SW_SHOWDEFAULT);
+		}
 	
 		return returnMessage;
 }
