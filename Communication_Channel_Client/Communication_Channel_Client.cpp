@@ -198,7 +198,7 @@ std::string MsgClient::initialiseListener(int port)
 				}
 				else if (type1 == "downloadLazy") {
 					//filesForLazyDownload
-					if (msg.bodyString() == "Successfull") {
+					if (msg.bodyString() == "Successful") {
 						typeOfResult = "finish lazy download";
 						break;
 					}
@@ -298,7 +298,8 @@ std::string MsgClient::displayFilesInClient(int category)
 			returnMessage = initialiseListener(8080);
 		});// Start listener on the client c1
 		t1.join();
-		return returnMessage;
+		std::string var = "Success," + returnMessage;
+		return var;
 }
 
 std::string MsgClient::downloadCategory(int category)
@@ -396,19 +397,20 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 		
 		//  send all *.cpp files from TestFiles folder
 
+			if (type == "upload") {
+				std::vector<std::string> files = filePathOf;
+				for (size_t i = 0; i < files.size(); ++i)
+				{
+					std::string fullPathOfFile = files[i];
+					//Show::write("\n\n  sending file " + files[i]);
+					sendFile(fullPathOfFile, si, category);
+				}
+				//std::string returnMessage = category + "Completed";
+				// shut down server's client handler
 
-		std::vector<std::string> files = filePathOf;
-		for (size_t i = 0; i < files.size(); ++i)
-		{
-			std::string fullPathOfFile = files[i];
-			//Show::write("\n\n  sending file " + files[i]);
-			sendFile(fullPathOfFile, si,category)  ;
-		}
-		//std::string returnMessage = category + "Completed";
-		// shut down server's client handler
-
-	/*	msg = makeMessage(1, "quit", "toAddr:localhost:8080", category, type);
-		sendMessage(msg, si);*/
+				msg = makeMessage(1, "finish", "toAddr:localhost:8080", category, type);
+				sendMessage(msg, si);
+			}
 		//Show::write("\n\n  client" + myCountString + " sent\n" + msg.toIndentedString());
 
 		//Show::write("\n");

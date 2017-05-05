@@ -2,7 +2,8 @@
 // Window.cpp - C++\CLI implementation of WPF Application                //
 //          - Demo for CSE 687 Project #4                                //
 // ver 2.0                                                               //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2015             //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2017			 //
+//Appended by Sushanth Suresh(SUID:987471535)							 //
 ///////////////////////////////////////////////////////////////////////////
 /*
 *  To run as a Windows Application:
@@ -37,12 +38,14 @@ WPFCppCliDemo::WPFCppCliDemo()
   hSendButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::sendMessage);
   hClearButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::clear);
   hFolderBrowseButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::browseForFolder);
+ 
+  
   hUploadButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::uploadFileList);
   hDisplayButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::displayFilesForCategory);
   hDownloadButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::downloadFilesForCategory);
   hDeleteButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::deleteCategory);
   // set Window properties
-  this->Title = "Client";
+  this->Title = "Client display";
   this->Width = 800;
   this->Height = 600;
   // attach dock panel to Window
@@ -71,7 +74,7 @@ void WPFCppCliDemo::setUpStatusBar()
 	RowDefinition^ hRow2Def2222q = gcnew RowDefinition();
 	hRow2Def2222q->Height = GridLength(15);
 	grid->RowDefinitions->Add(hRow2Def2222q);
-	hRadioCategoryDFL3->GroupName = "Categories DF";
+	hRadioCategoryDFL3->GroupName = "Categories of";
 	hRadioCategoryDFL3->Content = "Category 3";
 	hRadioCategoryDFL3->Height = 30;
 	hRadioCategoryDFL3->Width = 120;
@@ -82,7 +85,7 @@ void WPFCppCliDemo::setUpStatusBar()
 	RowDefinition^ rd = gcnew RowDefinition();
 	rd->Height = GridLength(35);
 	grid->RowDefinitions->Add(rd);
-	hDisplayButton->Content = "Display";
+	hDisplayButton->Content = "Display files";
 	hDisplayButton->Height = 30;
 	hDisplayButton->Width = 120;
 	hDisplayButton->BorderThickness = Thickness(2);

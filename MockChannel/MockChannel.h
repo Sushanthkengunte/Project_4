@@ -1,11 +1,12 @@
 #ifndef MOCKCHANNEL_H
 #define MOCKCHANNEL_H
 /////////////////////////////////////////////////////////////////////////////
-// MockChannel.h - Demo for CSE687 Project #4, Spring 2015                 //
+// MockChannel.h - Demo for CSE687 Project #4, Spring 2017                 //
 // - build as DLL to show how C++\CLI client can use native code channel   //
 // - MockChannel reads from sendQ and writes to recvQ                      //
 //                                                                         //
 // Jim Fawcett, CSE687 - Object Oriented Design, Spring 2015               //
+//Appended by sushanth suresh (SUID:987471535)							   //
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef IN_DLL

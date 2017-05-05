@@ -40,6 +40,8 @@ Build commands (either one)
 
 Maintenance History:
 ====================
+ver 2.0:04/05/2017
+-added functionality to return HTML dependency table
 ver 1.0 : 07 March 17
 - first release
 */
@@ -81,7 +83,7 @@ private:
 	std::vector<int> startLine;
 	std::vector<int> endLine;
 	std::string repositoryLocation;
-	//version 2
+	
 	
 
 };

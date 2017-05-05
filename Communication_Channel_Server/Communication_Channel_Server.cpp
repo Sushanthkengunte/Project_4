@@ -374,7 +374,7 @@ void MsgClient::downloadSpecifiedFiles(std::string type, std::vector<std::string
 
 		// shut down server's client handler
 
-			msg = makeMessage(1, "Suceesful", "toAddr:localhost:8080", category, type);
+			msg = makeMessage(1, "Successful", "toAddr:localhost:8080", category, type);
 		sendMessage(msg, si);
 		std::cout << "Server finished sending files back to client";
 		si.close();
@@ -433,7 +433,9 @@ void MsgClient::processMessage(HttpMessage msg)
 		//call the server function
 		std::string  cat = msg.findValue("Category");
 		std::string  tp = msg.findValue("type");
-		HttpMessage message = makeMessage(1, "Successfull", "toAddr:localhost:8080", cat,tp);
+		//send successful after recieving finish
+		if (msg.bodyString() == "finish") {
+		HttpMessage message = makeMessage(1, "Successfull", "toAddr:localhost:8080", cat, tp);
 		SocketSystem ss;
 		SocketConnecter si;
 		while (!si.connect("localhost", 8080))
@@ -442,6 +444,7 @@ void MsgClient::processMessage(HttpMessage msg)
 			::Sleep(100);
 		}
 		sendMessage(message, si);
+		}
 
 	}if (type == "delete") {
 		//std::cout << "Recieved message to delete";

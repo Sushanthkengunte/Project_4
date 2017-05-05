@@ -1,16 +1,16 @@
 /////////////////////////////////////////////////////////////////////////////
-// MockChannel.cpp - Demo for CSE687 Project #4, Spring 2015               //
+// MockChannel.cpp - Demo for CSE687 Project #4, Spring 2017               //
 // - build as DLL to show how C++\CLI client can use native code channel   //
 // - MockChannel reads from sendQ and writes to recvQ                      //
 //                                                                         //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2015               //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2015 
+//
 /////////////////////////////////////////////////////////////////////////////
 
 #define IN_DLL
 #include "MockChannel.h"
 #include "../Cpp11-BlockingQueue/Cpp11-BlockingQueue.h"
 #include "../Communication_Channel_Client/Communication_Channel_Client.h"
-//#include "../Client/Client.h"
 #include <string>
 #include <thread>
 #include <iostream>
@@ -109,6 +109,7 @@ void MockChannel::start()
     }
     BQueue& sendQ = pSendr->queue();
     BQueue& recvQ = pRecvr->queue();
+	//client.testExecutive();
     while (!stop_)
     {
       std::cout << "\n  channel deQing message";

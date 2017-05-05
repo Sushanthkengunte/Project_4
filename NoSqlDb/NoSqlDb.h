@@ -3,7 +3,7 @@
 //  NoSqlDb.h - Key-value pair in Database                         //
 //  ver 1.0                                                        //
 //                                                                 //
-//  Language:      Visual C++ 2008, SP1                            //
+//  Language:      Visual C++ 2015, SP1                            //
 //  Platform:      Lenovo , Windows 10      			           //
 //  Application:   NoSql Database - CIS 687 Project 1              //
 //  Author:        Sushanth Suresh SUID:987471535			       //
