@@ -1,40 +1,49 @@
 #pragma once
+
 /////////////////////////////////////////////////////////////////////////
-// MsgServer.cpp - Demonstrates simple one-way HTTP style messaging    //
-//                 and file transfer                                   //
+// Communication_Channel_Client.h - provides Client functionality      //
+//									                                   //
 //                                                                     //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016           //
+// Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017       //
 // Application: OOD Project #4                                         //
-// Platform:    Visual Studio 2015, Dell XPS 8900, Windows 10 pro      //
+// Platform:    Visual Studio 2015, Lenovo, Windows 10			       //
+//(SUID:987471535)													   //
 /////////////////////////////////////////////////////////////////////////
 /*
-* This package implements a server that receives HTTP style messages and
-* files from multiple concurrent clients and simply displays the messages
-* and stores files.
+*Module Operations:
+* This package implements a Client that receives HTTP style messages and
+* files from server and simply displays the messages and stores files.
+*This package uses two clases Clienthandler and MsgClient, where clientHandler
+*handles the client requests and msgClient sends the reply back
 *
-* It's purpose is to provide a very simple illustration of how to use
-* the Socket Package provided for Project #4.
+.
 */
 /*
 * Required Files:
-*   MsgClient.cpp, MsgServer.cpp
+*
 *   HttpMessage.h, HttpMessage.cpp
 *   Cpp11-BlockingQueue.h
 *   Sockets.h, Sockets.cpp
 *   FileSystem.h, FileSystem.cpp
 *   Logger.h, Logger.cpp
 *   Utilities.h, Utilities.cpp
+
 */
-/*
-* ToDo:
-* - pull the receiving code into a Receiver class
-* - Receiver should own a BlockingQueue, exposed through a
-*   public method:
-*     HttpMessage msg = Receiver.GetMessage()
-* - You will start the Receiver instance like this:
-*     Receiver rcvr("localhost:8080");
-*     ClientHandler ch;
-*     rcvr.start(ch);
+/*Public Interdfaces:
+*-----------------------
+* ClientHandler:
+*Its a functor that reads a message and process it on a different thread using threads
+*
+*MsgClient:
+*initialiseListener(int)       // initialises the reciever to run forever on a different thread
+*processMessage()			   // calls the appropiate function
+*deletingFilesInCategory()	   // deletes files in specific category
+*publishTheCategory()		   //Publisehs all the *.cpp,*.h and *.css files
+*dispplayFilesInCategory()		//displays all the files in the category after publishing it, in a list box
+*downloadCategory()				//Sends back all the files in a specific category
+*lazyDownload()					//populates all the file names which are required to be sent back
+*downloadSpecifiedFiles()		//Sends back all the files in a specific category
+*
 */
 #include "../HttpMessage/HttpMessage.h"
 #include "../Sockets/Sockets.h"
@@ -70,7 +79,7 @@ public:
 	ClientHandler(Async::BlockingQueue<HttpMessage>& msgQ) : msgQ_(msgQ) {}
 	void operator()(Socket socket);
 	std::vector<std::string> displayFiles;
-	Async::BlockingQueue<HttpMessage>& getQ();
+
 	
 private:
 	bool connectionClosed_;
@@ -78,7 +87,6 @@ private:
 	void callReadFileFunction(HttpMessage msg, std::string filename, size_t contentSize,Socket& socket);
 	HttpMessage readMessage(Socket& socket);
 	HttpMessage addFileBody(HttpMessage msg, std::string size);
-	//HttpMessage readMessageBody(HttpMessage msg, Socket& socket);
 	bool readFile(const std::string& filename, size_t fileSize, Socket& socket);
 	Async::BlockingQueue<HttpMessage>& msgQ_;
 };
@@ -100,7 +108,6 @@ public:
 	std::string displayFilesInClient(int category);
 	std::string displayFilesInCategorySourceCode(std::string category);
 	std::string downloadCategory(int category);
-	//bool checkmessage(HttpMessage msg);
 	std::string downloadLazy(std::string files1, int category);
 	std::vector<std::string> split(const std::string &s, char delim);
 
@@ -108,7 +115,7 @@ public:
 	std::vector<std::string> fileForLazy;
 	std::vector<std::string> filesTodisplay;
 private:
-	std::string processTheMessageFromSrv(HttpMessage msg);
+
 	HttpMessage makeMessage(size_t n, const std::string& msgBody, const EndPoint& ep, std::string category, std::string type);
 	void sendMessage(HttpMessage& msg, Socket& socket);
 	bool sendFile(const std::string& fqname, Socket& socket, std::string category);

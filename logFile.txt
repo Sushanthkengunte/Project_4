@@ -1,7 +1,7 @@
 
-                                             CodeAnalysis
+                                      CodeAnalysis - Version 1.4
     ==============================================================================================
-     Fri May  5 17:48:17 2017
+     Fri May  5 20:00:41 2017
      Path: "C:\Users\susha\Source\Repos\Project_4"
      Args: *.h, *.cpp, project_4.sln, /m, /r, /f
                                                                                
@@ -10,7 +10,7 @@
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-                             namespace                   Global Namespace       1       1    3301
+                             namespace                   Global Namespace       1       1    3409
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -129,11 +129,11 @@
           AbstrSynTree.cpp    function                                pop     128       3       1
           AbstrSynTree.cpp    function                               find     136       8       2
           AbstrSynTree.cpp    function                               main     158      36       2
-          AbstrSynTree.cpp      lambda  [](ASTNode*pNode,size_tindentLeve     177       2       1
+          AbstrSynTree.cpp    function                               void     177       2       1
           AbstrSynTree.cpp    function                               main     158      36       2
-          AbstrSynTree.cpp      lambda  [](ASTNode*pNode,size_tindentLeve     177       2       1
+          AbstrSynTree.cpp    function                               void     177       2       1
           AbstrSynTree.cpp    function                               main     158      36       2
-          AbstrSynTree.cpp      lambda  [](ASTNode*pNode,size_tindentLeve     177       2       1
+          AbstrSynTree.cpp    function                               void     177       2       1
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -235,96 +235,104 @@
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-       ActionsAndRules.cpp      lambda                                [])      26      36       3
+       ActionsAndRules.cpp    function                               main      26      36       3
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-   Communication_Channel_C       class                      ClientHandler      68      17       2
-   Communication_Channel_C    function                      ClientHandler      69       2       1
-   Communication_Channel_C       class                          MsgClient      91      25       1
+   Communication_Channel_C       class                      ClientHandler      77      16       2
+   Communication_Channel_C    function                      ClientHandler      78       2       1
+   Communication_Channel_C       class                          MsgClient      99      24       1
+              public data: std :: string initialiseListener ( int ) ; 
+              public data: std :: vector < std :: string > filePathOf ; 
+              public data: std :: vector < std :: string > fileForLazy ; 
+              public data: std :: vector < std :: string > filesTodisplay ; 
    Communication_Channel_C       class                      ClientHandler      69      13       2
    Communication_Channel_C    function                      ClientHandler      70       2       1
    Communication_Channel_C       class                          MsgClient      88      23       1
+              public data: std :: string initialiseListener ( int ) ; 
+              public data: std :: vector < std :: string > filePathOf ; 
+              public data: std :: vector < std :: string > fileForLazy ; 
+              public data: std :: vector < std :: string > filesTodisplay ; 
    Communication_Channel_C       class                      ClientHandler      68      17       2
    Communication_Channel_C    function                      ClientHandler      69       2       1
    Communication_Channel_C       class                          MsgClient      91      25       1
+              public data: std :: string initialiseListener ( int ) ; 
+              public data: std :: vector < std :: string > filePathOf ; 
+              public data: std :: vector < std :: string > fileForLazy ; 
+              public data: std :: vector < std :: string > filesTodisplay ; 
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-   Communication_Channel_C    function                        readMessage     396      48      10
-   Communication_Channel_C    function                        addFileBody     446       9       1
-   Communication_Channel_C    function                       splitforList     458      10       2
-   Communication_Channel_C    function               callReadFileFunction     470       8       1
-   Communication_Channel_C    function                           readFile     489      44       3
-   Communication_Channel_C    function                         operator()     536      13       3
-   Communication_Channel_C    function                               getQ     551       4       1
-   Communication_Channel_C    function                        makeMessage      73      30       3
-   Communication_Channel_C    function                        sendMessage     106       4       1
-   Communication_Channel_C    function                           sendFile     118      33       2
-   Communication_Channel_C    function                 initialiseListener     151      53      11
-   Communication_Channel_C    function                          findValue     165       6       2
-   Communication_Channel_C    function           processTheMessageFromSrv     206       5       1
-   Communication_Channel_C    function                         deleteFile     218      13       2
-   Communication_Channel_C      lambda                              [&]()     223       2       1
-   Communication_Channel_C    function                        publishFile     233      11       2
-   Communication_Channel_C      lambda                              [&]()     237       2       1
-   Communication_Channel_C    function                              split     244      10       2
-   Communication_Channel_C    function                           addFiles     256      15       2
-   Communication_Channel_C      lambda                              [&]()     264       2       1
-   Communication_Channel_C    function               displayFilesInClient     272      13       2
-   Communication_Channel_C      lambda                              [&]()     278       2       1
-   Communication_Channel_C    function   displayFilesInCategorySourceCode     286      17       2
-   Communication_Channel_C    function                   downloadCategory     305      12       2
-   Communication_Channel_C      lambda                              [&]()     311       2       1
-   Communication_Channel_C    function                       downloadLazy     318      26       3
-   Communication_Channel_C      lambda                              [&]()     326       2       1
-   Communication_Channel_C    function                            execute     350      41       8
-   Communication_Channel_C    function                      testExecutive     557      43       1
+   Communication_Channel_C    function                        readMessage     363      48      10
+   Communication_Channel_C    function                        addFileBody     413       9       1
+   Communication_Channel_C    function                       splitforList     425      10       2
+   Communication_Channel_C    function               callReadFileFunction     437       8       1
+   Communication_Channel_C    function                           readFile     456      37       3
+   Communication_Channel_C    function                         operator()     496      13       3
+   Communication_Channel_C    function                        makeMessage      58      30       3
+   Communication_Channel_C    function                        sendMessage      91       4       1
+   Communication_Channel_C    function                           sendFile     103      33       2
+   Communication_Channel_C    function                 initialiseListener     136      44       9
+   Communication_Channel_C    function                         deleteFile     185      13       2
+   Communication_Channel_C    function                                 t1     190       2       1
+   Communication_Channel_C    function                        publishFile     200      11       2
+   Communication_Channel_C    function                                 t1     204       2       1
+   Communication_Channel_C    function                              split     211      10       2
+   Communication_Channel_C    function                           addFiles     223      15       2
+   Communication_Channel_C    function                                 t1     231       2       1
+   Communication_Channel_C    function               displayFilesInClient     239      13       2
+   Communication_Channel_C    function                                 t1     245       2       1
+   Communication_Channel_C    function   displayFilesInCategorySourceCode     253      17       2
+   Communication_Channel_C    function                   downloadCategory     272      12       2
+   Communication_Channel_C    function                                 t1     278       2       1
+   Communication_Channel_C    function                       downloadLazy     286      25       3
+   Communication_Channel_C    function                                 t1     294       2       1
+   Communication_Channel_C    function                            execute     317      41       8
+   Communication_Channel_C    function                      testExecutive     517      43       1
    Communication_Channel_C    function                        makeMessage      71      30       3
    Communication_Channel_C    function                        sendMessage     104       4       1
    Communication_Channel_C    function                           sendFile     116      33       2
    Communication_Channel_C    function                 initialiseListener     150      83      13
    Communication_Channel_C    function                         deleteFile     242      13       2
-   Communication_Channel_C      lambda                              [&]()     247       2       1
+   Communication_Channel_C    function                                 t1     247       2       1
    Communication_Channel_C    function                        publishFile     257      11       2
-   Communication_Channel_C      lambda                              [&]()     261       2       1
+   Communication_Channel_C    function                                 t1     261       2       1
    Communication_Channel_C    function                              split     268      10       2
    Communication_Channel_C    function                           addFiles     280      15       2
-   Communication_Channel_C      lambda                              [&]()     288       2       1
+   Communication_Channel_C    function                                 t1     288       2       1
    Communication_Channel_C    function               displayFilesInClient     296      13       2
-   Communication_Channel_C      lambda                              [&]()     302       2       1
+   Communication_Channel_C    function                                 t1     302       2       1
    Communication_Channel_C    function                   downloadCategory     311      12       2
-   Communication_Channel_C      lambda                              [&]()     317       2       1
+   Communication_Channel_C    function                                 t1     317       2       1
    Communication_Channel_C    function                       downloadLazy     324      26       3
-   Communication_Channel_C      lambda                              [&]()     332       2       1
+   Communication_Channel_C    function                                 t1     332       2       1
    Communication_Channel_C    function                            execute     357      87       8
    Communication_Channel_C    function                      testExecutive     622      41       1
    Communication_Channel_C    function                        makeMessage      73      30       3
    Communication_Channel_C    function                        sendMessage     106       4       1
    Communication_Channel_C    function                           sendFile     118      33       2
    Communication_Channel_C    function                 initialiseListener     151      52      11
-   Communication_Channel_C    function                          findValue     164       6       2
    Communication_Channel_C    function           processTheMessageFromSrv     205       5       1
    Communication_Channel_C    function                         deleteFile     217      13       2
-   Communication_Channel_C      lambda                              [&]()     222       2       1
+   Communication_Channel_C    function                                 t1     222       2       1
    Communication_Channel_C    function                        publishFile     232      11       2
-   Communication_Channel_C      lambda                              [&]()     236       2       1
+   Communication_Channel_C    function                                 t1     236       2       1
    Communication_Channel_C    function                              split     243      10       2
    Communication_Channel_C    function                           addFiles     255      15       2
-   Communication_Channel_C      lambda                              [&]()     263       2       1
+   Communication_Channel_C    function                                 t1     263       2       1
    Communication_Channel_C    function               displayFilesInClient     271      13       2
-   Communication_Channel_C      lambda                              [&]()     277       2       1
+   Communication_Channel_C    function                                 t1     277       2       1
    Communication_Channel_C    function   displayFilesInCategorySourceCode     285      17       2
    Communication_Channel_C    function                   downloadCategory     304      12       2
-   Communication_Channel_C      lambda                              [&]()     310       2       1
+   Communication_Channel_C    function                                 t1     310       2       1
    Communication_Channel_C    function                       downloadLazy     317      26       3
-   Communication_Channel_C      lambda                              [&]()     325       2       1
+   Communication_Channel_C    function                                 t1     325       2       1
    Communication_Channel_C    function                            execute     349      41       8
    Communication_Channel_C    function                      testExecutive     555      43       1
-   Communication_Channel_C       class                      ClientCounter      51       7       3
-   Communication_Channel_C    function                      ClientCounter      52       2       1
-   Communication_Channel_C    function                              count      53       2       1
-   Communication_Channel_C    function                               main     607      45       2
+   Communication_Channel_C       class                      ClientCounter      36       7       3
+   Communication_Channel_C    function                      ClientCounter      37       2       1
+   Communication_Channel_C    function                              count      38       2       1
+   Communication_Channel_C    function                               main     567      45       2
    Communication_Channel_C    function                        readMessage     448      99      13
    Communication_Channel_C    function                           readFile     554      44       3
    Communication_Channel_C    function                         operator()     601      13       3
@@ -347,38 +355,38 @@
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-   Communication_Channel_S       class                      ClientHandler      69      11       2
-   Communication_Channel_S    function                      ClientHandler      70       2       1
-   Communication_Channel_S       class                          MsgClient      87      27       1
+   Communication_Channel_S       class                      ClientHandler      78      11       2
+   Communication_Channel_S    function                      ClientHandler      79       2       1
+   Communication_Channel_S       class                          MsgClient      96      27       1
    Communication_Channel_S       class                      ClientHandler      69      11       2
    Communication_Channel_S    function                      ClientHandler      70       2       1
    Communication_Channel_S       class                          MsgClient      87      25       1
-   Communication_Channel_S       class                      ClientHandler      69      11      38
+   Communication_Channel_S       class                      ClientHandler      69      11      37
    Communication_Channel_S    function                      ClientHandler      70       2       1
-   Communication_Channel_S       class                          MsgClient      87      26     301
+   Communication_Channel_S       class                          MsgClient      87      26     298
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-   Communication_Channel_S    function                        readMessage     512      50       9
-   Communication_Channel_S    function                           readFile     569      41       3
-   Communication_Channel_S    function                         operator()     614      13       3
-   Communication_Channel_S    function                        makeMessage      64      30       3
-   Communication_Channel_S    function                        sendMessage      97       4       1
-   Communication_Channel_S    function                           sendFile     109      36       2
-   Communication_Channel_S    function                 initialiseListener     146      44       4
-   Communication_Channel_S    function            deletingFilesInCategory     191      20       3
-   Communication_Channel_S    function            dispplayFilesInCategory     215      17       2
-   Communication_Channel_S    function                 publishTheCategory     235      15       3
-   Communication_Channel_S    function                    getCorrectTable     251      11       1
-   Communication_Channel_S    function                  putInCorrectTable     264       9       1
-   Communication_Channel_S    function                   downloadCategory     274      45       5
-   Communication_Channel_S    function             downloadSpecifiedFiles     319      45       5
-   Communication_Channel_S    function                       lazyDownload     368      15       3
-   Communication_Channel_S    function               findHtmlDependencies     385      17       4
-   Communication_Channel_S    function                     processMessage     403      43       9
-   Communication_Channel_S    function               doDownloadProcessing     447      14       2
-   Communication_Channel_S    function                 connectToTheClient     462      10       2
-   Communication_Channel_S    function                            execute     475      34       6
+   Communication_Channel_S    function                        readMessage     453      50       9
+   Communication_Channel_S    function                           readFile     510      41       3
+   Communication_Channel_S    function                         operator()     555      13       3
+   Communication_Channel_S    function                        makeMessage      49      30       3
+   Communication_Channel_S    function                        sendMessage      82       4       1
+   Communication_Channel_S    function                           sendFile      94      36       2
+   Communication_Channel_S    function                 initialiseListener     130      24       4
+   Communication_Channel_S    function            deletingFilesInCategory     155      20       3
+   Communication_Channel_S    function            dispplayFilesInCategory     179      17       2
+   Communication_Channel_S    function                 publishTheCategory     199      15       3
+   Communication_Channel_S    function                    getCorrectTable     215      11       1
+   Communication_Channel_S    function                  putInCorrectTable     228       9       1
+   Communication_Channel_S    function                   downloadCategory     238      33       5
+   Communication_Channel_S    function             downloadSpecifiedFiles     271      35       5
+   Communication_Channel_S    function                       lazyDownload     310      15       3
+   Communication_Channel_S    function               findHtmlDependencies     327      17       4
+   Communication_Channel_S    function                     processMessage     345      42       9
+   Communication_Channel_S    function               doDownloadProcessing     388      14       2
+   Communication_Channel_S    function                 connectToTheClient     403      10       2
+   Communication_Channel_S    function                            execute     416      34       6
    Communication_Channel_S    function                        makeMessage      64      30       3
    Communication_Channel_S    function                        sendMessage      97       4       1
    Communication_Channel_S    function                           sendFile     109      36       2
@@ -410,11 +418,11 @@
    Communication_Channel_S    function                     processMessage     403      78      10
    Communication_Channel_S    function                 connectToTheClient     483      10       2
    Communication_Channel_S    function                            execute     496      81       7
-   Communication_Channel_S       class                      ClientCounter      44       7       3
-   Communication_Channel_S    function                      ClientCounter      45       2       1
-   Communication_Channel_S    function                              count      46       2       1
-   Communication_Channel_S    function                               main     633      20       2
-   Communication_Channel_S      lambda                              [&]()     641       3       1
+   Communication_Channel_S       class                      ClientCounter      29       7       3
+   Communication_Channel_S    function                      ClientCounter      30       2       1
+   Communication_Channel_S    function                              count      31       2       1
+   Communication_Channel_S    function                               main     574      20       2
+   Communication_Channel_S    function                                 t1     582       3       1
    Communication_Channel_S    function                        readMessage     589      79      10
    Communication_Channel_S    function                           readFile     675      41       3
    Communication_Channel_S    function                         operator()     720      13       3
@@ -422,7 +430,7 @@
    Communication_Channel_S    function                      ClientCounter      45       2       1
    Communication_Channel_S    function                              count      46       2       1
    Communication_Channel_S    function                               main     739      20       2
-   Communication_Channel_S      lambda                              [&]()     747       3       1
+   Communication_Channel_S    function                                 t1     747       3       1
    Communication_Channel_S    function                        readMessage     581      79      10
    Communication_Channel_S    function                           readFile     667      41       3
    Communication_Channel_S    function                         operator()     712      13       3
@@ -430,7 +438,7 @@
    Communication_Channel_S    function                      ClientCounter      45       2       1
    Communication_Channel_S    function                              count      46       2       1
    Communication_Channel_S    function                               main     731      20       2
-   Communication_Channel_S      lambda                              [&]()     739       3       1
+   Communication_Channel_S    function                                 t1     739       3       1
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -443,7 +451,7 @@
        ConfigureParser.cpp    function            ~ConfigParseForCodeAnal      25      36       1
        ConfigureParser.cpp    function                             Attach      64      21       2
        ConfigureParser.cpp    function                              Build      89      98       3
-       ConfigureParser.cpp      lambda                                [])     194      48       8
+       ConfigureParser.cpp    function                               main     194      48       8
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -462,7 +470,7 @@
      Cpp11-BlockingQueue.h       class                      BlockingQueue      55      17      12
      Cpp11-BlockingQueue.h    function                      BlockingQueue      56       2       1
      Cpp11-BlockingQueue.h    function                      BlockingQueue      76       7       1
-     Cpp11-BlockingQueue.h    function                         operator=(      87       9       1
+     Cpp11-BlockingQueue.h    function                          operator=      87       9       1
      Cpp11-BlockingQueue.h    function                                deQ     100      26       3
      Cpp11-BlockingQueue.h    function                                enQ     130       7       2
      Cpp11-BlockingQueue.h    function                              front     141       6       1
@@ -471,7 +479,7 @@
      Cpp11-BlockingQueue.h       class                      BlockingQueue      46      13      10
      Cpp11-BlockingQueue.h    function                      BlockingQueue      47       2       1
      Cpp11-BlockingQueue.h    function                      BlockingQueue      62       3       1
-     Cpp11-BlockingQueue.h    function                         operator=(      68       6       1
+     Cpp11-BlockingQueue.h    function                          operator=      68       6       1
      Cpp11-BlockingQueue.h    function                                deQ      77      16       3
      Cpp11-BlockingQueue.h    function                                enQ      96       7       2
      Cpp11-BlockingQueue.h    function                               size     106       4       1
@@ -489,14 +497,14 @@
            CppProperties.h    function                           Property      62       2       1
            CppProperties.h    function                           Property      63       2       1
            CppProperties.h    function                          ~Property      64       2       1
-           CppProperties.h    function                         operator=(      69       5       1
+           CppProperties.h    function                          operator=      69       5       1
            CppProperties.h    function                     operatorconstT      75       2       1
            CppProperties.h    function                          newSetter      79       2       1
            CppProperties.h    function                          newGetter      80       2       1
            CppProperties.h    function                           getValue      82       1       1
-           CppProperties.h      lambda                       [](constT&t)      89       1       1
-           CppProperties.h      lambda                       [](constT&v)      90       1       1
-           CppProperties.h    function                        operator<<(      97      11       3
+           CppProperties.h    function                                  ]      89       1       1
+           CppProperties.h    function                                  ]      90       1       1
+           CppProperties.h    function                         operator<<      97      11       3
            CppProperties.h       class                           Property     118      15       8
            CppProperties.h    function                           Property     122       2       1
            CppProperties.h    function                           Property     123       2       1
@@ -504,22 +512,27 @@
            CppProperties.h    function                          newGetter     125       2       1
            CppProperties.h    function                     operatorconstT     126       2       1
            CppProperties.h    function                           getValue     127       1       1
-           CppProperties.h      lambda                       [](constT&v)     130       1       1
-           CppProperties.h    function                        operator<<(     137      11       3
+           CppProperties.h    function                                  ]     130       1       1
+           CppProperties.h    function                         operator<<     137      11       3
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
          CppProperties.cpp       class                                  X      14      15       2
+              public data: Property < std :: string > name ; 
+              public data: Property < double > isMutable ; 
+              public data: Property < const double > pi = 3 . 1415927 ; 
+              public data: Property < const std :: string > constName = "a const name" ; 
          CppProperties.cpp    function                               show      21       7       1
          CppProperties.cpp    function                            toUpper      41       6       1
          CppProperties.cpp       class                  UpperCaseProperty      54      12       3
          CppProperties.cpp    function                  UpperCaseProperty      56       4       1
-         CppProperties.cpp    function                         operator=(      61       4       1
+         CppProperties.cpp    function                          operator=      61       4       1
          CppProperties.cpp       class                                  Y      68       4       1
+              public data: UpperCaseProperty name = "jim" ; 
          CppProperties.cpp       class                                  Z      74      26       4
          CppProperties.cpp    function                                  Z      77      21       3
-         CppProperties.cpp      lambda             [](conststd::string&s)      79       5       1
-         CppProperties.cpp      lambda           [](conststd::string&val)      89       7       1
+         CppProperties.cpp    function                          newSetter      79       5       1
+         CppProperties.cpp    function                          newGetter      89       7       1
          CppProperties.cpp    function                               main     102      47       1
 
                  file name        type                               name    line    size    cplx
@@ -542,12 +555,21 @@
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-               Executive.h   namespace                       CodeAnalysis      91     114      93
-               Executive.h       class                        AnalFileMgr      99      22       7
-               Executive.h       class              CodeAnalysisExecutive     126      78      85
+               Executive.h   namespace                       CodeAnalysis      91     114       3
+               Executive.h       class                        AnalFileMgr      99      22       1
+               Executive.h       class              CodeAnalysisExecutive     126      78       1
+               Executive.h   namespace                       CodeAnalysis      91     114     183
+               Executive.h       class                        AnalFileMgr      99      22      13
+               Executive.h       class              CodeAnalysisExecutive     126      78     169
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
+             Executive.cpp    function                        AnalFileMgr      68       2       1
+             Executive.cpp    function                               file      74       7       1
+             Executive.cpp    function                                dir      84       4       1
+             Executive.cpp    function                               done      91       2       1
+             Executive.cpp    function                           numFiles      96       3       1
+             Executive.cpp    function                            numDirs     102       3       1
              Executive.cpp    function                        AnalFileMgr      68       2       1
              Executive.cpp    function                               file      74       7       1
              Executive.cpp    function                                dir      84       4       1
@@ -579,11 +601,52 @@
              Executive.cpp    function                           showData     568       6       1
              Executive.cpp    function                   displayDataLines     576      24       5
              Executive.cpp    function                     displayMetrics     606      39       4
-             Executive.cpp      lambda                 [&](ASTNode*pNode)     614      10       1
+             Executive.cpp    function                               void     614      10       1
              Executive.cpp    function                     displayMetrics     648       4       1
              Executive.cpp    function                         displayAST     679       7       1
              Executive.cpp    function               displayMetricSummary     689      34       6
-             Executive.cpp      lambda                 [&](ASTNode*pNode)     698       2       1
+             Executive.cpp    function                               void     698       2       1
+             Executive.cpp    function                       displaySlocs     746      25       4
+             Executive.cpp    function           dispatchOptionalDisplays     774      22       3
+             Executive.cpp    function                    setDisplayModes     799      25       4
+             Executive.cpp    function                        startLogger     827       9       1
+             Executive.cpp    function                        flushLogger     838       5       1
+             Executive.cpp    function                         stopLogger     845       8       1
+             Executive.cpp    function                         setLogFile     859      13       2
+             Executive.cpp    function                      getDepRsltFnm     874       3       1
+             Executive.cpp    function                     getDsCCRsltFnm     879       3       1
+             Executive.cpp    function                         systemTime     885       9       1
+             Executive.cpp    function               getExecFunctionality     899      35       2
+             Executive.cpp    function              CodeAnalysisExecutive     122       8       2
+             Executive.cpp    function             ~CodeAnalysisExecutive     133      14       1
+             Executive.cpp    function           showCommandLineArguments     178       9       1
+             Executive.cpp    function                 ProcessCommandLine     196      42       8
+             Executive.cpp    function                    getAnalysisPath     241       3       1
+             Executive.cpp    function                         getFileMap     249       3       1
+             Executive.cpp    function                     getSourceFiles     259       8       1
+             Executive.cpp    function                     cppHeaderFiles     278      12       3
+             Executive.cpp    function                     cppImplemFiles     293      12       3
+             Executive.cpp    function                        csharpFiles     308      12       3
+             Executive.cpp    function                          fileSLOCs     322       4       1
+             Executive.cpp    function                           numFiles     329       3       1
+             Executive.cpp    function                            numDirs     335       3       1
+             Executive.cpp    function                       showActivity     341      11       3
+             Executive.cpp    function                             string     343       2       1
+             Executive.cpp    function                      clearActivity     354       6       2
+             Executive.cpp    function                        setLanguage     376       7       1
+             Executive.cpp    function                  processSourceCode     385      95       8
+             Executive.cpp    function                 complexityAnalysis     483       4       1
+             Executive.cpp    function                      displayHeader     524      20       1
+             Executive.cpp    function                 displayMetricsLine     547      18       2
+             Executive.cpp    function                             string     549       2       1
+             Executive.cpp    function                           showData     568       6       1
+             Executive.cpp    function                   displayDataLines     576      24       5
+             Executive.cpp    function                     displayMetrics     606      39       4
+             Executive.cpp    function                               void     614      10       1
+             Executive.cpp    function                     displayMetrics     648       4       1
+             Executive.cpp    function                         displayAST     679       7       1
+             Executive.cpp    function               displayMetricSummary     689      34       6
+             Executive.cpp    function                               void     698       2       1
              Executive.cpp    function                       displaySlocs     746      25       4
              Executive.cpp    function           dispatchOptionalDisplays     774      22       3
              Executive.cpp    function                    setDisplayModes     799      25       4
@@ -608,7 +671,21 @@
              Executive.cpp    function                         operator()     739       3       1
              Executive.cpp    function               executefuncionality1     957       9       1
              Executive.cpp    function               executefuncionality2     966      18       1
-             Executive.cpp      lambda                                [])     989      48       4
+             Executive.cpp    function                               main     989      48       4
+             Executive.cpp    function                          showUsage     150      25       1
+             Executive.cpp    function                           contains     270       5       1
+             Executive.cpp      struct                           CompExts     493       6       2
+             Executive.cpp    function                         operator()     495       3       1
+             Executive.cpp    function                          removeExt     505       4       1
+             Executive.cpp      struct                          CompNames     511      10       2
+             Executive.cpp    function                         operator()     513       7       1
+             Executive.cpp    function                           TreeWalk     656      20       3
+             Executive.cpp      struct                          compFiles     726      17       3
+             Executive.cpp    function               ChangeFirstCharOfExt     729       8       1
+             Executive.cpp    function                         operator()     739       3       1
+             Executive.cpp    function               executefuncionality1     957       9       1
+             Executive.cpp    function               executefuncionality2     966      18       1
+             Executive.cpp    function                               main     989      48       4
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -688,35 +765,35 @@
             FileSystem.cpp    function                          push_back      53       3       1
             FileSystem.cpp    function                         operator[]      59       5       1
             FileSystem.cpp    function                         operator[]      67       5       1
-            FileSystem.cpp    function                        operator==(      75       3       1
+            FileSystem.cpp    function                         operator==      75       3       1
             FileSystem.cpp    function                         operator!=      81       3       1
             FileSystem.cpp    function                               size      87       3       1
             FileSystem.cpp    function                              Block      50       2       1
             FileSystem.cpp    function                          push_back      56       3       1
             FileSystem.cpp    function                         operator[]      62       5       1
             FileSystem.cpp    function                         operator[]      70       5       1
-            FileSystem.cpp    function                        operator==(      78       3       1
+            FileSystem.cpp    function                         operator==      78       3       1
             FileSystem.cpp    function                         operator!=      84       3       1
             FileSystem.cpp    function                               size      90       3       1
             FileSystem.cpp    function                              Block      47       2       1
             FileSystem.cpp    function                          push_back      53       3       1
             FileSystem.cpp    function                         operator[]      59       5       1
             FileSystem.cpp    function                         operator[]      67       5       1
-            FileSystem.cpp    function                        operator==(      75       3       1
+            FileSystem.cpp    function                         operator==      75       3       1
             FileSystem.cpp    function                         operator!=      81       3       1
             FileSystem.cpp    function                               size      87       3       1
             FileSystem.cpp    function                              Block      47       2       1
             FileSystem.cpp    function                          push_back      53       3       1
             FileSystem.cpp    function                         operator[]      59       5       1
             FileSystem.cpp    function                         operator[]      67       5       1
-            FileSystem.cpp    function                        operator==(      75       3       1
+            FileSystem.cpp    function                         operator==      75       3       1
             FileSystem.cpp    function                         operator!=      81       3       1
             FileSystem.cpp    function                               size      87       3       1
             FileSystem.cpp    function                              Block      47       2       1
             FileSystem.cpp    function                          push_back      53       3       1
             FileSystem.cpp    function                         operator[]      59       5       1
             FileSystem.cpp    function                         operator[]      67       5       1
-            FileSystem.cpp    function                        operator==(      75       3       1
+            FileSystem.cpp    function                         operator==      75       3       1
             FileSystem.cpp    function                         operator!=      81       3       1
             FileSystem.cpp    function                               size      87       3       1
             FileSystem.cpp    function                               File      95       2       1
@@ -808,9 +885,9 @@
             FileSystem.cpp    function                         isReadOnly     372       3       1
             FileSystem.cpp    function                           isSystem     378       3       1
             FileSystem.cpp    function                        isTemporary     384       3       1
-            FileSystem.cpp    function                         operator<(     390       3       1
-            FileSystem.cpp    function                        operator==(     396       3       1
-            FileSystem.cpp    function                         operator>(     402       3       1
+            FileSystem.cpp    function                          operator<     390       3       1
+            FileSystem.cpp    function                         operator==     396       3       1
+            FileSystem.cpp    function                          operator>     402       3       1
             FileSystem.cpp    function                            earlier     408       5       1
             FileSystem.cpp    function                              later     416       5       1
             FileSystem.cpp    function                            smaller     424       3       1
@@ -831,9 +908,9 @@
             FileSystem.cpp    function                         isReadOnly     460       3       1
             FileSystem.cpp    function                           isSystem     466       3       1
             FileSystem.cpp    function                        isTemporary     472       3       1
-            FileSystem.cpp    function                         operator<(     478       3       1
-            FileSystem.cpp    function                        operator==(     484       3       1
-            FileSystem.cpp    function                         operator>(     490       3       1
+            FileSystem.cpp    function                          operator<     478       3       1
+            FileSystem.cpp    function                         operator==     484       3       1
+            FileSystem.cpp    function                          operator>     490       3       1
             FileSystem.cpp    function                            earlier     496       5       1
             FileSystem.cpp    function                              later     504       5       1
             FileSystem.cpp    function                            smaller     512       3       1
@@ -854,9 +931,9 @@
             FileSystem.cpp    function                         isReadOnly     372       3       1
             FileSystem.cpp    function                           isSystem     378       3       1
             FileSystem.cpp    function                        isTemporary     384       3       1
-            FileSystem.cpp    function                         operator<(     390       3       1
-            FileSystem.cpp    function                        operator==(     396       3       1
-            FileSystem.cpp    function                         operator>(     402       3       1
+            FileSystem.cpp    function                          operator<     390       3       1
+            FileSystem.cpp    function                         operator==     396       3       1
+            FileSystem.cpp    function                          operator>     402       3       1
             FileSystem.cpp    function                            earlier     408       5       1
             FileSystem.cpp    function                              later     416       5       1
             FileSystem.cpp    function                            smaller     424       3       1
@@ -877,9 +954,9 @@
             FileSystem.cpp    function                         isReadOnly     372       3       1
             FileSystem.cpp    function                           isSystem     378       3       1
             FileSystem.cpp    function                        isTemporary     384       3       1
-            FileSystem.cpp    function                         operator<(     390       3       1
-            FileSystem.cpp    function                        operator==(     396       3       1
-            FileSystem.cpp    function                         operator>(     402       3       1
+            FileSystem.cpp    function                          operator<     390       3       1
+            FileSystem.cpp    function                         operator==     396       3       1
+            FileSystem.cpp    function                          operator>     402       3       1
             FileSystem.cpp    function                            earlier     408       5       1
             FileSystem.cpp    function                              later     416       5       1
             FileSystem.cpp    function                            smaller     424       3       1
@@ -900,9 +977,9 @@
             FileSystem.cpp    function                         isReadOnly     372       3       1
             FileSystem.cpp    function                           isSystem     378       3       1
             FileSystem.cpp    function                        isTemporary     384       3       1
-            FileSystem.cpp    function                         operator<(     390       3       1
-            FileSystem.cpp    function                        operator==(     396       3       1
-            FileSystem.cpp    function                         operator>(     402       3       1
+            FileSystem.cpp    function                          operator<     390       3       1
+            FileSystem.cpp    function                         operator==     396       3       1
+            FileSystem.cpp    function                          operator>     402       3       1
             FileSystem.cpp    function                            earlier     408       5       1
             FileSystem.cpp    function                              later     416       5       1
             FileSystem.cpp    function                            smaller     424       3       1
@@ -986,7 +1063,7 @@
             FileSystem.cpp    function                     firstDirectory     649      13       2
             FileSystem.cpp    function                      nextDirectory     665       6       1
             FileSystem.cpp    function                              title     676       4       1
-            FileSystem.cpp      lambda                                [])     681     297      15
+            FileSystem.cpp    function                               main     681     297      15
             FileSystem.cpp       class                   FileSystemSearch      30      14      10
             FileSystem.cpp    function                   FileSystemSearch      44       2       1
             FileSystem.cpp    function                  ~FileSystemSearch      45       2       1
@@ -996,7 +1073,7 @@
             FileSystem.cpp    function                     firstDirectory     737      13       2
             FileSystem.cpp    function                      nextDirectory     753       6       1
             FileSystem.cpp    function                              title     764       4       1
-            FileSystem.cpp      lambda                                [])     769     438      31
+            FileSystem.cpp    function                               main     769     438      31
             FileSystem.cpp       class                   FileSystemSearch      27      14      10
             FileSystem.cpp    function                   FileSystemSearch      41       2       1
             FileSystem.cpp    function                  ~FileSystemSearch      42       2       1
@@ -1006,7 +1083,7 @@
             FileSystem.cpp    function                     firstDirectory     649      13       2
             FileSystem.cpp    function                      nextDirectory     665       6       1
             FileSystem.cpp    function                              title     676       4       1
-            FileSystem.cpp      lambda                                [])     681     297      15
+            FileSystem.cpp    function                               main     681     297      15
             FileSystem.cpp       class                   FileSystemSearch      27      14      10
             FileSystem.cpp    function                   FileSystemSearch      41       2       1
             FileSystem.cpp    function                  ~FileSystemSearch      42       2       1
@@ -1016,7 +1093,7 @@
             FileSystem.cpp    function                     firstDirectory     649      13       2
             FileSystem.cpp    function                      nextDirectory     665       6       1
             FileSystem.cpp    function                              title     676       4       1
-            FileSystem.cpp      lambda                                [])     681     297      15
+            FileSystem.cpp    function                               main     681     297      15
             FileSystem.cpp       class                   FileSystemSearch      27      14      10
             FileSystem.cpp    function                   FileSystemSearch      41       2       1
             FileSystem.cpp    function                  ~FileSystemSearch      42       2       1
@@ -1026,7 +1103,7 @@
             FileSystem.cpp    function                     firstDirectory     649      13       2
             FileSystem.cpp    function                      nextDirectory     665       6       1
             FileSystem.cpp    function                              title     676       4       1
-            FileSystem.cpp      lambda                                [])     681     297      15
+            FileSystem.cpp    function                               main     681     297      15
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1061,7 +1138,7 @@
         FileSystemTest.cpp    function         TestGetFilesAndDirectories     356      41       1
         FileSystemTest.cpp    function                               test     398       7       1
         FileSystemTest.cpp    function                               test     410      12       1
-        FileSystemTest.cpp      lambda                                [])     423       7       1
+        FileSystemTest.cpp    function                               main     423       7       1
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1218,7 +1295,7 @@
                 Logger.cpp    function                              title      30       4       1
                 Logger.cpp    function                             attach      36       5       1
                 Logger.cpp    function                              start      46      22       5
-                Logger.cpp      lambda                              [=]()      50      14       4
+                Logger.cpp    function                               void      50      14       4
                 Logger.cpp    function                            running      71       3       1
                 Logger.cpp    function                              pause      77      12       3
                 Logger.cpp    function                             paused      92       3       1
@@ -1230,7 +1307,7 @@
                 Logger.cpp    function                              title      30       4       1
                 Logger.cpp    function                             attach      36       5       1
                 Logger.cpp    function                              start      46      22       5
-                Logger.cpp      lambda                              [=]()      50      14       4
+                Logger.cpp    function                               void      50      14       4
                 Logger.cpp    function                            running      71       3       1
                 Logger.cpp    function                              pause      77      12       3
                 Logger.cpp    function                             paused      92       3       1
@@ -1242,14 +1319,14 @@
                 Logger.cpp    function                              title      26       4       1
                 Logger.cpp    function                             attach      32       4       1
                 Logger.cpp    function                              start      39      19       4
-                Logger.cpp      lambda                              [=]()      43      11       3
+                Logger.cpp    function                               void      43      11       3
                 Logger.cpp    function                               stop      61      11       2
                 Logger.cpp    function                            ~Logger      75       3       1
                 Logger.cpp    function                              write      21       4       1
                 Logger.cpp    function                              title      26       4       1
                 Logger.cpp    function                             attach      32       4       1
                 Logger.cpp    function                              start      39      19       4
-                Logger.cpp      lambda                              [=]()      43      11       3
+                Logger.cpp    function                               void      43      11       3
                 Logger.cpp    function                               stop      61      11       2
                 Logger.cpp    function                            ~Logger      75       3       1
                 Logger.cpp      struct                           Cosmetic     137       3       2
@@ -1269,31 +1346,34 @@
     -----------------------  ----------  ---------------------------------  ------  ------  ------
              MockChannel.h      struct                             ISendr      22       3       1
              MockChannel.h      struct                             IRecvr      27       3       1
-             MockChannel.h      struct                       IMockChannel      32       5       1
-             MockChannel.h      struct                      ObjectFactory      40       5       4
+             MockChannel.h      struct                       IMockChannel      32       6       1
+             MockChannel.h      struct                      ObjectFactory      41       5       4
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
-           MockChannel.cpp    function                        createSendr     176       2       1
-           MockChannel.cpp    function                        createRecvr     178       2       1
-           MockChannel.cpp    function                  createMockChannel     181       4       1
+           MockChannel.cpp    function                        createSendr     134       2       1
+           MockChannel.cpp    function                        createRecvr     136       2       1
+           MockChannel.cpp    function                  createMockChannel     139       4       1
            MockChannel.cpp       class                              Sendr      25       7       3
            MockChannel.cpp    function                        postMessage      34       3       1
            MockChannel.cpp    function                              queue      37       2       1
            MockChannel.cpp       class                              Recvr      45       7       3
            MockChannel.cpp    function                         getMessage      54       3       1
            MockChannel.cpp    function                              queue      59       3       1
-           MockChannel.cpp       class                        MockChannel      67      13      18
-           MockChannel.cpp    function                        MockChannel      82       2       1
-           MockChannel.cpp    function                              split      86      10       2
-           MockChannel.cpp    function                              start      99      72      13
-           MockChannel.cpp    function                             thread     102      67      12
-           MockChannel.cpp    function                               stop     172       2       1
-           MockChannel.cpp    function                               main     191      19       1
+           MockChannel.cpp       class                        MockChannel      67      14      18
+           MockChannel.cpp    function                        MockChannel      83       2       1
+           MockChannel.cpp    function                              split      87      10       2
+           MockChannel.cpp    function                              start      99      28       4
+           MockChannel.cpp    function                             thread     102      23       3
+           MockChannel.cpp    function                               stop     128       2       1
+           MockChannel.cpp    function                          getResult     171      38       9
+           MockChannel.cpp    function                               main     149      19       1
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
                  NoSqlDb.h       class                            Element      79       9       5
+              public data: Property < Name > name ; 
+              public data: Property < Childrens > children ; 
                  NoSqlDb.h    function                               show      91      17       3
                  NoSqlDb.h    function                               save     248       8       1
                  NoSqlDb.h       class                            NoSqlDb     121      21      19
@@ -1322,6 +1402,8 @@
                   Parser.h       class                            IAction      94       5       2
                   Parser.h    function                           ~IAction      95       2       1
                   Parser.h       class                              IRule     105      11       4
+              public data: static const bool Continue = true ; 
+              public data: static const bool Stop = false ; 
                   Parser.h    function                             ~IRule     108       2       1
                   Parser.h       class                             Parser     118      11       8
                   Parser.h    function                             Parser     129       2       1
@@ -1334,7 +1416,7 @@
                 Parser.cpp    function                            addRule      28       3       1
                 Parser.cpp    function                               next      33      15       2
                 Parser.cpp    function                              parse      52      11       2
-                Parser.cpp      lambda                                [])      89      55       8
+                Parser.cpp    function                               main      89      55       8
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1373,8 +1455,8 @@
                SemiExp.cpp    function                            SemiExp      27       2       1
                SemiExp.cpp    function                            SemiExp      36       5       1
                SemiExp.cpp    function                            SemiExp      44       7       1
-               SemiExp.cpp    function                         operator=(      54       8       2
-               SemiExp.cpp    function                         operator=(      65      10       2
+               SemiExp.cpp    function                          operator=      54       8       2
+               SemiExp.cpp    function                          operator=      65      10       2
                SemiExp.cpp    function                              begin      76       2       1
                SemiExp.cpp    function                                end      80       2       1
                SemiExp.cpp    function                               find      86       7       1
@@ -1408,7 +1490,7 @@
                  Sockets.h       class                    SocketConnecter     204      12       1
                  Sockets.h       class                     SocketListener     223      21       7
                  Sockets.h    function                              start     254      47       6
-                 Sockets.h      lambda                              [&]()     268      29       3
+                 Sockets.h    function                       ListenThread     268      29       3
                  Sockets.h       class                       SocketSystem     144       8       1
                  Sockets.h       class                             Socket     159      39       4
                  Sockets.h    function                   operator::SOCKET     170       2       1
@@ -1416,7 +1498,7 @@
                  Sockets.h       class                    SocketConnecter     204      12       1
                  Sockets.h       class                     SocketListener     223      21       7
                  Sockets.h    function                              start     254      47       6
-                 Sockets.h      lambda                              [&]()     268      29       3
+                 Sockets.h    function                       ListenThread     268      29       3
                  Sockets.h       class                       SocketSystem     144       8       1
                  Sockets.h       class                             Socket     159      39       4
                  Sockets.h    function                   operator::SOCKET     170       2       1
@@ -1424,7 +1506,7 @@
                  Sockets.h       class                    SocketConnecter     204      12       1
                  Sockets.h       class                     SocketListener     223      21       7
                  Sockets.h    function                              start     254      47       6
-                 Sockets.h      lambda                              [&]()     268      29       3
+                 Sockets.h    function                       ListenThread     268      29       3
                  Sockets.h       class                       SocketSystem     144       8      13
                  Sockets.h       class                             Socket     159      39      96
                  Sockets.h    function                   operator::SOCKET     170       2       1
@@ -1432,7 +1514,7 @@
                  Sockets.h       class                    SocketConnecter     204      12      49
                  Sockets.h       class                     SocketListener     223      21      67
                  Sockets.h    function                              start     254      47       6
-                 Sockets.h      lambda                              [&]()     268      29       3
+                 Sockets.h    function                       ListenThread     268      29       3
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1447,7 +1529,7 @@
                Sockets.cpp    function                             Socket      54       6       1
                Sockets.cpp    function                             Socket      66       7       1
                Sockets.cpp    function                             Socket      76       9       1
-               Sockets.cpp    function                         operator=(      88      10       1
+               Sockets.cpp    function                          operator=      88      10       1
                Sockets.cpp    function                              ipVer     105       3       1
                Sockets.cpp    function                              close     111       4       1
                Sockets.cpp    function                       shutDownSend     118       6       1
@@ -1465,7 +1547,7 @@
                Sockets.cpp    function                             Socket      54       6       1
                Sockets.cpp    function                             Socket      66       7       1
                Sockets.cpp    function                             Socket      76       9       1
-               Sockets.cpp    function                         operator=(      88      10       1
+               Sockets.cpp    function                          operator=      88      10       1
                Sockets.cpp    function                              ipVer     105       3       1
                Sockets.cpp    function                              close     111       4       1
                Sockets.cpp    function                       shutDownSend     118       6       1
@@ -1483,7 +1565,7 @@
                Sockets.cpp    function                             Socket      54       6       1
                Sockets.cpp    function                             Socket      66       7       1
                Sockets.cpp    function                             Socket      76       9       1
-               Sockets.cpp    function                         operator=(      88      10       1
+               Sockets.cpp    function                          operator=      88      10       1
                Sockets.cpp    function                              ipVer     105       3       1
                Sockets.cpp    function                              close     111       4       1
                Sockets.cpp    function                       shutDownSend     118       6       1
@@ -1501,7 +1583,7 @@
                Sockets.cpp    function                             Socket      54       6       1
                Sockets.cpp    function                             Socket      66       7       1
                Sockets.cpp    function                             Socket      76       9       1
-               Sockets.cpp    function                         operator=(      88      10       1
+               Sockets.cpp    function                          operator=      88      10       1
                Sockets.cpp    function                              ipVer     105       3       1
                Sockets.cpp    function                              close     111       4       1
                Sockets.cpp    function                       shutDownSend     118       6       1
@@ -1518,27 +1600,27 @@
                Sockets.cpp    function                        waitForData     261      12       2
                Sockets.cpp    function                    SocketConnecter     279       3       1
                Sockets.cpp    function                    SocketConnecter     285       8       1
-               Sockets.cpp    function                         operator=(     296      10       1
+               Sockets.cpp    function                          operator=     296      10       1
                Sockets.cpp    function                   ~SocketConnecter     309       3       1
                Sockets.cpp    function                            connect     315      63       8
                Sockets.cpp    function                    SocketConnecter     279       3       1
                Sockets.cpp    function                    SocketConnecter     285       8       1
-               Sockets.cpp    function                         operator=(     296      10       1
+               Sockets.cpp    function                          operator=     296      10       1
                Sockets.cpp    function                   ~SocketConnecter     309       3       1
                Sockets.cpp    function                            connect     315      63       8
                Sockets.cpp    function                    SocketConnecter     279       3       1
                Sockets.cpp    function                    SocketConnecter     285       8       1
-               Sockets.cpp    function                         operator=(     296      10       1
+               Sockets.cpp    function                          operator=     296      10       1
                Sockets.cpp    function                   ~SocketConnecter     309       3       1
                Sockets.cpp    function                            connect     315      63       8
                Sockets.cpp    function                    SocketConnecter     279       3       1
                Sockets.cpp    function                    SocketConnecter     285       8       1
-               Sockets.cpp    function                         operator=(     296      10       1
+               Sockets.cpp    function                          operator=     296      10       1
                Sockets.cpp    function                   ~SocketConnecter     309       3       1
                Sockets.cpp    function                            connect     315      63       8
                Sockets.cpp    function                     SocketListener     384      11       1
                Sockets.cpp    function                     SocketListener     398       9       1
-               Sockets.cpp    function                         operator=(     410      11       1
+               Sockets.cpp    function                          operator=     410      11       1
                Sockets.cpp    function                    ~SocketListener     424       3       1
                Sockets.cpp    function                               bind     430      42       6
                Sockets.cpp    function                             listen     475      11       2
@@ -1546,7 +1628,7 @@
                Sockets.cpp    function                               stop     506       4       1
                Sockets.cpp    function                     SocketListener     384      11       1
                Sockets.cpp    function                     SocketListener     398       9       1
-               Sockets.cpp    function                         operator=(     410      11       1
+               Sockets.cpp    function                          operator=     410      11       1
                Sockets.cpp    function                    ~SocketListener     424       3       1
                Sockets.cpp    function                               bind     430      42       6
                Sockets.cpp    function                             listen     475      11       2
@@ -1554,7 +1636,7 @@
                Sockets.cpp    function                               stop     506       4       1
                Sockets.cpp    function                     SocketListener     384      11       1
                Sockets.cpp    function                     SocketListener     398       9       1
-               Sockets.cpp    function                         operator=(     410      11       1
+               Sockets.cpp    function                          operator=     410      11       1
                Sockets.cpp    function                    ~SocketListener     424       3       1
                Sockets.cpp    function                               bind     430      42       6
                Sockets.cpp    function                             listen     475      11       2
@@ -1562,7 +1644,7 @@
                Sockets.cpp    function                               stop     506       4       1
                Sockets.cpp    function                     SocketListener     384      11       1
                Sockets.cpp    function                     SocketListener     398       9       1
-               Sockets.cpp    function                         operator=(     410      11       1
+               Sockets.cpp    function                          operator=     410      11       1
                Sockets.cpp    function                    ~SocketListener     424       3       1
                Sockets.cpp    function                               bind     430      42       6
                Sockets.cpp    function                             listen     475      11       2
@@ -1575,7 +1657,7 @@
                Sockets.cpp    function                        clearBuffer     532       4       1
                Sockets.cpp    function           clientTestStringHandling     672      31       5
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
-               Sockets.cpp      lambda                                [])     766      35       4
+               Sockets.cpp    function                               main     766      35       4
                Sockets.cpp       class                      ClientHandler     522       6      56
                Sockets.cpp    function                         operator()     538      46       6
                Sockets.cpp    function                 testStringHandling     590      33       6
@@ -1583,7 +1665,7 @@
                Sockets.cpp    function                        clearBuffer     532       4       1
                Sockets.cpp    function           clientTestStringHandling     672      31       5
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
-               Sockets.cpp      lambda                                [])     766      35       4
+               Sockets.cpp    function                               main     766      35       4
                Sockets.cpp       class                      ClientHandler     522       6      19
                Sockets.cpp    function                         operator()     538      46       6
                Sockets.cpp    function                 testStringHandling     590      33       6
@@ -1591,7 +1673,7 @@
                Sockets.cpp    function                        clearBuffer     532       4       1
                Sockets.cpp    function           clientTestStringHandling     672      31       5
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
-               Sockets.cpp      lambda                                [])     766      35       4
+               Sockets.cpp    function                               main     766      35       4
                Sockets.cpp       class                      ClientHandler     522       6      19
                Sockets.cpp    function                         operator()     538      46       6
                Sockets.cpp    function                 testStringHandling     590      33       6
@@ -1599,7 +1681,7 @@
                Sockets.cpp    function                        clearBuffer     532       4       1
                Sockets.cpp    function           clientTestStringHandling     672      31       5
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
-               Sockets.cpp      lambda                                [])     766      35       4
+               Sockets.cpp    function                               main     766      35       4
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1684,7 +1766,7 @@
              Tokenizer.cpp    function                         isEndQuote     247      10       2
              Tokenizer.cpp    function                           eatQuote     260      15       2
              Tokenizer.cpp    function                             getTok     278      46       8
-             Tokenizer.cpp      lambda                                [])     329      61       8
+             Tokenizer.cpp    function                               main     329      61       8
              Tokenizer.cpp   namespace                            Scanner      19      83      38
              Tokenizer.cpp      struct                            Context      31      30       5
               public data: std :: string token ; 
@@ -1741,7 +1823,7 @@
              Tokenizer.cpp    function                           eatChars     514      11       2
              Tokenizer.cpp    function                            testLog     648       5       1
              Tokenizer.cpp    function                               main     666      82       7
-             Tokenizer.cpp      lambda                                [])     329      61       8
+             Tokenizer.cpp    function                               main     329      61       8
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1750,7 +1832,10 @@
                TypeTable.h    function                              Tuple      76       1       1
                TypeTable.h    function                              Tuple      77       1       1
                TypeTable.h       class                             LineNO      94       5       1
+              public data: int startLine ; 
+              public data: int endLine ; 
                TypeTable.h       class                          TypeTable     104      28      25
+              public data: std :: vector < Tuple > value ( Key ) ; 
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1813,6 +1898,7 @@
                Utilities.h    function                            toValue     107       6       1
                Utilities.h   namespace                          Utilities      53      53       6
                Utilities.h       class                               test      55       4       1
+              public data: std :: vector < std :: string > publicVector ; 
                Utilities.h       class                       StringHelper      61      16       1
                Utilities.h       class                          Converter      82       5       3
                Utilities.h    function                           toString      90       5       1
@@ -1845,20 +1931,20 @@
              Utilities.cpp    function                              title      23       4       1
              Utilities.cpp    function                              Title      29       4       1
              Utilities.cpp    function                              split      35      22       4
-             Utilities.cpp      lambda                        [](autosrc)      16       1       1
-             Utilities.cpp      lambda                        [](autosrc)      19       1       1
+             Utilities.cpp    function                               void      16       1       1
+             Utilities.cpp    function                               void      19       1       1
              Utilities.cpp    function                            putline      59       3       1
              Utilities.cpp    function                               main      66      41       2
-             Utilities.cpp      lambda                        [](autosrc)      22       1       1
-             Utilities.cpp      lambda                        [](autosrc)      25       1       1
+             Utilities.cpp    function                               void      22       1       1
+             Utilities.cpp    function                               void      25       1       1
              Utilities.cpp    function                 ToDecAddressString     102       5       1
              Utilities.cpp    function                 ToHexAddressString     110       5       1
              Utilities.cpp    function                            putline     118       3       1
              Utilities.cpp    function                               main     126      54       2
              Utilities.cpp    function                            putline     129       3       1
              Utilities.cpp    function                              main1     138      41       2
-             Utilities.cpp      lambda                        [](autosrc)      16       1       1
-             Utilities.cpp      lambda                        [](autosrc)      19       1       1
+             Utilities.cpp    function                               void      16       1       1
+             Utilities.cpp    function                               void      19       1       1
              Utilities.cpp    function                            putline      59       3       1
              Utilities.cpp    function                               main      66      41       2
 
@@ -1897,7 +1983,7 @@
                 Window.cpp    function                setUpConnectionView     523      38       1
                 Window.cpp    function                           OnLoaded     563       3       1
                 Window.cpp    function                          Unloading     567       3       1
-                Window.cpp      lambda  [STAThread]intmain(array<System::     574       6       1
+                Window.cpp    function                               main     574       6       1
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -1951,7 +2037,7 @@
     -----------------------  ----------  ---------------------------------  ------  ------  ------
            XmlDocument.cpp    function                        XmlDocument      23       5       1
            XmlDocument.cpp    function                        XmlDocument      31       4       1
-           XmlDocument.cpp    function                         operator=(      38       6       1
+           XmlDocument.cpp    function                          operator=      38       6       1
            XmlDocument.cpp    function                            xmlRoot      47       8       2
            XmlDocument.cpp    function                            xmlRoot      58       3       1
            XmlDocument.cpp    function                               find      66      11       2
@@ -1963,7 +2049,7 @@
            XmlDocument.cpp    function                           toString     136       3       1
            XmlDocument.cpp    function                        XmlDocument      23       5       1
            XmlDocument.cpp    function                        XmlDocument      31       4       1
-           XmlDocument.cpp    function                         operator=(      38       6       1
+           XmlDocument.cpp    function                          operator=      38       6       1
            XmlDocument.cpp    function                            xmlRoot      47       8       2
            XmlDocument.cpp    function                            xmlRoot      58       3       1
            XmlDocument.cpp    function                               find      66      11       2
@@ -1976,23 +2062,23 @@
            XmlDocument.cpp    function                            enQuote     139       2       1
            XmlDocument.cpp    function                      buildDocument     150      19       1
            XmlDocument.cpp    function                            testDFS     172      12       2
-           XmlDocument.cpp      lambda        [](AbstractXmlElement&Elem)     176       3       1
+           XmlDocument.cpp    function                                  ]     176       3       1
            XmlDocument.cpp    function                        testElement     187      19       1
            XmlDocument.cpp    function                       testElements     209      18       3
            XmlDocument.cpp    function                    testDescendents     230      18       3
            XmlDocument.cpp    function             testElementDescendents     251      18       3
            XmlDocument.cpp    function                               main     272      37       4
-           XmlDocument.cpp      lambda        [](AbstractXmlElement&Elem)     282       3       1
+           XmlDocument.cpp    function                                  ]     282       3       1
            XmlDocument.cpp    function                            enQuote     139       2       1
            XmlDocument.cpp    function                      buildDocument     150      19       1
            XmlDocument.cpp    function                            testDFS     172      12       2
-           XmlDocument.cpp      lambda        [](AbstractXmlElement&Elem)     176       3       1
+           XmlDocument.cpp    function                                  ]     176       3       1
            XmlDocument.cpp    function                        testElement     187      19       1
            XmlDocument.cpp    function                       testElements     209      18       3
            XmlDocument.cpp    function                    testDescendents     230      18       3
            XmlDocument.cpp    function             testElementDescendents     251      18       3
            XmlDocument.cpp    function                               main     272      37       4
-           XmlDocument.cpp      lambda        [](AbstractXmlElement&Elem)     282       3       1
+           XmlDocument.cpp    function                                  ]     282       3       1
 
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
@@ -2171,6 +2257,7 @@
                  file name        type                               name    line    size    cplx
     -----------------------  ----------  ---------------------------------  ------  ------  ------
                XmlWriter.h       class                          XmlWriter      58      23      19
+              public data: typedef std :: pair < std :: string , std :: string > attribElem ; 
                XmlWriter.h    function                          XmlWriter      81       2       1
                XmlWriter.h    function                                xml      83       2       1
                XmlWriter.h    function                              clear      86       6       1
@@ -2248,8 +2335,8 @@
        xmlElementParts.cpp    function                             remove     101      10       2
        xmlElementParts.cpp    function                          trimFront     114       4       1
        xmlElementParts.cpp    function                            toLower     121       9       3
-       xmlElementParts.cpp      lambda                                [])     136      33       5
-       xmlElementParts.cpp      lambda                                [])     136      33       5
+       xmlElementParts.cpp    function                               main     136      33       5
+       xmlElementParts.cpp    function                               main     136      33       5
 
                           Functions Exceeding Metric Limits and Public Data
     ==============================================================================================
@@ -2257,7 +2344,6 @@
     -----------------------  ----------  ---------------------------------  ------  ------  ------
          ActionsAndRules.h    function                           doAction     595      85       6
          ActionsAndRules.h    function                             doTest     899      74      10
-   Communication_Channel_C    function                 initialiseListener     151      53      11
    Communication_Channel_C    function                 initialiseListener     150      83      13
    Communication_Channel_C    function                            execute     357      87       8
    Communication_Channel_C    function                 initialiseListener     151      52      11
@@ -2271,11 +2357,16 @@
        ConfigureParser.cpp    function                              Build      89      98       3
    Cpp11-BlockingQueue.cpp    function                               main      37      52       3
              Executive.cpp    function                  processSourceCode     385      95       8
+             Executive.cpp    function                  processSourceCode     385      95       8
+            FileSystem.cpp    function                               main     681     297      15
+            FileSystem.cpp    function                               main     769     438      31
+            FileSystem.cpp    function                               main     681     297      15
+            FileSystem.cpp    function                               main     681     297      15
+            FileSystem.cpp    function                               main     681     297      15
         GrammarHelpers.cpp    function              isFirstArgDeclaration     164      54       2
         GrammarHelpers.cpp    function                               main     594      59      17
            HttpMessage.cpp    function                              main2     260      68       4
-           MockChannel.cpp    function                              start      99      72      13
-           MockChannel.cpp    function                             thread     102      67      12
+                Parser.cpp    function                               main      89      55       8
             ScopeStack.cpp    function                               main      49      75       1
                Sockets.cpp    function                            connect     315      63       8
                Sockets.cpp    function                            connect     315      63       8
@@ -2285,8 +2376,10 @@
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
                Sockets.cpp    function           clientTestBufferHandling     706      57       8
+             Tokenizer.cpp    function                               main     329      61       8
              Tokenizer.cpp    function                          nextState     192      81      14
              Tokenizer.cpp    function                               main     666      82       7
+             Tokenizer.cpp    function                               main     329      61       8
              Utilities.cpp    function                               main     126      54       2
                 Window.cpp    function                    setUpTabControl     108      54       1
                 Window.cpp    function               setButtonsProperties     183      72       1
@@ -2388,6 +2481,48 @@
                 std :: vector < DeclarationNode > decl_ ; 
               public data: AbstrSynTree.h : 103 - struct ASTNode
                 std :: vector < Scanner :: ITokCollection * > statements_ ; 
+              public data: Communication_Channel_Client.h : 104 - class MsgClient
+                std :: string initialiseListener ( int ) ; 
+              public data: Communication_Channel_Client.h : 114 - class MsgClient
+                std :: vector < std :: string > filePathOf ; 
+              public data: Communication_Channel_Client.h : 115 - class MsgClient
+                std :: vector < std :: string > fileForLazy ; 
+              public data: Communication_Channel_Client.h : 116 - class MsgClient
+                std :: vector < std :: string > filesTodisplay ; 
+              public data: Communication_Channel_Client.h : 93 - class MsgClient
+                std :: string initialiseListener ( int ) ; 
+              public data: Communication_Channel_Client.h : 103 - class MsgClient
+                std :: vector < std :: string > filePathOf ; 
+              public data: Communication_Channel_Client.h : 104 - class MsgClient
+                std :: vector < std :: string > fileForLazy ; 
+              public data: Communication_Channel_Client.h : 105 - class MsgClient
+                std :: vector < std :: string > filesTodisplay ; 
+              public data: Communication_Channel_Client.h : 96 - class MsgClient
+                std :: string initialiseListener ( int ) ; 
+              public data: Communication_Channel_Client.h : 107 - class MsgClient
+                std :: vector < std :: string > filePathOf ; 
+              public data: Communication_Channel_Client.h : 108 - class MsgClient
+                std :: vector < std :: string > fileForLazy ; 
+              public data: Communication_Channel_Client.h : 109 - class MsgClient
+                std :: vector < std :: string > filesTodisplay ; 
+              public data: CppProperties.cpp : 16 - class X
+                Property < std :: string > name ; 
+              public data: CppProperties.cpp : 17 - class X
+                Property < double > isMutable ; 
+              public data: CppProperties.cpp : 18 - class X
+                Property < const double > pi = 3 . 1415927 ; 
+              public data: CppProperties.cpp : 19 - class X
+                Property < const std :: string > constName = "a const name" ; 
+              public data: CppProperties.cpp : 70 - class Y
+                UpperCaseProperty name = "jim" ; 
+              public data: NoSqlDb.h : 83 - class Element
+                Property < Name > name ; 
+              public data: NoSqlDb.h : 84 - class Element
+                Property < Childrens > children ; 
+              public data: Parser.h : 107 - class IRule
+                static const bool Continue = true ; 
+              public data: Parser.h : 108 - class IRule
+                static const bool Stop = false ; 
               public data: ScopeStack.cpp : 26 - struct element
                 std :: string type ; 
               public data: ScopeStack.cpp : 27 - struct element
@@ -2402,7 +2537,17 @@
                 std :: string token ; 
               public data: Tokenizer.cpp : 35 - struct Context
                 std :: istream * _pIn ; 
+              public data: TypeTable.h : 96 - class LineNO
+                int startLine ; 
+              public data: TypeTable.h : 97 - class LineNO
+                int endLine ; 
+              public data: TypeTable.h : 113 - class TypeTable
+                std :: vector < Tuple > value ( Key ) ; 
+              public data: Utilities.h : 57 - class test
+                std :: vector < std :: string > publicVector ; 
+              public data: XmlWriter.h : 60 - class XmlWriter
+                typedef std :: pair < std :: string , std :: string > attribElem ; 
 
 
-    searched   397 dirs
-   processed   135 files
+    searched   398 dirs
+   processed   137 files

@@ -3,8 +3,8 @@
 // - build as DLL to show how C++\CLI client can use native code channel   //
 // - MockChannel reads from sendQ and writes to recvQ                      //
 //                                                                         //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2015 
-//
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2017			   // 
+//Appended by Sushanth Suresh (SUID:987471535)							   //
 /////////////////////////////////////////////////////////////////////////////
 
 #define IN_DLL
@@ -69,6 +69,7 @@ public:
   MockChannel(ISendr* pSendr, IRecvr* pRecvr);
   void start();
   void stop();
+   Message getResult(std::vector<std::string> m, MsgClient& client);
 private:
   std::thread thread_;
   ISendr* pISendr_;
@@ -95,15 +96,13 @@ std::vector<std::string> MockChannel::split(const std::string &s, char delim) {
 }
 //----< creates thread to read from sendQ and echo back to the recvQ >-------
 
-void MockChannel::start()
-{
+void MockChannel::start(){
   std::cout << "\n  MockChannel starting up";
   thread_ = std::thread(
     [this] {
     Sendr* pSendr = dynamic_cast<Sendr*>(pISendr_);
     Recvr* pRecvr = dynamic_cast<Recvr*>(pIRecvr_);
-    if (pSendr == nullptr || pRecvr == nullptr)
-    {
+    if (pSendr == nullptr || pRecvr == nullptr){
       std::cout << "\n  failed to start Mock Channel\n\n";
       return;
     }
@@ -117,50 +116,7 @@ void MockChannel::start()
 	  std::cout << "\n  channel got message: " << msg;
 	  Message res;
 	  std::vector<std::string> m = split(msg, ',');
-	  if (m[0] == "PUBLISH") {
-		  res = client.publishFile(std::stoi(m[1]));
-		 // res = c.publish(std::stoi(m[1]));
-		  res = "PUBLISH," + res;
-	  }
-	  else if (m[0] == "DELETE") {
-		  res = client.deleteFile(std::stoi(m[1]));
-		  res = "DELETE," + res;
-	  }
-	  else if (m[0] == "DISPLAY") {
-		  res = client.displayFilesInClient(std::stoi(m[1]));
-		  res = "DISPLAY," + res;
-	  }
-	  else if (m[0] == "UPLOAD") {
-		  std::string files;
-		  int actualsize = m.size() - 1;
-		  for (int i = 2; i < actualsize; i++) {
-			  files += m[i] + ",";
-		  }
-		  files.pop_back();
-		  res = client.addFiles(std::stoi(m[1]),files);
-		  std::cout << "\n   got response: " << res;
-		  res = "UPLOAD," + res;
-		  std::cout << "\n   sent response: " << res;
-	  }
-	  else if (m[0] == "DOWNLOAD") {
-		  if (m[2] != "ALL") {
-			  std::string files;
-			  int actualsize = m.size() - 1;
-			  for (int i = 2; i < actualsize; i++) {
-				  files += m[i] + ",";
-			  }
-			  files.pop_back();
-			  res = client.downloadLazy(files,std::stoi(m[1]));
-		  }
-		  else {
-			  res = client.downloadCategory(std::stoi(m[1]));/* .download(std::stoi(m[1]), std::string("ALL"));*/
-		  }
-		  
-		  //
-		  res = "DOWNLOAD," + res;
-		  std::cout << "\n   sent response: " << res;
-	  }
-
+	  res = getResult(m, client);
       std::cout << "\n  channel enQing message";
 	  recvQ.enQ(res);
 	  std::cout << "\n   got response: " << res;
@@ -171,6 +127,8 @@ void MockChannel::start()
 //----< signal server thread to stop >---------------------------------------
 
 void MockChannel::stop() { stop_ = true; }
+
+
 
 //----< factory functions >--------------------------------------------------
 
@@ -208,3 +166,43 @@ int main()
   std::cin.get();
 }
 #endif
+//returns the result
+Message MockChannel::getResult(std::vector<std::string> m, MsgClient & client)
+{
+	Message res;
+	if (m[0] == "PUBLISH") {
+		res = client.publishFile(std::stoi(m[1]));
+		// res = c.publish(std::stoi(m[1]));
+		res = "PUBLISH," + res;
+	}else if (m[0] == "DELETE") {
+		res = client.deleteFile(std::stoi(m[1]));
+		res = "DELETE," + res;
+	}else if (m[0] == "DISPLAY") {
+		res = client.displayFilesInClient(std::stoi(m[1]));
+		res = "DISPLAY," + res;
+	}else if (m[0] == "UPLOAD") {
+		std::string files;
+		int actualsize = m.size() - 1;
+		for (int i = 2; i < actualsize; i++) {
+			files += m[i] + ",";
+		}
+		files.pop_back();
+		res = client.addFiles(std::stoi(m[1]), files);
+		std::cout << "\n   got response: " << res;
+		res = "UPLOAD," + res;
+		std::cout << "\n   sent response: " << res;
+	}else if (m[0] == "DOWNLOAD") {
+		if (m[2] != "ALL") {
+			std::string files;
+			int actualsize = m.size() - 1;
+			for (int i = 2; i < actualsize; i++) {
+				files += m[i] + ",";
+			}
+			files.pop_back();
+			res = client.downloadLazy(files, std::stoi(m[1]));
+		}
+		res = "DOWNLOAD," + res;
+		std::cout << "\n   sent response: " << res;
+	}
+	return res;
+}

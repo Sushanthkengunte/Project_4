@@ -1,34 +1,19 @@
 /////////////////////////////////////////////////////////////////////////
-// MsgClient.cpp - Demonstrates simple one-way HTTP messaging          //
+// Communication_Channel_Server.cpp 						           //
 //                                                                     //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016           //
+//Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017        //
 // Application: OOD Project #4                                         //
-// Platform:    Visual Studio 2015, Dell XPS 8900, Windows 10 pro      //
+// Platform:    Visual Studio 2015,Lenovo, Windows 10				   //	
+//(SUID: 987471535)  												   //	
 /////////////////////////////////////////////////////////////////////////
 /*
-* This package implements a client that sends HTTP style messages and
-* files to a server that simply displays messages and stores files.
+* This package implementsCommunication_Channel_Server.h
 *
-* It's purpose is to provide a very simple illustration of how to use
-* the Socket Package provided for Project #4.
+*
 */
 /*
 * Required Files:
-*   MsgClient.cpp, MsgServer.cpp
-*   HttpMessage.h, HttpMessage.cpp
-*   Cpp11-BlockingQueue.h
-*   Sockets.h, Sockets.cpp
-*   FileSystem.h, FileSystem.cpp
-*   Logger.h, Logger.cpp
-*   Utilities.h, Utilities.cpp
-*/
-/*
-* ToDo:
-* - pull the sending parts into a new Sender class
-* - You should create a Sender like this:
-*     Sender sndr(endPoint);  // sender's EndPoint
-*     sndr.PostMessage(msg);
-*   HttpMessage msg has the sending adddress, e.g., localhost:8080.
+* Communication_Channel_Server.h
 */
 
 #include "Communication_Channel_Server.h"
@@ -252,18 +237,13 @@ void MsgClient::putInCorrectTable(std::string category, std::unordered_map<std::
 //-------downloading files in a category---------------
 void MsgClient::downloadCategory(std::string category, std::string type, std::vector<std::string> files) {
 	std::cout << "\ndownload files in category" + category;
-	try
-	{
+	try{
 		SocketSystem ss;
 		SocketConnecter si;
-		while (!si.connect("localhost", 8080))
-		{
+		while (!si.connect("localhost", 8080)){
 			std::cout << "\n client waiting to connect";
 			::Sleep(100);
-		}
-
-		// send a set of messages
-
+		}// send a set of messages
 		HttpMessage msg;
 		std::string msgBody = "sending back with files to download";
 		std::cout << msgBody;
@@ -272,20 +252,13 @@ void MsgClient::downloadCategory(std::string category, std::string type, std::ve
 		std::cout << "\n\n  Server sends back download msg\n" + msg.toIndentedString();
 		files.push_back("project4.js");
 		files.push_back("style.css");
-		//std::vector<std::string> files;
 		for (size_t i = 0; i < files.size(); ++i)
 		{
 			std::cout << "\n\n  sending file " + files[i];
 			sendFile(files[i], si, category, type);
 		}
-
-		// shut down server
-
 		msg = makeMessage(1, "finish", "toAddr:localhost:8080", category, type);
 		sendMessage(msg, si);
-		//Show::write("\n\n  client" + myCountString + " sent\n" + msg.toIndentedString());
-
-		//std::cout << "\n";
 		std::cout << "\n  Sending finish msg to stop client to listen";
 	}
 	catch (std::exception& exc)
@@ -305,28 +278,18 @@ void MsgClient::downloadSpecifiedFiles(std::string type, std::vector<std::string
 		{
 			std::cout << "\n client waiting to connect";
 			::Sleep(100);
-		}
-
-		// send a set of messages
-
+		}// send a set of messages
 		HttpMessage msg;
 		std::string msgBody = "Sending from Server to " + type + "\n";
 		msg = makeMessage(1, msgBody, "localhost:8080", category, type);
 		sendMessage(msg, si);
 		std::cout << "\n\n  Server sends \n" + msg.toIndentedString();
-		//  send all *.cpp files from TestFiles folder
-
 		for (size_t i = 0; i < filesForLazyDownload.size(); ++i)
 		{
-
 			std::string fullPathOfFile = files[i];
-			//Show::write("\n\n  sending file " + files[i]);
 			sendFile(fullPathOfFile, si, category,type);
-		}
-
-		// shut down server's client handler
-
-			msg = makeMessage(1, "Successful", "toAddr:localhost:8080", category, type);
+		}// shut down server's client handler
+		msg = makeMessage(1, "Successful", "toAddr:localhost:8080", category, type);
 		sendMessage(msg, si);
 		std::cout << "Server finished sending files back to client";
 		si.close();
@@ -341,7 +304,7 @@ void MsgClient::downloadSpecifiedFiles(std::string type, std::vector<std::string
 
 }
 
-
+//--------requests to get dependencies of each  file
 
 void MsgClient::lazyDownload(std::string files,std::string category,std::string type)
 {
@@ -359,6 +322,7 @@ void MsgClient::lazyDownload(std::string files,std::string category,std::string 
 	}
 
 }
+//populates the dependencies
 
 void MsgClient::findHtmlDependencies(std::string forEach,std::unordered_map<std::string, std::vector<std::string>> correctTable)
 {
@@ -378,10 +342,11 @@ void MsgClient::findHtmlDependencies(std::string forEach,std::unordered_map<std:
 	}
 	
 }
-
+//process the message got from the client
 void MsgClient::processMessage(HttpMessage msg){
 	std::string type = msg.findValue("type");
 	if (type == "upload") {
+		
 		std::string  cat = msg.findValue("Category");
 		std::string  tp = msg.findValue("type");		
 		if (msg.bodyString() == "finish") {//send successful after recieving finish
@@ -389,6 +354,7 @@ void MsgClient::processMessage(HttpMessage msg){
 		connectToTheClient(message);
 		}
 	}if (type == "delete") {
+
 		std::string  cat = msg.findValue("Category");
 		deletingFilesInCategory(cat);
 		std::string  tp = msg.findValue("type");
@@ -421,6 +387,7 @@ void MsgClient::processMessage(HttpMessage msg){
 		}
 	}	
 }
+
 void MsgClient::doDownloadProcessing(HttpMessage msg)
 {
 	std::string  cat = msg.findValue("Category");
@@ -435,6 +402,18 @@ void MsgClient::doDownloadProcessing(HttpMessage msg)
 	absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\Category1\\project4.js");
 	absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\Category1\\style.css");
 	downloadCategory(cat, tp, absolutePathOfFiles);
+}
+void MsgClient::douploadProcessing(HttpMessage msg)
+{
+	std::string  cat = msg.findValue("Category");
+	std::string  tp = msg.findValue("type");
+	if (msg.bodyString() == "finish") {//send successful after recieving finish
+		HttpMessage message = makeMessage(1, "Successfull", "toAddr:localhost:8080", cat, tp);
+		connectToTheClient(message);
+	}
+}
+void MsgClient::dodeleteProcessing(HttpMessage msg)
+{
 }
 void MsgClient::connectToTheClient(HttpMessage msg)
 {

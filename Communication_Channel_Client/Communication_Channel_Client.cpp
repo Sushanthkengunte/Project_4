@@ -1,34 +1,19 @@
 /////////////////////////////////////////////////////////////////////////
-// MsgClient.cpp - Demonstrates simple one-way HTTP messaging          //
+// Communication_Channel_Client.cpp 						           //
 //                                                                     //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016           //
+//Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017        //
 // Application: OOD Project #4                                         //
-// Platform:    Visual Studio 2015, Dell XPS 8900, Windows 10 pro      //
+// Platform:    Visual Studio 2015,Lenovo, Windows 10				   //	
+//(SUID: 987471535)  												   //	
 /////////////////////////////////////////////////////////////////////////
 /*
-* This package implements a client that sends HTTP style messages and
-* files to a server that simply displays messages and stores files.
+* This package implements Communication_Channel_Client.h
 *
-* It's purpose is to provide a very simple illustration of how to use
-* the Socket Package provided for Project #4.
+*
 */
 /*
 * Required Files:
-*   MsgClient.cpp, MsgServer.cpp
-*   HttpMessage.h, HttpMessage.cpp
-*   Cpp11-BlockingQueue.h
-*   Sockets.h, Sockets.cpp
-*   FileSystem.h, FileSystem.cpp
-*   Logger.h, Logger.cpp
-*   Utilities.h, Utilities.cpp
-*/
-/*
-* ToDo:
-* - pull the sending parts into a new Sender class
-* - You should create a Sender like this:
-*     Sender sndr(endPoint);  // sender's EndPoint
-*     sndr.PostMessage(msg);
-*   HttpMessage msg has the sending adddress, e.g., localhost:8080.
+* Communication_Channel_Client.h
 */
 
 
@@ -62,13 +47,7 @@ size_t ClientCounter::clientCount = 0;
 
 
 //----< factory for creating messages >------------------------------
-/*
-* This function only creates one type of message for this demo.
-* - To do that the first argument is 1, e.g., index for the type of message to create.
-* - The body may be an empty string.
-* - EndPoints are strings of the form ip:port, e.g., localhost:8081. This argument
-*   expects the receiver EndPoint for the toAddr attribute.
-*/
+
 HttpMessage MsgClient::makeMessage(size_t n, const std::string& body, const EndPoint& ep, std::string category, std::string type)
 {
 	HttpMessage msg;
@@ -108,12 +87,7 @@ void MsgClient::sendMessage(HttpMessage& msg, Socket& socket)
 	socket.send(msgString.size(), (Socket::byte*)msgString.c_str());
 }
 //----< send file using socket >-------------------------------------
-/*
-* - Sends a message to tell receiver a file is coming.
-* - Then sends a stream of bytes until the entire file
-*   has been sent.
-* - Sends in binary mode which works for either text or binary.
-*/
+
 bool MsgClient::sendFile(const std::string& filename, Socket& socket,std::string category)
 {
 	// assumes that socket is connected
@@ -153,7 +127,7 @@ std::string MsgClient::initialiseListener(int port){
 	::Sleep(20);//to test for download
 		Async::BlockingQueue<HttpMessage> msgQ;
 		std::string typeOfResult;
-		try{
+		//try{
 			SocketSystem ss;
 			SocketListener sl(port, Socket::IP6);
 			ClientHandler cp(msgQ);
@@ -168,11 +142,6 @@ std::string MsgClient::initialiseListener(int port){
 						break;
 					}
 			}
-				//else if (type1 == "display") {
-				//	
-				//	typeOfResult = msg.bodyString();		
-				//	break;//send back to gui and break
-				//}
 			else if (type1 == "download") {
 					if (msg.bodyString() == "finish") {
 						typeOfResult = "finish download";
@@ -184,34 +153,21 @@ std::string MsgClient::initialiseListener(int port){
 						break;
 					}
 				}
-				//else if (type1 == "publish") {//filesForLazyDownload					
-				//	typeOfResult = msg.bodyString();
-				//	break;
-				//}
 				else /*if (checkmessage(msg))*/ {
 					filesTodisplay.clear();
-					typeOfResult = msg.bodyString();//"finished" + type1;
+					typeOfResult = msg.bodyString();
 					break;
 				}
 			}
 			std::cout << "\n-----------------\n Successfully completed and returned from Server \n-----------------\n";
 			sl.close();
 			return typeOfResult;
-		}catch (std::exception& exc){
-			std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
-		}
+		//}catch (std::exception& exc){
+			//std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
+		//}
 }
 
-std::string MsgClient::processTheMessageFromSrv(HttpMessage msg)
-{
-	std::string temp;
 
-	return temp;
-}
-//bool MsgClient::checkmessage(HttpMessage msg) {
-//	//send the message to the GUI and after sending the 
-//	return true;
-//}
 
 //when GUI selects a category to delete from server, 
 std::string MsgClient::deleteFile(int category)
@@ -228,7 +184,7 @@ std::string MsgClient::deleteFile(int category)
 		return returnMessage;
 	
 }
-
+//------client makes a call to the server to publish------
 std::string MsgClient::publishFile(int category)
 {
 	std::string returnMessage;
@@ -241,6 +197,7 @@ std::string MsgClient::publishFile(int category)
 		
 		return returnMessage;
 }
+//------splits the csv string into a vector of string--------
 std::vector<std::string> MsgClient::split(const std::string &s, char delim) {
 	std::stringstream ss;
 	ss.str(s);
@@ -251,7 +208,7 @@ std::vector<std::string> MsgClient::split(const std::string &s, char delim) {
 	}
 	return elems;
 }
-
+//---------makes the appropriate call to the server to add files
 std::string MsgClient::addFiles(int category, std::string files)
 {
 	std::vector<std::string> filePath;
@@ -268,6 +225,7 @@ std::string MsgClient::addFiles(int category, std::string files)
 	
 		return returnMessage;
 }
+//---------makes the appropriate call to the server to display files
 std::string MsgClient::displayFilesInClient(int category)
 {
 	
@@ -282,7 +240,7 @@ std::string MsgClient::displayFilesInClient(int category)
 		std::string var = "Success," + returnMessage;
 		return var;
 }
-
+//----------dispalys files in source code------------
 std::string MsgClient::displayFilesInCategorySourceCode(std::string category) {
 	std::cout << "\nCategory" + category + ":";
 	std::string pathTill = FileSystem::Path::getFullFileSpec("../");
@@ -297,10 +255,10 @@ std::string MsgClient::displayFilesInCategorySourceCode(std::string category) {
 
 	}
 	//correct.pop_back();
-	std::cout << "\nDisplayed all files in Source Code in Server side ";
+	std::cout << "\nDisplayed all files in Source Code in Server side in"+pathToTheCategory;
 	return correct;
 }
-
+//---------makes the appropriate call to the server to download files in a category
 std::string MsgClient::downloadCategory(int category)
 {
 	
@@ -314,6 +272,7 @@ std::string MsgClient::downloadCategory(int category)
 		t1.join();
 		return returnMessage;
 }
+//---------makes the appropriate call to the server to download dependent files in a specific category
 std::string MsgClient::downloadLazy(std::string files1, int category)
 {
 	std::vector<std::string> files;
@@ -338,7 +297,6 @@ std::string MsgClient::downloadLazy(std::string files1, int category)
 			LPCWSTR ch = L"chrome.exe";
 			ShellExecute(NULL, a, ch, swpath, NULL, SW_SHOWDEFAULT);
 		}
-	
 		return returnMessage;
 }
 
@@ -441,7 +399,7 @@ HttpMessage ClientHandler::readMessage(Socket& socket){
 	}
 	return msg;
 }
-
+//---------adds the body of file message
 HttpMessage ClientHandler::addFileBody(HttpMessage msg, std::string filename)
 {
 	HttpMessage temp = msg;
@@ -465,7 +423,7 @@ void ClientHandler::splitforList(std::string fileList)
 	}
 	//return std::vector<std::string>();
 }
-
+//-------makes the call to the read the file
 void ClientHandler::callReadFileFunction(HttpMessage msg, std::string filename, size_t contentSize, Socket& socket)
 {
 	std::string correctfilename;
@@ -480,11 +438,7 @@ void ClientHandler::callReadFileFunction(HttpMessage msg, std::string filename, 
 
 
 //----< read a binary file from socket and save >--------------------
-/*
-* This function expects the sender to have already send a file message,
-* and when this function is running, continuosly send bytes until
-* fileSize bytes have been sent.
-*/
+
 bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socket& socket)
 {
 	std::cout << "\n\nReceiving file-------->" + filename;
@@ -493,13 +447,6 @@ bool ClientHandler::readFile(const std::string& filename, size_t fileSize, Socke
 	file.open(FileSystem::File::out, FileSystem::File::binary);
 	if (!file.isGood())
 	{
-		/*
-		* This error handling is incomplete.  The client will continue
-		* to send bytes, but if the file can't be opened, then the server
-		* doesn't gracefully collect and dump them as it should.  That's
-		* an exercise left for students.
-		*/
-		//Show::write("\n\n  can't open file " + fqname);
 		std::cout << "Cant open file" + fqname;
 		return false;
 	}
@@ -546,12 +493,7 @@ void ClientHandler::operator()(Socket socket)
 		msgQ_.enQ(msg);
 	}
 }
-
-inline Async::BlockingQueue<HttpMessage>& ClientHandler::getQ()
-{
-	// TODO: insert return statement here
-	return msgQ_;
-}
+//-----------test executive--------------
 
 void MsgClient::testExecutive()
 {

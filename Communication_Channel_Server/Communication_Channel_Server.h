@@ -1,41 +1,50 @@
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////
-// MsgServer.cpp - Demonstrates simple one-way HTTP style messaging    //
+// Communication_Channel_Server.h - provides Server functionality      //
 //                 and file transfer                                   //
 //                                                                     //
-// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016           //
+// Sushanth Suresh, CSE687 - Object Oriented Design, Spring 2017       //
 // Application: OOD Project #4                                         //
-// Platform:    Visual Studio 2015, Dell XPS 8900, Windows 10 pro      //
+// Platform:    Visual Studio 2015, Lenovo, Windows 10			       //
+//(SUID:987471535)													   //
 /////////////////////////////////////////////////////////////////////////
 /*
+*Module Operations:
 * This package implements a server that receives HTTP style messages and
 * files from multiple concurrent clients and simply displays the messages
 * and stores files.
+*This package uses two clases Clienthandler and MsgClient, where clientHandler
+*handles the client requests and msgClient sends the reply back
 *
-* It's purpose is to provide a very simple illustration of how to use
-* the Socket Package provided for Project #4.
+.
 */
 /*
 * Required Files:
-*   MsgClient.cpp, MsgServer.cpp
+*
 *   HttpMessage.h, HttpMessage.cpp
 *   Cpp11-BlockingQueue.h
 *   Sockets.h, Sockets.cpp
 *   FileSystem.h, FileSystem.cpp
 *   Logger.h, Logger.cpp
 *   Utilities.h, Utilities.cpp
+
 */
-/*
-* ToDo:
-* - pull the receiving code into a Receiver class
-* - Receiver should own a BlockingQueue, exposed through a
-*   public method:
-*     HttpMessage msg = Receiver.GetMessage()
-* - You will start the Receiver instance like this:
-*     Receiver rcvr("localhost:8080");
-*     ClientHandler ch;
-*     rcvr.start(ch);
+/*Public Interdfaces:
+*-----------------------
+* ClientHandler:
+*Its a functor that reads a message and process it on a different thread using threads
+*
+*MsgClient:
+*initialiseListener(int)       // initialises the reciever to run forever on a different thread
+*processMessage()			   // calls the appropiate function
+*deletingFilesInCategory()	   // deletes files in specific category
+*publishTheCategory()		   //Publisehs all the *.cpp,*.h and *.css files
+*dispplayFilesInCategory()		//displays all the files in the category after publishing it, in a list box
+*downloadCategory()				//Sends back all the files in a specific category
+*lazyDownload()					//populates all the file names which are required to be sent back
+*downloadSpecifiedFiles()		//Sends back all the files in a specific category
+*
 */
 #include "../HttpMessage/HttpMessage.h"
 #include "Sockets.h"
@@ -101,6 +110,8 @@ public:
 private:
 	void connectToTheClient(HttpMessage msg);
 	void doDownloadProcessing(HttpMessage msg);
+	void douploadProcessing(HttpMessage msg);
+	void dodeleteProcessing(HttpMessage msg);
 	std::unordered_map<std::string, std::vector<std::string>> category1HtmlDependencytable;
 	std::unordered_map<std::string, std::vector<std::string>> category2HtmlDependencytable;
 	std::unordered_map<std::string, std::vector<std::string>> category3HtmlDependencytable;

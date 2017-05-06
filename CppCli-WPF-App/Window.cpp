@@ -45,7 +45,7 @@ WPFCppCliDemo::WPFCppCliDemo()
   hDownloadButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::downloadFilesForCategory);
   hDeleteButton->Click += gcnew RoutedEventHandler(this, &WPFCppCliDemo::deleteCategory);
   // set Window properties
-  this->Title = "Client display";
+  this->Title = "Remote Code Publisher";
   this->Width = 800;
   this->Height = 600;
   // attach dock panel to Window
@@ -107,7 +107,7 @@ void WPFCppCliDemo::setUpStatusBar()
 void WPFCppCliDemo::setUpTabControl()
 {
   hGrid->Children->Add(hTabControl);
-  hSendMessageTab->Header = "Publish / Delete / Messages from server";
+  hSendMessageTab->Header = "Publish / Delete / Response from server";
   hUploadFLTab->Header = "Upload File List";
   hDisplayFLTab->Header = "Display File List";
   hTabControl->Items->Add(hUploadFLTab);
