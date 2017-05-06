@@ -82,6 +82,7 @@ public:
 private:
 	bool connectionClosed_;
 	HttpMessage readMessage(Socket& socket);
+	HttpMessage addFileBody1(HttpMessage msg, std::string size);
 	bool readFile(const std::string& filename, size_t fileSize, Socket& socket);
 	Async::BlockingQueue<HttpMessage>& msgQ_;
 
@@ -110,8 +111,11 @@ public:
 private:
 	void connectToTheClient(HttpMessage msg);
 	void doDownloadProcessing(HttpMessage msg);
+	void dodisplayProcessing1(HttpMessage msg);
 	void douploadProcessing(HttpMessage msg);
 	void dodeleteProcessing(HttpMessage msg);
+	void dopublishProcessing(HttpMessage msg);
+	std::string putInCsv(std::unordered_map<std::string, std::vector<std::string>> table);
 	std::unordered_map<std::string, std::vector<std::string>> category1HtmlDependencytable;
 	std::unordered_map<std::string, std::vector<std::string>> category2HtmlDependencytable;
 	std::unordered_map<std::string, std::vector<std::string>> category3HtmlDependencytable;

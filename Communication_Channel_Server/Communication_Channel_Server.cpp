@@ -346,35 +346,22 @@ void MsgClient::findHtmlDependencies(std::string forEach,std::unordered_map<std:
 void MsgClient::processMessage(HttpMessage msg){
 	std::string type = msg.findValue("type");
 	if (type == "upload") {
-		
-		std::string  cat = msg.findValue("Category");
-		std::string  tp = msg.findValue("type");		
-		if (msg.bodyString() == "finish") {//send successful after recieving finish
-		HttpMessage message = makeMessage(1, "Successfull", "toAddr:localhost:8080", cat, tp);
-		connectToTheClient(message);
-		}
-	}if (type == "delete") {
+		douploadProcessing(msg);
 
-		std::string  cat = msg.findValue("Category");
-		deletingFilesInCategory(cat);
-		std::string  tp = msg.findValue("type");
-		HttpMessage message = makeMessage(1, msg.bodyString(), "toAddr:localhost:8080", cat, tp);
-		connectToTheClient(message);		
+	}if (type == "delete") {
+		dodeleteProcessing(msg);
+		
 	}if (type == "publish") {
-		std::string  cat = msg.findValue("Category");
-		std::string  tp = msg.findValue("type");
-		publishTheCategory(cat);		
-		auto table = getCorrectTable(cat);
-		MsgClient c2;
-		c2.putInCorrectTable(cat, table);
-		c2.execute(100, 1,tp,cat);	
+		dopublishProcessing(msg);
+	
 	}if (type == "display") {
-		std::string  cat = msg.findValue("Category");
+		dodisplayProcessing1(msg);
+	/*	std::string  cat = msg.findValue("Category");
 		std::string csvString = dispplayFilesInCategory(cat);
 		std::string  tp = msg.findValue("type");
 		std::cout << "\n"+csvString;
 		HttpMessage message = makeMessage(1, csvString , "toAddr:localhost:8080", cat, tp);
-		connectToTheClient(message);	
+		connectToTheClient(message);*/	
 	} if (type == "download") {
 		doDownloadProcessing(msg);
 	}if (type == "downloadLazy") {
@@ -387,7 +374,7 @@ void MsgClient::processMessage(HttpMessage msg){
 		}
 	}	
 }
-
+//calls download method
 void MsgClient::doDownloadProcessing(HttpMessage msg)
 {
 	std::string  cat = msg.findValue("Category");
@@ -403,6 +390,16 @@ void MsgClient::doDownloadProcessing(HttpMessage msg)
 	absolutePathOfFiles.push_back(pathTill + "Server_Files\\HtmlFiles\\Category1\\style.css");
 	downloadCategory(cat, tp, absolutePathOfFiles);
 }
+void MsgClient::dodisplayProcessing1(HttpMessage msg)
+{
+	std::string  cat = msg.findValue("Category");
+	std::string csvString = dispplayFilesInCategory(cat);
+	std::string  tp = msg.findValue("type");
+	std::cout << "\n" + csvString;
+	HttpMessage message = makeMessage(1, csvString, "toAddr:localhost:8080", cat, tp);
+	connectToTheClient(message);
+}
+//calls upload method
 void MsgClient::douploadProcessing(HttpMessage msg)
 {
 	std::string  cat = msg.findValue("Category");
@@ -412,9 +409,28 @@ void MsgClient::douploadProcessing(HttpMessage msg)
 		connectToTheClient(message);
 	}
 }
+//calls delete method
 void MsgClient::dodeleteProcessing(HttpMessage msg)
 {
+	std::string  cat = msg.findValue("Category");
+	deletingFilesInCategory(cat);
+	std::string  tp = msg.findValue("type");
+	HttpMessage message = makeMessage(1, msg.bodyString(), "toAddr:localhost:8080", cat, tp);
+	connectToTheClient(message);
 }
+//calls publish method
+void MsgClient::dopublishProcessing(HttpMessage msg)
+{
+	std::string  cat = msg.findValue("Category");
+	std::string  tp = msg.findValue("type");
+	publishTheCategory(cat);
+	auto table = getCorrectTable(cat);
+	MsgClient c2;
+	c2.putInCorrectTable(cat, table);
+	c2.execute(100, 1, tp, cat);
+}
+
+//connects to the client and sends the message
 void MsgClient::connectToTheClient(HttpMessage msg)
 {
 	SocketSystem ss;
@@ -427,10 +443,19 @@ void MsgClient::connectToTheClient(HttpMessage msg)
 	si.close();
 }
 
+std::string MsgClient::putInCsv(std::unordered_map<std::string, std::vector<std::string>> table)
+{
+	std::string temp;
+	for (auto each : table) {
+		if (each.second.size() == 0)
+			temp += each.first + ",";
+	}
+	return temp;
+}
 //----< this defines the behavior of the client >--------------------
 
 void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessages, std::string type, std::string category){
-	try{
+	//try{
 		SocketSystem ss;
 		SocketConnecter si;
 		while (!si.connect("localhost", 8080)){
@@ -443,10 +468,8 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 			msgBody += "Publish finished \n Files with No parent are:\n";
 			std::unordered_map<std::string, std::vector<std::string>> temp = getCorrectTable(category);
 			std::vector<std::string > keys;
-			for (auto each : temp) {
-				if (each.second.size() == 0)
-					msgBody += each.first + ",";
-			}
+			msgBody = putInCsv(temp);
+		
 		}
 		else
 			msgBody = "done";	
@@ -457,11 +480,11 @@ void MsgClient::execute(const size_t TimeBetweenMessages, const size_t NumMessag
 		std::cout << "\n";
 		std::cout << "\n  All done folks";
 		si.close();
-	}catch (std::exception& exc){
-		std::cout << "\n  Exeception caught: ";
-		std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
-		std::cout << exMsg;
-	}
+	//}catch (std::exception& exc){
+		//std::cout << "\n  Exeception caught: ";
+		//std::string exMsg = "\n  " + std::string(exc.what()) + "\n\n";
+		//std::cout << exMsg;
+	//}
 }
 
 
@@ -494,12 +517,8 @@ HttpMessage ClientHandler::readMessage(Socket& socket){
 			std::string fileFullSpecIs = "../Server_Files/SourceCode/Category" + category + "/" + filename;
 			readFile(fileFullSpecIs, contentSize, socket);
 		}if (filename != ""){// construct message body
-			msg.removeAttribute("content-length");
-			std::string category = msg.findValue("Category");
-			std::string bodyString = filename + " Saved into Category" + category;
-			std::string sizeString = Converter<size_t>::toString(bodyString.size());
-			msg.addAttribute(HttpMessage::Attribute("content-length", sizeString));
-			msg.addBody(bodyString);
+			msg = addFileBody1(msg, filename);
+
 		}else{// read message body
 			size_t numBytes = 0;
 			size_t pos = msg.findAttribute("content-length");
@@ -515,6 +534,17 @@ HttpMessage ClientHandler::readMessage(Socket& socket){
 		}
 	}
 	return msg;
+}
+HttpMessage ClientHandler::addFileBody1(HttpMessage msg, std::string filename)
+{
+	HttpMessage temp = msg;
+	temp.removeAttribute("content-length");
+	std::string category = temp.findValue("Category");
+	std::string bodyString = filename + " Saved into Category" + category;
+	std::string sizeString = Converter<size_t>::toString(bodyString.size());
+	temp.addAttribute(HttpMessage::Attribute("content-length", sizeString));
+	temp.addBody(bodyString);
+	return temp;
 }
 //----< read a binary file from socket and save >--------------------
 /*

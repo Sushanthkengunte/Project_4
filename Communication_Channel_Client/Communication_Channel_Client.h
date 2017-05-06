@@ -86,7 +86,7 @@ private:
 	void splitforList(std::string fileList);
 	void callReadFileFunction(HttpMessage msg, std::string filename, size_t contentSize,Socket& socket);
 	HttpMessage readMessage(Socket& socket);
-	HttpMessage addFileBody(HttpMessage msg, std::string size);
+	HttpMessage addFileBody(HttpMessage msg, std::string filename);
 	bool readFile(const std::string& filename, size_t fileSize, Socket& socket);
 	Async::BlockingQueue<HttpMessage>& msgQ_;
 };

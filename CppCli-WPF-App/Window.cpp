@@ -103,28 +103,31 @@ void WPFCppCliDemo::setUpStatusBar()
 	grid->SetRow(hDownloadButton, 5);
 	grid->Children->Add(hDownloadButton);
 }
-
+void CppCliWindows::WPFCppCliDemo::setgrids()
+{
+	hGrid->Children->Add(hTabControl);
+	hSendMessageTab->Header = "Publish / Delete / Response from server";
+	hUploadFLTab->Header = "Upload File List";
+	hDisplayFLTab->Header = "Display File List";
+	hTabControl->Items->Add(hUploadFLTab);
+	hTabControl->Items->Add(hDisplayFLTab);
+	hTabControl->Items->Add(hSendMessageTab);
+	hStatusBar->Items->Add(hStatusBarItem);
+	hStatus->Text = "very important messages will appear here";
+	//status->FontWeight = FontWeights::Bold;
+	hStatusBarItem->Content = hStatus;
+	hStatusBar->Padding = Thickness(10, 2, 10, 2);
+	Console::Write("\n  setting up sendMessage view");
+	hSendMessageGrid->Margin = Thickness(20);
+	hSendMessageTab->Content = hSendMessageGrid;
+	setTextBlockProperties();
+	setButtonsProperties();
+	grid->Margin = Thickness(20);
+	hDisplayFLTab->Content = grid;
+}
 void WPFCppCliDemo::setUpTabControl()
 {
-  hGrid->Children->Add(hTabControl);
-  hSendMessageTab->Header = "Publish / Delete / Response from server";
-  hUploadFLTab->Header = "Upload File List";
-  hDisplayFLTab->Header = "Display File List";
-  hTabControl->Items->Add(hUploadFLTab);
-  hTabControl->Items->Add(hDisplayFLTab);
-  hTabControl->Items->Add(hSendMessageTab);
-  hStatusBar->Items->Add(hStatusBarItem);
-  hStatus->Text = "very important messages will appear here";
-  //status->FontWeight = FontWeights::Bold;
-  hStatusBarItem->Content = hStatus;
-  hStatusBar->Padding = Thickness(10, 2, 10, 2);
-  Console::Write("\n  setting up sendMessage view");
-  hSendMessageGrid->Margin = Thickness(20);
-  hSendMessageTab->Content = hSendMessageGrid;
-  setTextBlockProperties();
-  setButtonsProperties();
-  grid->Margin = Thickness(20);
-  hDisplayFLTab->Content = grid;
+	setgrids();
   RowDefinition^ hRow1Defq = gcnew RowDefinition();
   grid->RowDefinitions->Add(hRow1Defq);
   Grid^ hGridq = gcnew Grid();
@@ -178,8 +181,7 @@ void WPFCppCliDemo::setTextBlockProperties()
   hSendMessageGrid->SetRow(hScrollViewer1, 0);
   hSendMessageGrid->Children->Add(hScrollViewer1);
 }
-
-void WPFCppCliDemo::setButtonsProperties()
+void CppCliWindows::WPFCppCliDemo::setRowDefiniton()
 {
 	RowDefinition^ hRow2Def22f = gcnew RowDefinition();
 	hRow2Def22f->Height = GridLength(40);
@@ -191,17 +193,25 @@ void WPFCppCliDemo::setButtonsProperties()
 	hClearButton->BorderBrush = Brushes::Black;
 	hSendMessageGrid->SetRow(hClearButton, 1);
 	hSendMessageGrid->Children->Add(hClearButton);
-  RowDefinition^ hRow2Def22 = gcnew RowDefinition();
-  hRow2Def22->Height = GridLength(15);
-  hSendMessageGrid->RowDefinitions->Add(hRow2Def22);
-  hRadioCategoryPM1->GroupName = "Categories PM";
-  hRadioCategoryPM1->Content = "Category 1";
-  hRadioCategoryPM1->Height = 30;
-  hRadioCategoryPM1->Width = 120;
-  hRadioCategoryPM1->BorderThickness = Thickness(2);
-  hRadioCategoryPM1->BorderBrush = Brushes::Black;
-  hSendMessageGrid->SetRow(hRadioCategoryPM1, 2);
-  hSendMessageGrid->Children->Add(hRadioCategoryPM1);
+	RowDefinition^ hRow2Def22 = gcnew RowDefinition();
+	hRow2Def22->Height = GridLength(15);
+	hSendMessageGrid->RowDefinitions->Add(hRow2Def22);
+	hRadioCategoryPM1->GroupName = "Categories PM";
+	hRadioCategoryPM1->Content = "Category 1";
+	hRadioCategoryPM1->Height = 30;
+	hRadioCategoryPM1->Width = 120;
+	hRadioCategoryPM1->BorderThickness = Thickness(2);
+	hRadioCategoryPM1->BorderBrush = Brushes::Black;
+	hSendMessageGrid->SetRow(hRadioCategoryPM1, 2);
+	hSendMessageGrid->Children->Add(hRadioCategoryPM1);
+	
+
+}
+
+void WPFCppCliDemo::setButtonsProperties()
+{
+	
+	setRowDefiniton();
   RowDefinition^ hRow2Def22w = gcnew RowDefinition();
   hRow2Def22w->Height = GridLength(15);
   hSendMessageGrid->RowDefinitions->Add(hRow2Def22w);
@@ -252,6 +262,10 @@ void WPFCppCliDemo::setButtonsProperties()
   hSendMessageGrid->SetRow(hStackPanel112, 5);
   hSendMessageGrid->Children->Add(hStackPanel112);
 }
+
+
+
+
 
 void WPFCppCliDemo::setUpSendMessageView()
 {

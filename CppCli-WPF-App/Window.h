@@ -165,6 +165,8 @@ namespace CppCliWindows
     String^ toSystemString(std::string& str);
     void setTextBlockProperties();
     void setButtonsProperties();
+	void setRowDefiniton();
+	void setgrids();
 	void directorySearch(String^);
 	int getCategoryUFL();
 	int getCategoryDFL();
